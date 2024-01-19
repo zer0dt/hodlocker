@@ -28,10 +28,10 @@ cp .env.example .env
 
 5. 
 
-Change the DATABASE_URL to your postgres instance - free instance at https://supabase.com/
-Add your PUSHER details for notifications - free at https://pusher.com/
-Add a private key to fund anon posts and replies (10,000 sats  ~ 5000 interactions )
-aAdd your mainnet TAAL api key from https://platform.taal.com/
+- Change the DATABASE_URL to your postgres instance - free instance at https://supabase.com/
+- Add your PUSHER details for notifications - free at https://pusher.com/
+- Add a private key to fund anon posts and replies (10,000 sats  ~ 5000 interactions)
+- Add your mainnet TAAL api key from https://platform.taal.com/
 
 
 6. Start the development server.
