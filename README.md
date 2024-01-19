@@ -12,12 +12,10 @@ cd hodlocker
 ```bash
 npm install
 ```
-3. Install Scrypt-CLI, Initialize, and Build Contract
+3. Compile Contract
 
 ```bash
-npm install -g scrypt-cli
-npx scrypt-cli init
-npm run build:contract
+npx scrypt-cli compile
 ```
 
 4. Copy `env.example` to `env` and update the variables.
@@ -39,6 +37,9 @@ cp .env.example .env
 npx prisma db push
 ``` 
 
+7. - Create an entry in your supabase instance in the "Tag" table with Name: BSV, FullName: Bitcoin 
+   - Also create an entry in the "Bitcoiner" table with handle "anon" for anon posting to work.
+  
 6. Start the development server.
 
 ```bash
