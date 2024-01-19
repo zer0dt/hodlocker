@@ -33,6 +33,11 @@ cp .env.example .env
 - Add a private key to fund anon posts and replies (10,000 sats  ~ 5000 interactions)
 - Add your mainnet TAAL api key from https://platform.taal.com/
 
+6.  Sync your prisma client with the Supabase instance.
+
+   ```bash
+npx prisma db push
+``` 
 
 6. Start the development server.
 
