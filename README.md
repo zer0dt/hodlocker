@@ -38,7 +38,7 @@ npx prisma db push
 ``` 
 
 7. - Create an entry in your supabase instance in the "Tag" table with Name: BSV, FullName: Bitcoin 
-   - Also create an entry in the "Bitcoiner" table with handle "anon" for anon posting to work.
+   - Also create an entry in the "Bitcoiner" table with Handle: anon
   
 6. Start the development server.
 
