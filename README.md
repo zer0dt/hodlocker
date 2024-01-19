@@ -12,35 +12,30 @@ cd hodlocker
 ```bash
 npm install
 ```
-3. Compile Contract
 
-```bash
-npx scrypt-cli compile
-```
-
-4. Copy `env.example` to `env` and update the variables.
+3. Copy `env.example` to `env` and update the variables.
 
 ```bash
 cp .env.example .env
 ``` 
 
-5. 
+4. 
 
 - Change the DATABASE_URL to your postgres instance - free instance at https://supabase.com/
 - Add your PUSHER details for notifications - free at https://pusher.com/
 - Add a private key to fund anon posts and replies (10,000 sats  ~ 5000 interactions)
 - Add your mainnet TAAL api key from https://platform.taal.com/
 
-6.  Sync your prisma client with the Supabase instance.
+5.  Sync your prisma client with the Supabase instance.
 
    ```bash
 npx prisma db push
 ``` 
 
-7. - Create an entry in your supabase instance in the "Tag" table with Name: BSV, FullName: Bitcoin 
+6. - Create an entry in your supabase instance in the "Tag" table with Name: BSV, FullName: Bitcoin 
    - Also create an entry in the "Bitcoiner" table with Handle: anon
   
-6. Start the development server.
+7. Start the development server.
 
 ```bash
 npm run dev
