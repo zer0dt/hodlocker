@@ -1,0 +1,6 @@
+This favicon was generated using the following font:
+
+- Font Title: Alumni Sans
+- Font Author: Copyright 2015 The Alumni Sans Project Authors (https://github.com/googlefonts/alumni)
+- Font Source: http://fonts.gstatic.com/s/alumnisans/v18/nwpHtKqkOwdO2aOIwhWudEWpx_zq_Xna-Xd9uOhQqFsJ3C8qng.ttf
+- Font License: SIL Open Font License, 1.1 (http://scripts.sil.org/OFL))

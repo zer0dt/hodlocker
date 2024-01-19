@@ -1,0 +1,182 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.lock-icon:hover {
+  color: #ffac33; /* Corrected the color value */
+}
+
+.transition-all {
+  -webkit-transition: all 0.5s ease-out;
+  transition: all 0.5s ease-out;
+}
+
+.opacity-0 {
+  opacity: 0;
+}
+.opacity-100 {
+  opacity: 1;
+}
+.scale-0 {
+  -webkit-transform: scale(0);
+  transform: scale(0);
+}
+.scale-100 {
+  -webkit-transform: scale(1);
+  transform: scale(1);
+}
+
+@keyframes shimmer {
+  0% {
+      background-position: -468px 0;
+  }
+  100% {
+      background-position: 468px 0;
+  }
+}
+
+.shimmer {
+  animation-duration: 1.25s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: shimmer;
+  animation-timing-function: linear;
+  background: darkgray linear-gradient(90deg, #f0f0f0, #f7f7f7, #f0f0f0);
+  background-size: 800px 104px;
+  position: relative;
+}
+
+.react-tweet-theme { 
+  --tweet-container-margin: 0.5rem 0!important;
+  --tweet-body-font-size: 1rem!important; 
+  --tweet-body-line-height: 1.25rem!important;
+  --tweet-body-margin: 0!important;
+  --tweet-header-font-size: 0.9rem!important;
+}
+
+.fade-in {
+  opacity: 1;
+  -webkit-transition: opacity 0.5s ease-out;
+  transition: opacity 0.5s ease-out;
+}
+
+.post-placeholder {
+  opacity: 0;
+}
+
+.comments-textarea__control{
+  margin-top: 10px;
+  margin-bottom: 20px;
+  max-height: 160px;
+  overflow-y: hidden !important; /* Enable vertical scrolling once max height is reached */
+}
+.comments-textarea__input{
+  max-height: 200px; /* Set your desired maximum height */
+  overflow-y: scroll !important;
+  background-color: #fff;
+  border-radius: 3px;
+  transition: 0.3s ease-in-out;
+  padding: 9px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #333;
+  border: 1px solid #FF9900;
+  &:focus,&:active{
+    outline: none;
+    border: 1px solid #3fb9de;
+  }
+  &::placeholder {
+    color: #a4b0be;
+    font-size: 14px;
+  }
+}
+.comments-textarea__highlighter{
+  padding: 10px;
+}
+.comments-textarea__suggestions__list {
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  max-height: 200px;
+  overflow: auto;
+}
+.comments-textarea__suggestions__item {
+  padding: 5px 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+.comments-textarea__suggestions__item — focused {
+  background-color: #daf4fa;
+}
+
+/* DARK */
+
+.dark-comments-textarea__control{
+  margin-top: 10px;
+  margin-bottom: 20px;
+  max-height: 160px;
+  overflow-y: auto !important; /* Enable vertical scrolling once max height is reached */
+}
+.dark-comments-textarea__input{
+  background-color: #fff;
+  border-radius: 3px;
+  transition: 0.3s ease-in-out;
+  padding: 9px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #ffffff;
+  border: 1px solid #dedede;
+  &:focus,&:active{
+    outline: none;
+    border: 1px solid #3fb9de;
+  }
+  &::placeholder {
+    color: #ffffff;
+    font-size: 14px;
+  }
+}
+.dark-comments-textarea__highlighter{
+  padding: 10px;
+}
+.dark-comments-textarea__suggestions__list {
+  background-color: #0f172a;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  max-height: 200px;
+  overflow: auto;
+}
+.dark-comments-textarea__suggestions__item {
+  padding: 5px 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  color: white
+}
+.dark-comments-textarea__suggestions__item — focused {
+  background-color: #daf4fa;
+}
+
+

@@ -1,0 +1,18 @@
+
+contract Lockup {
+  int lockUntilHeight;
+  Ripemd160 pkhash;
+  constructor(Ripemd160 pkhash, int lockUntilHeight) {
+    require(lockUntilHeight < 500000000);
+    this.lockUntilHeight = lockUntilHeight;
+    this.pkhash = pkhash;
+  }
+  public function redeem(Sig sig, PubKey pubkey, SigHashPreimage __scrypt_ts_txPreimage) {
+    require(Tx.checkPreimageSigHashType(__scrypt_ts_txPreimage, SigHashType(b'41')));
+    require(SigHash.nLocktime(__scrypt_ts_txPreimage) < 500000000);
+    require(SigHash.nSequence(__scrypt_ts_txPreimage) < 0xffffffff);
+    require(SigHash.nLocktime(__scrypt_ts_txPreimage) >= this.lockUntilHeight);
+    require(hash160(pubkey) == this.pkhash);
+    require(checkSig(sig, pubkey));
+  }
+}

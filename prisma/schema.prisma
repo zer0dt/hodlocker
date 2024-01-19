@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("NEXT_DATABASE_URL")
+  directUrl  = env("NEXT_DIRECT_URL")
+}
+
+model Bitcoiner {
+  handle       String         @id
+  created_at   DateTime       @default(now())
+  pubkey       String         @default("02eb0b9d11e2d4989ba95e6c787fc25b3e7ce14b79dc5902036000429671ef5362")
+  spent_tx     SpentTx[]
+  locklikes    LockLikes[]
+  replies      Replies[]
+  transactions Transactions[]
+  nftposts     NFTPosts[]
+  settings     Settings?
+}
+
+model Settings {
+  handle_id     String    @id
+  amountToLock  Float     @default(0.01)
+  blocksToLock  Int       @default(1000)
+  link          Bitcoiner @relation(fields: [handle_id], references: [handle])     
+}
+
+model SpentTx {
+  txid         String     @id
+  handle_id    String
+  permalocked  Boolean    @default(false)
+  link         Bitcoiner  @relation(fields: [handle_id], references: [handle] )
+}
+
+model Transactions {
+  txid         String      @id
+  amount       Int
+  handle_id    String
+  note         String      @default("")
+  created_at   DateTime    @default(now())
+  locked_until Int         @default(0)
+  tags         Tag[]       // Add a 'tags' field to Transactions
+  locklikes    LockLikes[]
+  replies      Replies[]
+  link         Bitcoiner   @relation(fields: [handle_id], references: [handle])
+}
+
+model Replies {
+  txid         String       @id
+  amount       Int
+  handle_id    String
+  note         String
+  created_at   DateTime     @default(now())
+  locked_until Int          @default(0)  
+  locklikes    LockLikes[]
+  post_id      String 
+  nftpost_id   String?      
+  bitcoiner    Bitcoiner    @relation(fields: [handle_id], references: [handle])
+  transaction  Transactions @relation(fields: [post_id], references: [txid])
+  nftpost      NFTPosts?     @relation(fields: [nftpost_id], references: [txid])
+}
+
+model LockLikes {
+  txid         String       @id
+  amount       Int
+  handle_id    String
+  locked_until Int          @default(0)
+  created_at   DateTime     @default(now())
+  post_id      String?
+  reply_txid   String?
+  nftpost_id   String?
+  link         Bitcoiner    @relation(fields: [handle_id], references: [handle])
+  post         Transactions? @relation(fields: [post_id], references: [txid])
+  replies      Replies?     @relation(fields: [reply_txid], references: [txid])
+  nftpost      NFTPosts?    @relation(fields: [nftpost_id], references: [txid])
+}
+
+model NFTPosts {
+  txid         String      @id
+  amount       Int
+  handle_id    String
+  note         String      @default("")
+  nft_txid     String
+  created_at   DateTime    @default(now())
+  locked_until Int         @default(0)
+  locklikes    LockLikes[]
+  replies      Replies[]
+  link         Bitcoiner   @relation(fields: [handle_id], references: [handle])
+}
+
+model Tag {
+  id           Int          @id @default(autoincrement())
+  name         String       @unique
+  fullName     String       @default("") 
+  type         String       @default("coin")     
+  transactions Transactions[] 
+}

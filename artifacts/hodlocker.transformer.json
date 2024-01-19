@@ -1,0 +1,9 @@
+{
+  "success": true,
+  "errors": [],
+  "scryptfile": "hodlocker.scrypt",
+  "sourceMapFile": "hodlocker.scrypt.map",
+  "ctxMethods": [
+    "redeem"
+  ]
+}
