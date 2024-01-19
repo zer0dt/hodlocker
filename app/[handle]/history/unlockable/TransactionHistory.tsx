@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
-import { callRedeem } from "@/app/components/scrypt";
+import { callRedeem } from "@/app/utils/scrypt";
 
 import {
   checkIfSpent,

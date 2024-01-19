@@ -169,7 +169,7 @@ const UnlockModal = ({
                     <p>Unspent Txs: <b>{totalUnspentTransactions}</b></p>
                     <div className="flex justify-start items-center">
                       <p className="">Total Amount: <b>{totalAmountUnspentTransactions / 100000000}</b></p>
-                      <SiBitcoinsv className="text-orange-400" />
+                      <SiBitcoinsv className="text-orange-400 ml-1" />
                     </div>
 
                     <div className="pt-4">
