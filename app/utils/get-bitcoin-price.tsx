@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic'
 
 export const getBitcoinPrice = cache(async (): Promise<number> => {
   const url = 'https://api.whatsonchain.com/v1/bsv/main/exchangerate';
-  const apiKey = process.env.WHATSONCHAIN_API_KEY as string;
+  const apiKey = process.env.TAAL_MAINNET_API_KEY as string;
   
   try {
     const res = await fetch(url, {
