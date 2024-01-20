@@ -7,7 +7,8 @@ import { ThreeDots } from 'react-loader-spinner'
 
 import { ImageUploader } from '../uploads/ImageUploader'
 
-import { postNewBitcoiner, postNewReply, HODLTransactions, getAddressUtxos, broadcastTx, getAllBitcoinerHandles } from '../../server-actions'
+import { postNewBitcoiner, postNewReply, HODLTransactions, getAllBitcoinerHandles } from '../../server-actions'
+import { postAnonReply } from "./anon-reply-server-action"
 import { getLockupScript } from '../../utils/scrypt';
 import { WalletContext } from '../../context/WalletContextProvider';
 import { bsv } from 'scrypt-ts';
@@ -17,7 +18,7 @@ import { Mention, MentionsInput, SuggestionDataItem } from 'react-mentions';
 
 
 interface deployProps {
-    transaction: HODLTransactions
+  transaction: HODLTransactions
 }
 
 
@@ -68,21 +69,21 @@ export default function replyInteraction({ transaction }: deployProps) {
   }, [])
 
 
-  useEffect(() => { 
+  useEffect(() => {
     if (handle && pubkey) {
       const publicKey = bsv.PublicKey.fromHex(pubkey)
       let address = bsv.Address.fromPublicKey(publicKey)
 
       console.log("pubkey address: ", address.toString())
-    }    
-    
+    }
+
   }, [pubkey]);
 
   useEffect(() => {
-    const fetchBitcoiners  = async () => {
+    const fetchBitcoiners = async () => {
       const bitcoiners = await getAllBitcoinerHandles()
       if (bitcoiners) {
-          // Transform the data to match the expected type
+        // Transform the data to match the expected type
         const mentionData: SuggestionDataItem[] = bitcoiners.map((bitcoiner: string) => ({
           id: bitcoiner, // Replace with the actual unique identifier
           display: bitcoiner
@@ -90,51 +91,51 @@ export default function replyInteraction({ transaction }: deployProps) {
 
         setMentionData(mentionData)
       }
-    }  
-    
+    }
+
     fetchBitcoiners()
   }, [])
-  
+
   const Lock = async () => {
-    setLoading(true)    
-    
+    setLoading(true)
+
     if (isLinked) {
       if (handle && pubkey) {
-        postNewBitcoiner(handle, pubkey) 
-        console.log("using this pubkey to lock: ", pubkey)         
+        postNewBitcoiner(handle, pubkey)
+        console.log("using this pubkey to lock: ", pubkey)
       } else {
         alert('RelayX not connected yet.')
         await fetchRelayOneData()
         return
-      }  
-      
+      }
+
       if (!pubkey) {
         alert('Public Key is missing!');
         setLoading(false)
         return;
       }
-      
+
       if (currentBlockHeight) {
         console.log("current Block Height", currentBlockHeight)
         if ((currentBlockHeight + blocksToLock) <= currentBlockHeight) {
-          alert('nLockTime should be greater than the current block height.')        
+          alert('nLockTime should be greater than the current block height.')
           setBlocksToLock(1000)
           return;  // Do not proceed with the locking process.
-        }         
-                
+        }
+
         const nLockTime = currentBlockHeight + blocksToLock
 
         console.log(parseFloat(amountToLock))
-  
+
         if ((parseFloat(amountToLock) * 100000000) > 2100000000) {
           alert("You cannot lock more than 21 bitcoin at this moment.")
           return;
         }
-    
+
         console.log("content: ", note)
         console.log("paymail: ", paymail)
         setPaying(true)
-                
+
         console.log("amount to lock: ", amountToLock)
         console.log("locking for ", blocksToLock + " blocks, locked until " + nLockTime)
 
@@ -149,69 +150,62 @@ export default function replyInteraction({ transaction }: deployProps) {
             to: lockupScript,
             amount: amountToLock,
             currency: "BSV",
-            opReturn: 
-            ["19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut",
-            fullMessage,
-            "text/markdown",
-            "UTF-8",
-            "|",
-            "1PuQa7K62MiKCtssSLKy1kh56WWU7MtUR5",
-            "SET",
-            "app",
-            "hodlocker.com",
-            "type",
-            "post",
-            "context",
-            "tx",
-            "tx",
-            transaction.txid,
-            "paymail",
-            paymail
-          ]                     
+            opReturn:
+              ["19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut",
+                fullMessage,
+                "text/markdown",
+                "UTF-8",
+                "|",
+                "1PuQa7K62MiKCtssSLKy1kh56WWU7MtUR5",
+                "SET",
+                "app",
+                "hodlocker.com",
+                "type",
+                "post",
+                "context",
+                "tx",
+                "tx",
+                transaction.txid,
+                "paymail",
+                paymail
+              ]
           }).catch(e => {
-              console.log(e.message);
-              toast.error("An error has occurred: " + e.message)
-              setLoading(false)
+            console.log(e.message);
+            toast.error("An error has occurred: " + e.message)
+            setLoading(false)
           });
-    
+
           if (send) {
-            try {  
-              console.log(send)   
-              toast("Transaction posted on-chain: " + send.txid.slice(0, 6) + "..." + send.txid.slice(-6))     
+            try {
+              console.log(send)
+              toast("Transaction posted on-chain: " + send.txid.slice(0, 6) + "..." + send.txid.slice(-6))
               const newReply = await postNewReply(
-                send.txid, 
+                send.txid,
                 parseFloat(amountToLock) * 100000000,
                 transaction.txid,
                 send.paymail.substring(0, send.paymail.lastIndexOf("@")),
                 fullMessage,
                 nLockTime
-              )        
+              )
               console.log(newReply)
-              toast.success("Transaction posted to hodlocker.com: " + newReply.txid.slice(0, 6) + "..." + newReply.txid.slice(-6))  
-    
-              const response = fetch(
-                `https://locks.gorillapool.io/api/tx/${send.txid}/submit`,
-                {
-                  method: "POST", // Make sure to match the HTTP method expected by the API
-                }
-              );
+              toast.success("Transaction posted to hodlocker.com: " + newReply.txid.slice(0, 6) + "..." + newReply.txid.slice(-6))
 
               setPaying(false)
-              setLoading(false)  
-              setNote('')           
-              router.refresh()              
+              setLoading(false)
+              setNote('')
+              router.refresh()
             } catch (err) {
               alert(err)
-            }          
+            }
           }
-        } 
-      }           
+        }
+      }
     } else {
       setPaying(false)
       setLoading(false)
     }
-  } 
-  
+  }
+
   const AnonLock = async () => {
     setLoading(true);
     console.log("posting in anon mode");
@@ -243,131 +237,37 @@ export default function replyInteraction({ transaction }: deployProps) {
         blocksToLock + " blocks, locked until " + nLockTime
       );
 
-      const privateKey = bsv.PrivateKey.fromString(
-        "KzSSts7qwpGuJ8oPWdWNWN1dnpLvMuTPDZUyRkF2tmrtZMx1QLXe"
-      );
+      const deployedAnonReply = await postAnonReply(transaction.txid, note, amountToLock, nLockTime)
 
-      let publicKey = bsv.PublicKey.fromPrivateKey(privateKey);
-      let address = bsv.Address.fromPublicKey(publicKey);
+      if (deployedAnonReply) {
 
-      console.log("address: " + address.toString());
-
-      let tx = new bsv.Transaction();
-
-      const utxo = await getAddressUtxos(address.toString());
-
-      tx.from({
-        // TXID that contains the output you want to unlock:
-        txId: utxo[0].tx_hash,
-        // Index of the UTXO:
-        outputIndex: utxo[0].tx_pos,
-        // Script of the UTXO. In this case it's a regular P2PKH script:
-        script: "76a9140663f6cd4ed402c3555e08dfd1b4ef5856e1d99588ac",
-        // Value locked in the UTXO in satoshis:
-        satoshis: utxo[0].value,
-      });
-
-      if (nLockTime) {
-        const lockupScript = await getLockupScript(
-          nLockTime,
-          publicKey.toString()
+        toast.success(
+          "Transaction posted to hodlocker.com: " +
+          deployedAnonReply.txid.slice(0, 6) +
+          "..." +
+          deployedAnonReply.txid.slice(-6)
         );
-
-        const opReturn = [
-          "19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut",
-          note,
-          "text/markdown",
-          "UTF-8",
-          "|",
-          "1PuQa7K62MiKCtssSLKy1kh56WWU7MtUR5",
-          "SET",
-          "app",
-          "hodlocker.com",
-          "type",
-          "post",
-          "context",
-          "tx",
-          "tx",
-           transaction.txid,
-          "paymail",
-          "anon",
-        ];
-
-        tx.addOutput(
-          new bsv.Transaction.Output({
-            script: bsv.Script.fromASM(lockupScript),
-            satoshis: 1,
-          })
-        );
-
-        tx.addOutput(
-          new bsv.Transaction.Output({
-            script: bsv.Script.buildSafeDataOut(opReturn),
-            satoshis: 0,
-          })
-        );
-
-        tx.change("1anon2duh1CnEqfLuoXYuiTx2arHy1cSP");
-        tx.feePerKb(1);
-
-        console.log("Transaction before sealing and signing:", tx.toString());
-
-        // Seal and sign the transaction
-        tx = tx
-          .seal()
-          .sign("KzSSts7qwpGuJ8oPWdWNWN1dnpLvMuTPDZUyRkF2tmrtZMx1QLXe");
-
-        console.log("Transaction after sealing and signing:", tx.toString());
-
-        // Serialize the transaction for broadcasting
-        const serializedTx = tx.serialize();
-
-        console.log("Serialized transaction:", serializedTx);
-
-        // Now, broadcast the transaction
-        const broadcastedTx = await broadcastTx(serializedTx);
-
-        console.log("broadcasted anon txid: ", broadcastedTx);
-        toast("Transaction posted on-chain: " + broadcastedTx.slice(0, 6) + "..." + broadcastedTx.slice(-6))
-
-        if (broadcastedTx) {
-          const newPost = await postNewReply(
-            broadcastedTx,
-            parseFloat(amountToLock) * 100000000,
-            transaction.txid,
-            "anon",
-            note,
-            nLockTime
-          );
-          console.log(newPost);
-          toast.success("Transaction posted to hodlocker.com: " + newPost.txid.slice(0, 6) + "..." + newPost.txid.slice(-6) )
-
-          const response = fetch(
-            `https://locks.gorillapool.io/api/tx/${broadcastedTx}/submit`,
-            {
-              method: "POST", // Make sure to match the HTTP method expected by the API
-            }
-          );
-        }
 
         setPaying(false);
         setLoading(false);
-        setNote('')
+        setNote("");
+        setUploadedImage(null);
         router.refresh();
       } else {
         setLoading(false);
         return;
       }
     }
-  };
-        
+  }
+
+
   const spinner = () => {
     return (
-      <ThreeDots 
-        height="1em" 
-        width="1em" 
+      <ThreeDots
+        height="1em"
+        width="1em"
         radius="4"
-        color="#f97316" 
+        color="#f97316"
         ariaLabel="three-dots-loading"
         wrapperStyle={{}}
         visible={true}
@@ -381,31 +281,31 @@ export default function replyInteraction({ transaction }: deployProps) {
     } else {
       setUploadedImage(null);
     }
-  }; 
-      
+  };
 
-    return (      
-      <>
+
+  return (
+    <>
       <div className="flex flex-col">
         <div className="rounded-lg w-full flex justify-start items-center bg-white dark:bg-black">
           <div className="flex w-full justify-center items-center pl-4">
             <MentionsInput
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            autoComplete="off"
-            id="message"
-            className={darkMode ? "dark-comments-textarea w-11/12" : "comments-textarea w-11/12"}
-            placeholder="What's up?"
-          >
-            <Mention
-              trigger="@"
-              data={mentionData}
-              displayTransform={(display) => `@${display}`}
-              markup="[@__display__]"
-              appendSpaceOnAdd={true}
-            />
-          </MentionsInput>
-  
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              autoComplete="off"
+              id="message"
+              className={darkMode ? "dark-comments-textarea w-11/12" : "comments-textarea w-11/12"}
+              placeholder="What's up?"
+            >
+              <Mention
+                trigger="@"
+                data={mentionData}
+                displayTransform={(display) => `@${display}`}
+                markup="[@__display__]"
+                appendSpaceOnAdd={true}
+              />
+            </MentionsInput>
+
             <div className="flex flex-col justify-start items-center">
               <button
                 onClick={() => {
@@ -418,45 +318,45 @@ export default function replyInteraction({ transaction }: deployProps) {
                 {(paying || loading) ? spinner() : (
                   <>
                     <svg className="w-5 h-5 rotate-90" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
-                      <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z"/>
+                      <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
                     </svg>
                     <span className="sr-only">Upload image</span>
                   </>
                 )}
-  
+
               </button>
             </div>
           </div>
         </div>
 
         <div className="flex justify-between items-center mb-0 pt-2 pl-4">
-    <div className="flex items-center">
-      <input
-        id="default-checkbox"
-        type="checkbox"
-        onChange={handleCheckboxChange}
-        checked={anonMode}
-        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-      />
-      <label
-        htmlFor="default-checkbox"
-        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-      >
-        anon mode
-      </label>
-    </div>
+          <div className="flex items-center">
+            <input
+              id="default-checkbox"
+              type="checkbox"
+              onChange={handleCheckboxChange}
+              checked={anonMode}
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+              htmlFor="default-checkbox"
+              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >
+              anon mode
+            </label>
+          </div>
 
-    <div>
-      {isLinked ? 
-        <ImageUploader
-          isDrawerVisible={false}
-          onImageUpload={handleImageUpload}
-        /> : null
-      }
-    </div>
-  </div>
+          <div>
+            {isLinked ?
+              <ImageUploader
+                isDrawerVisible={false}
+                onImageUpload={handleImageUpload}
+              /> : null
+            }
+          </div>
+        </div>
       </div>
-  
+
     </>
-    )
+  )
 } 

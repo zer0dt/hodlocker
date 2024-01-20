@@ -14,10 +14,10 @@ import { toast } from "sonner";
 import {
   postNewBitcoiner,
   postNewTransaction,
-  getAddressUtxos,
-  broadcastTx,
   getAllBitcoinerHandles,
 } from "../../server-actions";
+
+import { postAnon } from './anon-post-server-action'
 import { getLockupScript } from "../../utils/scrypt";
 import { WalletContext } from "../../context/WalletContextProvider";
 import { bsv } from "scrypt-ts";
@@ -268,13 +268,6 @@ export default function DeployInteraction({
                 newPost.txid.slice(-6)
               );
 
-              const response = fetch(
-                `https://locks.gorillapool.io/api/tx/${send.txid}/submit`,
-                {
-                  method: "POST", // Make sure to match the HTTP method expected by the API
-                }
-              );
-
               setPaying(false);
               setLoading(false);
               setNote("");
@@ -326,133 +319,26 @@ export default function DeployInteraction({
         blocksToLock + " blocks, locked until " + nLockTime
       );
 
-      if (process.env.NEXT_PUBLIC_ANON_PRIVATE_KEY) {
-        const privateKey = bsv.PrivateKey.fromString(
-          process.env.NEXT_PUBLIC_ANON_PRIVATE_KEY
-        )
+      const deployedAnonPost = await postAnon(note, sub, amountToLock, nLockTime)
 
-        let publicKey = bsv.PublicKey.fromPrivateKey(privateKey);
-        let address = bsv.Address.fromPublicKey(publicKey);
+      if (deployedAnonPost) {
 
-        console.log("address: " + address.toString());
+        toast.success(
+          "Transaction posted to hodlocker.com: " +
+          deployedAnonPost.txid.slice(0, 6) +
+          "..." +
+          deployedAnonPost.txid.slice(-6)
+        );
 
-        let tx = new bsv.Transaction();
-
-        const utxo = await getAddressUtxos(address.toString());
-
-        tx.from({
-          // TXID that contains the output you want to unlock:
-          txId: utxo[0].tx_hash,
-          // Index of the UTXO:
-          outputIndex: utxo[0].tx_pos,
-          // Script of the UTXO. In this case it's a regular P2PKH script:
-          script: "76a9140663f6cd4ed402c3555e08dfd1b4ef5856e1d99588ac",
-          // Value locked in the UTXO in satoshis:
-          satoshis: utxo[0].value,
-        });
-
-        if (nLockTime) {
-          const lockupScript = await getLockupScript(
-            nLockTime,
-            publicKey.toString()
-          );
-
-          const opReturn = [
-            "19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut",
-            note,
-            "text/markdown",
-            "UTF-8",
-            "|",
-            "1PuQa7K62MiKCtssSLKy1kh56WWU7MtUR5",
-            "SET",
-            "app",
-            "hodlocker.com",
-            "type",
-            "post",
-            "paymail",
-            "anon",
-          ];
-
-          tx.addOutput(
-            new bsv.Transaction.Output({
-              script: bsv.Script.fromASM(lockupScript),
-              satoshis: 1,
-            })
-          );
-
-          tx.addOutput(
-            new bsv.Transaction.Output({
-              script: bsv.Script.buildSafeDataOut(opReturn),
-              satoshis: 0,
-            })
-          );
-
-          tx.change("1anon2duh1CnEqfLuoXYuiTx2arHy1cSP");
-          tx.feePerKb(2);
-
-          console.log("Transaction before sealing and signing:", tx.toString());
-
-          // Seal and sign the transaction
-          tx = tx
-            .seal()
-            .sign("KzSSts7qwpGuJ8oPWdWNWN1dnpLvMuTPDZUyRkF2tmrtZMx1QLXe");
-
-          console.log("Transaction after sealing and signing:", tx.toString());
-
-          // Serialize the transaction for broadcasting
-          const serializedTx = tx.serialize();
-
-          console.log("Serialized transaction:", serializedTx);
-
-          // Now, broadcast the transaction
-          const broadcastedTx = await broadcastTx(serializedTx);
-
-          console.log("broadcasted anon txid: ", broadcastedTx);
-          toast(
-            "Transaction posted on-chain: " +
-            broadcastedTx.slice(0, 6) +
-            "..." +
-            broadcastedTx.slice(-6)
-          );
-
-          if (broadcastedTx) {
-            const newPost = await postNewTransaction(
-              broadcastedTx,
-              parseFloat(amountToLock) * 100000000,
-              "anon",
-              note,
-              nLockTime,
-              sub
-            );
-            console.log(newPost);
-            toast.success(
-              "Transaction posted to hodlocker.com: " +
-              newPost.txid.slice(0, 6) +
-              "..." +
-              newPost.txid.slice(-6)
-            );
-          }
-
-          const response = fetch(
-            `https://locks.gorillapool.io/api/tx/${broadcastedTx}/submit`,
-            {
-              method: "POST", // Make sure to match the HTTP method expected by the API
-            }
-          );
-
-          setPaying(false);
-          setLoading(false);
-          setNote("");
-          setUploadedImage(null);
-          router.refresh();
-          closeDrawer();
-        } else {
-          setLoading(false);
-          return;
-        }
+        setPaying(false);
+        setLoading(false);
+        setNote("");
+        setUploadedImage(null);
+        router.refresh();
+        closeDrawer();
       } else {
-        alert("No private key to fund anon posting found.")
-        return
+        setLoading(false);
+        return;
       }
     }
   };
