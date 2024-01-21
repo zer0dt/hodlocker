@@ -4,10 +4,10 @@ import { Alumni_Sans } from 'next/font/google'
 import React, { Suspense } from 'react';
 import Link from 'next/link'
 
-import UserBalance from './UserBalance';
-import { getAllBitcoinLocked } from '@/app/utils/get-all-bitcoin-locked';
-
 import BitcoinLocked from './BitcoinLocked'
+import UserBalance from './UserBalance';
+import Loading from '@/app/(home)/loading';
+
 
 const inter = Alumni_Sans({ subsets: ['latin'] })
 
@@ -15,9 +15,6 @@ export const dynamic = 'force-dynamic'
 
 
 export default async function NavBar() {  
-  const bitcoinLocked = await getAllBitcoinLocked()
-
-  console.log(bitcoinLocked.toFixed(2) + " total bitcoin locked")
 
   return (
     <>
@@ -30,12 +27,9 @@ export default async function NavBar() {
           
             <div className="flex flex-col justify-center">
               <div>
-                <span id="badge-dismiss-dark" className="inline-flex items-center px-2 py-1 text-sm font-medium text-black bg-gray-100 rounded dark:bg-gray-700 dark:text-white">
-                <Suspense fallback={<p>nav</p>}>
-                  <BitcoinLocked bitcoinLocked={bitcoinLocked} />
-                </Suspense>
-                  
-                </span>
+                <Suspense fallback={<p className="font-mono">loading total locked...</p>} >
+                <BitcoinLocked />
+                </Suspense>                
               </div>
             </div>
        

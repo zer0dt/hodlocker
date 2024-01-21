@@ -1,20 +1,20 @@
-'use client'
-
 import React from 'react';
+import { getAllBitcoinLocked } from '@/app/utils/get-all-bitcoin-locked';
 
 import { SiBitcoinsv } from 'react-icons/si';
 
 
-export default function BitcoinLocked({ bitcoinLocked }: {bitcoinLocked: number}) {
+export default async function BitcoinLocked() {
 
+    const bitcoinLocked = await getAllBitcoinLocked()
 
-    console.log(bitcoinLocked.toFixed(2))
+    console.log(bitcoinLocked.toFixed(2) + " total bitcoin locked")
 
-  return (
-        <>
-            <span className="text-md font-mono">total locked - {Number(bitcoinLocked).toFixed(2)}</span>
+    return (
+        <span id="badge-dismiss-dark" className="inline-flex items-center px-2 py-1 text-sm font-medium text-black bg-gray-100 rounded dark:bg-gray-700 dark:text-white">
+            <span className="text-md font-mono">total locked - {Number(bitcoinLocked).toFixed(0)}</span>
             <SiBitcoinsv className="text-orange-400 ml-1 mr-1" />
-        </>
+        </span>
 
     );
 }
