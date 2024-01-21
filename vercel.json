@@ -1,3 +1,0 @@
-{
-    "buildCommand": "npm install --force && next build"
-  }

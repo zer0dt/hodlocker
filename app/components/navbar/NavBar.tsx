@@ -1,12 +1,13 @@
 
 import { Alumni_Sans } from 'next/font/google'
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import Link from 'next/link'
 
-import { SiBitcoinsv } from 'react-icons/si';
 import UserBalance from './UserBalance';
 import { getAllBitcoinLocked } from '@/app/utils/get-all-bitcoin-locked';
+
+import BitcoinLocked from './BitcoinLocked'
 
 const inter = Alumni_Sans({ subsets: ['latin'] })
 
@@ -30,8 +31,10 @@ export default async function NavBar() {
             <div className="flex flex-col justify-center">
               <div>
                 <span id="badge-dismiss-dark" className="inline-flex items-center px-2 py-1 text-sm font-medium text-black bg-gray-100 rounded dark:bg-gray-700 dark:text-white">
-                  <span className="text-md font-mono">total locked - {Number(bitcoinLocked).toFixed(2)}</span>
-                  <SiBitcoinsv className="text-orange-400 ml-1 mr-1" />
+                <Suspense fallback={<p>nav</p>}>
+                  <BitcoinLocked bitcoinLocked={bitcoinLocked} />
+                </Suspense>
+                  
                 </span>
               </div>
             </div>
