@@ -76,7 +76,7 @@ export default function FeedBar() {
                 </li>
             </Link>
 
-            <Link href={`/?tab=trending&sort=${activeSort}&filter=${activeFilter}`}>
+            <Link prefetch={false} href={`/?tab=trending&sort=${activeSort}&filter=${activeFilter}`}>
                 <li
                     className={
                         activeTab == "trending" ? activeClassName : notActiveClassName

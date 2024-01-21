@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { Suspense } from "react";
-import Loading from "../loading";
+import Loading from "@/app/loading";
 import SublockerFeed from "../components/feeds/sublockers/SublockerFeed";
 import TopFeed from "../components/feeds/TopFeed";
 import Pagination from "../components/feeds/sorting-utils/Pagination";
@@ -37,7 +37,7 @@ export default async function Feeds({ searchParams }: FeedsProps) {
               {activeTab === "subs" && (
                 <div>
                   <Suspense
-                    key={activeSort + activeFilter + "subs" + currentPage}
+                    key={"subs" + activeSort + activeFilter + currentPage}
                     fallback={<Loading />}
                   >
                     <SublockerFeed />
@@ -48,7 +48,7 @@ export default async function Feeds({ searchParams }: FeedsProps) {
               {activeTab === "top" && (
                 <div>
                   <Suspense
-                    key={activeSort + activeFilter + "top" + currentPage}
+                    key={"top" + activeSort + activeFilter + currentPage}
                     fallback={<Loading />}
                   >
                     <TopFeed sort={activeSort} filter={activeFilter} page={currentPage} limit={30} />
@@ -60,7 +60,7 @@ export default async function Feeds({ searchParams }: FeedsProps) {
               {activeTab === "latest" && (
                 <div>
                   <Suspense
-                    key={activeSort + activeFilter + "latest" + currentPage}
+                    key={"latest" + activeSort + activeFilter + currentPage}
                     fallback={<Loading />}
                   >
                     <LatestFeed sort={activeSort} filter={activeFilter} page={currentPage} limit={30} />
@@ -72,7 +72,7 @@ export default async function Feeds({ searchParams }: FeedsProps) {
               {activeTab === "trending" && (
                 <div>
                   <Suspense
-                    key={activeSort + activeFilter + "trending" + currentPage}
+                    key={"trending" + activeSort + activeFilter + currentPage}
                     fallback={<Loading />}
                   >
                     <TrendingFeed sort={activeSort} filter={activeFilter} page={currentPage} limit={30} />
