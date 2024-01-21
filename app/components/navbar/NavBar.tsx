@@ -7,6 +7,7 @@ import Link from 'next/link'
 import BitcoinLocked from './BitcoinLocked'
 import UserBalance from './UserBalance';
 import Loading from '@/app/(home)/loading';
+import { SiBitcoinsv } from 'react-icons/si';
 
 
 const inter = Alumni_Sans({ subsets: ['latin'] })
@@ -15,6 +16,15 @@ export const dynamic = 'force-dynamic'
 
 
 export default async function NavBar() {  
+
+  const fallback = () => {
+    return (
+      <span id="badge-dismiss-dark" className="inline-flex items-center px-2 py-1 mr-1 text-sm font-medium text-black bg-gray-100 rounded dark:bg-gray-700 dark:text-white">
+            <span className="text-md font-mono">loading total locked...</span>
+            <SiBitcoinsv className="text-orange-400 ml-1 mr-1" />
+        </span>
+    )
+  }
 
   return (
     <>
@@ -27,7 +37,7 @@ export default async function NavBar() {
           
             <div className="flex flex-col justify-center">
               <div>
-                <Suspense fallback={<p className="font-mono">loading total locked...</p>} >
+                <Suspense fallback={fallback()} >
                 <BitcoinLocked />
                 </Suspense>                
               </div>
