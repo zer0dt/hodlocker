@@ -86,7 +86,10 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
                 <div className="min-w-full rounded-lg mx-auto flex h-screen w-full justify-center bg-white text-sm text-gray-900 antialiased dark:bg-black dark:text-white">
                     <div className="w-full rounded-lg border-x border-gray-100 dark:border-gray-800">
 
-                        <ProfileInfo handle={bitcoiner.handle} followingItems={followingItems} followerItems={followerItems} totalAmountandLockLiked={bitcoiner.totalAmountandLockLiked} created_at={bitcoiner.created_at} />
+                        <Suspense fallback={<p>Profile fallback</p>}>
+                            <ProfileInfo handle={bitcoiner.handle} followingItems={followingItems} followerItems={followerItems} totalAmountandLockLiked={bitcoiner.totalAmountandLockLiked} created_at={bitcoiner.created_at} />
+                        </Suspense>
+                        
 
                         <ul className="mt-1 flex justify-evenly">
                             <li
