@@ -1,6 +1,6 @@
 
 import { Suspense } from "react";
-import Loading from "@/app/(home)/loading";
+import Loading from "@/app/loading";
 import SublockerFeed from "@/app/components/feeds/sublockers/SublockerFeed";
 import { getSubTopPosts } from "@/app/utils/sublockers/get-sub-top-posts";
 import { getSubLatestPosts } from "@/app/utils/sublockers/get-sub-latest-posts";

@@ -65,7 +65,10 @@ export default async function RootLayout({
           <WalletContextProvider>
             <ProgressBarProvider>
               <NavBar />
-              {children}
+              <Suspense fallback={<p>test</p>}>
+                {children}
+              </Suspense>
+              
               <Toaster richColors position="top-center" />
               <Analytics />
               <AppBar />

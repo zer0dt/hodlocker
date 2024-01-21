@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { Suspense } from "react";
-import Loading from "./Loading";
+import Loading from "../loading";
 import SublockerFeed from "../components/feeds/sublockers/SublockerFeed";
 import TopFeed from "../components/feeds/TopFeed";
 import Pagination from "../components/feeds/sorting-utils/Pagination";
