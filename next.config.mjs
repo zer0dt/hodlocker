@@ -5,9 +5,6 @@ import webpack from "webpack";
 const nextConfig = {
   staticPageGenerationTimeout: 3000,
   swcMinify: true,
-  experimental: {
-    ppr: true,
-  },
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [

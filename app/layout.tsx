@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Roboto_Flex } from 'next/font/google'
 
 import { WalletContextProvider } from './context/WalletContextProvider'
+import ProgressBarProvider from './context/ProgressBarProvider'
 
 import NavBar from './components/navbar/NavBar'
 import AppBar from './components/appbar/AppBar'
@@ -10,8 +11,6 @@ import AppBar from './components/appbar/AppBar'
 import { Toaster } from 'sonner';
 
 import { Analytics } from '@vercel/analytics/react';
-import { Suspense } from 'react'
-import Loading from './(home)/loading'
 
 
 const inter = Roboto_Flex({ subsets: ['latin'] })
@@ -37,17 +36,16 @@ export default async function RootLayout({
     <html lang="en" style={{ scrollBehavior: 'smooth' }}>
 
       <body className={inter.className}>
-        <Suspense fallback={<Loading />}>
-          <WalletContextProvider>
-           
-              <NavBar />
-              {children}
-              <Toaster richColors position="top-center" />
-              <Analytics />
-              <AppBar />
-           
-          </WalletContextProvider>
-        </Suspense>
+
+        <WalletContextProvider>
+          <ProgressBarProvider>
+            <NavBar />
+            {children}
+            <Toaster richColors position="top-center" />
+            <Analytics />
+            <AppBar />
+          </ProgressBarProvider>
+        </WalletContextProvider>
 
       </body>
     </html>
