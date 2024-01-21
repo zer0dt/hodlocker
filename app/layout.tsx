@@ -3,7 +3,6 @@ import type { Metadata } from 'next'
 import { Roboto_Flex } from 'next/font/google'
 
 import { WalletContextProvider } from './context/WalletContextProvider'
-import ProgressBarProvider from './context/ProgressBarProvider'
 
 import NavBar from './components/navbar/NavBar'
 import AppBar from './components/appbar/AppBar'
@@ -40,13 +39,13 @@ export default async function RootLayout({
       <body className={inter.className}>
         <Suspense fallback={<Loading />}>
           <WalletContextProvider>
-            <ProgressBarProvider>
+           
               <NavBar />
               {children}
               <Toaster richColors position="top-center" />
               <Analytics />
               <AppBar />
-            </ProgressBarProvider>
+           
           </WalletContextProvider>
         </Suspense>
 
