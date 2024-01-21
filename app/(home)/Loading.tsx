@@ -1,5 +1,6 @@
+'use server'
 
-export default function Loading() {
+export default async function Loading() {
    
     return (
         <div className="text-center py-32"> 

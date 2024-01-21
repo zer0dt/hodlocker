@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 
 import Disclaimer from "@/app/components/Disclaimer";
 
-import Loading from "../../../(home)/loading";
+import Loading from "../../../(home)/Loading";
 
 import SublockerFeedBar from "./sublockerFeedBar";
 import SublockerFeeds from "./sublockerFeeds";
@@ -39,9 +39,7 @@ export default async function SublockerPage({ params, searchParams }: SublockerP
 
         <div className="w-full">
           <div className="flex justify-center">
-            <Suspense fallback={<Loading />}>
               <SublockerFeeds params={params} searchParams={searchParams} />
-            </Suspense>
           </div>
         </div>
 
