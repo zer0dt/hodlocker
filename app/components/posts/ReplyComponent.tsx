@@ -54,7 +54,7 @@ function formatNote(note: string) {
   const mentionRegex = /@([a-zA-Z0-9_-]+)|\[@([a-zA-Z0-9_-]+)\]/g;
   formattedNote = formattedNote.replace(mentionRegex, (match, p1, p2) => {
       const handle = p1 || p2;
-      return `<a href="/user/${handle}" target="_blank" rel="noopener noreferrer"><span class="text-orange-400">@${handle}</span></a>`;
+      return `<a href="/${handle}"><span class="text-orange-400">@${handle}</span></a>`;
   });
   
   return DOMPurify.sanitize(formattedNote, { ADD_TAGS: ["iframe"], ADD_ATTR: ['allow', 'frameborder', 'allowfullscreen'] });
