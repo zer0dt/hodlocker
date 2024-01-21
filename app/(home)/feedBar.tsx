@@ -39,7 +39,7 @@ export default function FeedBar() {
                 <SortingDropdown sub={activeSub} tab={activeTab} sort={activeSort} filter={activeFilter ? parseFloat(activeFilter) : 0} />
             </li>
 
-            <Link prefetch={false} href={`/?tab=subs&sort=${activeSort}&filter=${activeFilter}`}>
+            <Link href={`/?tab=subs&sort=${activeSort}&filter=${activeFilter}`}>
                 <li
                     className={
                         activeTab == "subs" ? activeClassName : notActiveClassName
@@ -52,7 +52,7 @@ export default function FeedBar() {
                 </li>
             </Link>
 
-            <Link prefetch={false} href={`/?tab=top&sort=${activeSort}&filter=${activeFilter}`}>
+            <Link href={`/?tab=top&sort=${activeSort}&filter=${activeFilter}`}>
                 <li
                     className={
                         activeTab == "top" ? activeClassName : notActiveClassName
@@ -64,7 +64,7 @@ export default function FeedBar() {
                 </li>
             </Link>
 
-            <Link prefetch={false} href={`/?tab=latest&sort=${activeSort}&filter=${activeFilter}`}>
+            <Link href={`/?tab=latest&sort=${activeSort}&filter=${activeFilter}`}>
                 <li
                     className={
                         activeTab == "latest" ? activeClassName : notActiveClassName
@@ -76,7 +76,7 @@ export default function FeedBar() {
                 </li>
             </Link>
 
-            <Link prefetch={false} href={`/?tab=trending&sort=${activeSort}&filter=${activeFilter}`}>
+            <Link href={`/?tab=trending&sort=${activeSort}&filter=${activeFilter}`}>
                 <li
                     className={
                         activeTab == "trending" ? activeClassName : notActiveClassName
@@ -88,7 +88,7 @@ export default function FeedBar() {
                 </li>
             </Link>
 
-            <Link prefetch={false} href="/?tab=leaderboard&ranked=liked">
+            <Link href="/?tab=leaderboard&ranked=liked">
                 <li
                     className={
                         activeTab == "leaderboard"
