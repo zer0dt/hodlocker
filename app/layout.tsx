@@ -11,6 +11,8 @@ import AppBar from './components/appbar/AppBar'
 import { Toaster } from 'sonner';
 
 import { Analytics } from '@vercel/analytics/react';
+import { Suspense } from 'react'
+import Loading from './(home)/loading'
 
 
 const inter = Roboto_Flex({ subsets: ['latin'] })
@@ -33,22 +35,22 @@ export default async function RootLayout({
 }) {
 
   return (
-    <html lang="en" style={{scrollBehavior:'smooth'}}> 
+    <html lang="en" style={{ scrollBehavior: 'smooth' }}>
 
-        <body className={inter.className}>
-                         
-              <WalletContextProvider>
-                <ProgressBarProvider>
-                  <NavBar />                 
-                    {children}
-          
-                    <Toaster richColors position="top-center" />
-                    <Analytics />
-                    <AppBar />   
-                </ProgressBarProvider>                
-              </WalletContextProvider>  
-              
-        </body>       
+      <body className={inter.className}>
+        <Suspense fallback={<Loading />}>
+          <WalletContextProvider>
+            <ProgressBarProvider>
+              <NavBar />
+              {children}
+              <Toaster richColors position="top-center" />
+              <Analytics />
+              <AppBar />
+            </ProgressBarProvider>
+          </WalletContextProvider>
+        </Suspense>
+
+      </body>
     </html>
   )
 }
