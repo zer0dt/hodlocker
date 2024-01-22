@@ -49,13 +49,12 @@ function enrichItem(item: HODLTransactions): any {
     }
 }
 
-async function fetchTransactions(
+const fetchTransactions = async function cache(
     sort: string,
     filter: number,
     page: number,
     limit: number
 ): Promise<HODLTransactions[]> {
-    "use server";
 
     const currentBlockHeight = await fetchCurrentBlockHeight();
 
