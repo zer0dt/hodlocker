@@ -191,7 +191,7 @@ export default async function TrendingFeed({ searchParams }: TrendingFeedProps) 
     return (
         activeTab == "trending" ? 
         <div className="grid grid-cols-1 gap-0 w-full lg:w-96 pb-20">
-            {
+            { latestPosts ?
                 latestPosts.filter(Boolean).map((item) => {
                     return (
                         <PostComponent
@@ -200,7 +200,7 @@ export default async function TrendingFeed({ searchParams }: TrendingFeedProps) 
                             postLockLike={postLockLike}
                         />
                     );
-                })
+                }) : null
             }
         </div> : null
     )
