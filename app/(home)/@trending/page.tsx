@@ -186,13 +186,13 @@ export default async function TrendingFeed({ searchParams }: TrendingFeedProps) 
 
     const currentPage = searchParams.page || 1;
 
-    const latestPosts = activeTab == "trending" ? await getTrendingPosts(activeSort, activeFilter, currentPage, 30) : null
+    const trendingPosts = activeTab == "trending" ? await getTrendingPosts(activeSort, activeFilter, currentPage, 30) : null
 
     return (
         activeTab == "trending" ? 
         <div className="grid grid-cols-1 gap-0 w-full lg:w-96 pb-20">
-            { latestPosts ?
-                latestPosts.filter(Boolean).map((item) => {
+            { trendingPosts ?
+                trendingPosts.filter(Boolean).map((item) => {
                     return (
                         <PostComponent
                             key={item.txid}
