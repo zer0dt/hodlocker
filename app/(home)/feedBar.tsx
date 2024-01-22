@@ -20,6 +20,8 @@ export default function FeedBar() {
     const activeFilter = searchParams.get("filter") || 0;
 
 
+
+
     let notActiveClassName =
         "inline-block px-3 py-1 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 border-b-2 border-transparent";
     let activeClassName =
@@ -40,11 +42,7 @@ export default function FeedBar() {
             </li>
 
             <Link href={`/?tab=subs&sort=${activeSort}&filter=${activeFilter}`}>
-                <li
-                    className={
-                        activeTab == "subs" ? activeClassName : notActiveClassName
-                    }
-                >
+                <li className={activeTab == "subs" ? activeClassName : notActiveClassName}>
                     <div className="flex">
                         <p className="text-md dark:text-white">{activeSub == "all" ? (activeSub) : ("h/" + activeSub)}</p>
                         <IoMdArrowDropdown className="mt-1" />
@@ -53,11 +51,7 @@ export default function FeedBar() {
             </Link>
 
             <Link href={`/?tab=top&sort=${activeSort}&filter=${activeFilter}`}>
-                <li
-                    className={
-                        activeTab == "top" ? activeClassName : notActiveClassName
-                    }
-                >
+                <li className={activeTab == "top" ? activeClassName : notActiveClassName}>
                     <div>
                         <p className="text-md dark:text-white">top</p>
                     </div>
@@ -65,11 +59,7 @@ export default function FeedBar() {
             </Link>
 
             <Link href={`/?tab=latest&sort=${activeSort}&filter=${activeFilter}`}>
-                <li
-                    className={
-                        activeTab == "latest" ? activeClassName : notActiveClassName
-                    }
-                >
+                <li className={activeTab == "latest" ? activeClassName : notActiveClassName}>
                     <div>
                         <p className="text-md dark:text-white">latest</p>
                     </div>
@@ -77,11 +67,7 @@ export default function FeedBar() {
             </Link>
 
             <Link href={`/?tab=trending&sort=${activeSort}&filter=${activeFilter}`}>
-                <li
-                    className={
-                        activeTab == "trending" ? activeClassName : notActiveClassName
-                    }
-                >
+                <li className={activeTab == "trending" ? activeClassName : notActiveClassName}>
                     <div>
                         <p className="text-md dark:text-white">trending</p>
                     </div>
@@ -89,13 +75,7 @@ export default function FeedBar() {
             </Link>
 
             <Link href="/?tab=leaderboard&ranked=liked">
-                <li
-                    className={
-                        activeTab == "leaderboard"
-                            ? activeClassName
-                            : notActiveClassName
-                    }
-                >
+                <li className={activeTab == "leaderboard" ? activeClassName : notActiveClassName}>
                     <div>
                         <p className="text-md dark:text-white">🏆</p>
                     </div>

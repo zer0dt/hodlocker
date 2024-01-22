@@ -7,7 +7,6 @@ import prisma from "@/app/db";
 import PostComponent from "../posts/PostComponent";
 
 
-
 export const getLatestPosts = cache(
   async (
     sort: string,

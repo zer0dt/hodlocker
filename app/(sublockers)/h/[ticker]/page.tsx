@@ -5,6 +5,7 @@ import Disclaimer from "@/app/components/Disclaimer";
 import SublockerFeedBar from "./sublockerFeedBar";
 import SublockerFeeds from "./sublockerFeeds";
 
+import Loading from "@/app/loading";
 
 interface SublockerPageProps {
   params: {
