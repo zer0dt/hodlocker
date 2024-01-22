@@ -188,7 +188,7 @@ export default function LockLikeInteraction({ postTxid, replyTxid, postLockLike 
                       onClick={(e) => { e.stopPropagation(); setPopoverVisible(true); }}
                     />
                   }                    
-                    <div ref={popoverRef} className={`absolute top-1 left-5 z-50 shadow-2xl inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 ${popoverVisible ? 'opacity-100 visible' : 'opacity-0 invisible'} bg-white border border-gray-200 rounded-lg shadow-2xl dark:text-gray-400 dark:border-gray-600 dark:bg-black flex flex-col items-center`}>
+                    <div ref={popoverRef} className={`absolute bottom-5 left-5 z-50 shadow-2xl inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 ${popoverVisible ? 'opacity-100 visible' : 'opacity-0 invisible'} bg-white border border-gray-200 rounded-lg shadow-2xl dark:text-gray-400 dark:border-gray-600 dark:bg-black flex flex-col items-center`}>
                       <div className="px-3 w-full py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-black">
                           <h3 className="font-semibold text-center text-gray-900 dark:text-white">lock it up</h3>
                       </div>

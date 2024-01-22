@@ -5,6 +5,7 @@ import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import { postLockLike } from "@/app/server-actions";
 import prisma from "@/app/db";
 import PostComponent from "@/app/components/posts/PostComponent";
+import Pagination from "@/app/components/feeds/sorting-utils/Pagination";
 
 export const getLatestPosts = cache(
     async (
@@ -171,7 +172,8 @@ export default async function LatestFeed({ searchParams }: LatestFeedProps) {
         const latestPosts = await getLatestPosts(activeSort, activeFilter, currentPage, 30)
 
         return (
-            <div className="grid grid-cols-1 gap-0 w-full lg:w-96 pb-20">
+            <>
+                <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
                 {
                     latestPosts.map((transaction) => (
                         <PostComponent
@@ -183,6 +185,11 @@ export default async function LatestFeed({ searchParams }: LatestFeedProps) {
                 }
 
             </div>
+            <div>
+                <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} />
+            </div>
+            </>
+            
         )
     } else {
         return (

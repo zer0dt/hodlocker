@@ -13,32 +13,24 @@ export default async function Layout(props: {
 
   return (
     <main className="pb-24 flex flex-col items-center justify-center pt-2 lg:p-12 lg:pt-6">
-        <div className="text-md font-medium text-gray-500 border-b border-gray-200 dark:text-white dark:border-gray-700">
-          <Suspense fallback={<p>🔒</p>}>
-            <FeedBar />
-          </Suspense>
-        </div>
+      <div className="text-md font-medium text-gray-500 border-b border-gray-200 dark:text-white dark:border-gray-700">
+        <Suspense fallback={<p>🔒</p>}>
+          <FeedBar />
+        </Suspense>
+      </div>
 
-        <div className="w-full">
-          <div className="flex justify-center">
-      
-              {props.sublockers}
-     
-   
-            {props.top}
-       
-          
-            {props.latest}
-          
-      
-            {props.trending}
-        
-   
-            {props.leaderboard}
-        
-          </div>
-        </div>
+      <div className="w-full">
+        <div className="justify-center">
 
-      </main>
+          {props.sublockers}
+          {props.top}
+          {props.latest}
+          {props.trending}
+          {props.leaderboard}
+
+        </div>
+      </div>
+
+    </main>
   )
 }

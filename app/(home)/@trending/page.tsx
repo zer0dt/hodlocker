@@ -4,6 +4,7 @@ import prisma from "@/app/db";
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import { HODLTransactions, postLockLike } from "@/app/server-actions";
 import PostComponent from "@/app/components/posts/PostComponent";
+import Pagination from "@/app/components/feeds/sorting-utils/Pagination";
 
 
 function enrichItem(item: HODLTransactions): any {
@@ -187,22 +188,27 @@ export default async function TrendingFeed({ searchParams }: TrendingFeedProps) 
         const trendingPosts = await getTrendingPosts(activeSort, activeFilter, currentPage, 30)
 
         return (
-            <div className="grid grid-cols-1 gap-0 w-full lg:w-96 pb-20">
-                {
-                    trendingPosts.filter(Boolean).map((item) => {
-                        return (
-                            <PostComponent
-                                key={item.txid}
-                                transaction={item}
-                                postLockLike={postLockLike}
-                            />
-                        );
-                    })
-                }
-            </div>
+            <>
+                <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
+                    {
+                        trendingPosts.filter(Boolean).map((item) => {
+                            return (
+                                <PostComponent
+                                    key={item.txid}
+                                    transaction={item}
+                                    postLockLike={postLockLike}
+                                />
+                            );
+                        })
+                    }
+                </div>
+                <div>
+                    <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} />
+                </div>
+            </>
         )
     } else {
-        return (     
+        return (
             null
         )
     }

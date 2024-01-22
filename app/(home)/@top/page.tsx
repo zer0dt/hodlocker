@@ -3,6 +3,7 @@ import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import { postLockLike } from '@/app/server-actions'
 import prisma from '@/app/db';
 import PostComponent from '@/app/components/posts/PostComponent';
+import Pagination from '@/app/components/feeds/sorting-utils/Pagination';
 
 
 
@@ -137,19 +138,26 @@ export default async function TopFeed({ searchParams }: TopFeedProps) {
         const topPosts = await getTopPosts(activeSort, activeFilter, currentPage, 30)
 
         return (
-            <div className="grid grid-cols-1 gap-0 w-full lg:w-96 pb-20">
-                {
-                    topPosts.map((transaction) => (
-                        <PostComponent
-                            key={transaction.txid} // Assuming transaction has an 'id' field
-                            transaction={transaction}
-                            postLockLike={postLockLike}
-                        />
-                    ))
-                }
+            <>
+                <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
+                    {
+                        topPosts.map((transaction) => (
+                            <PostComponent
+                                key={transaction.txid} // Assuming transaction has an 'id' field
+                                transaction={transaction}
+                                postLockLike={postLockLike}
+                            />
+                        ))
+                    }
 
-            </div>
+                </div>
+                <div>
+                    <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} />
+                </div>
+            </>
         )
+
+
     } else {
         return (
             null
