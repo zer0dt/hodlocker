@@ -1,11 +1,11 @@
 import React from "react";
 import Link from "next/link";
 
-import { getBitcoinersforLocked, getBitcoinersforLiked } from "../../../utils/get-bitcoiners-leaderboard"
+import { getBitcoinersforLocked, getBitcoinersforLiked } from "@/app/utils/get-bitcoiners-leaderboard"
 
 import { PiUserSwitchBold } from "react-icons/pi";
 
-import LoggedInLeaderboard from "./LoggedInLeaderboard";
+import LoggedInLeaderboard from "@/app/(home)/@leaderboard/LoggedInLeaderboard";
 
 import Image from 'next/image'
 import { SiBitcoinsv } from "react-icons/si";

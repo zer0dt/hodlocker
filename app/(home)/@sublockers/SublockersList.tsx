@@ -8,22 +8,18 @@ import { SiBitcoinsv } from "react-icons/si";
 
 import { createNewTag } from "@/app/server-actions";
 import { toast } from "sonner";
-import { useSearchParams } from "next/navigation";
 
 interface SublockersProps {
+  searchParams: {
+    filter: string
+  }
   coinTags: any,
   topicTags: any,
 }
 
-export default function Sublockers({ coinTags, topicTags }: SublockersProps) {
+export default function Sublockers({ searchParams, coinTags, topicTags }: SublockersProps) {
 
-  const searchParams = useSearchParams()
-
-  const activeTab = searchParams.get('tab') || "trending";
-
-  const activeSort = searchParams.get("sort") || "year";
-
-  const activeFilter = searchParams.get("filter") || 0;
+  const activeFilter = searchParams.filter || 0;
 
   const sortedCoinTags = [...coinTags].sort((a, b) => b.totalAmountLocked - a.totalAmountLocked);
   const sortedTopicTags = [...topicTags].sort((a, b) => b.totalAmountLocked - a.totalAmountLocked);
