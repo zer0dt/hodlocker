@@ -1,7 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Roboto_Flex } from 'next/font/google'
-import { Alumni_Sans } from 'next/font/google'
 
 import { WalletContextProvider } from './context/WalletContextProvider'
 import ProgressBarProvider from './context/ProgressBarProvider'
@@ -16,8 +15,6 @@ import { Suspense } from 'react'
 
 
 const inter = Roboto_Flex({ subsets: ['latin'] })
-const inter2 = Alumni_Sans({ subsets: ['latin'] })
-
 
 export const metadata: Metadata = {
   metadataBase: new URL('http://localhost:3000'),
