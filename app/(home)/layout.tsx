@@ -20,7 +20,7 @@ export default async function Layout(props: {
       </div>
 
       <div className="w-full">
-        <div className="justify-center">
+        <div className="flex justify-center">
 
           {props.sublockers}
           {props.top}

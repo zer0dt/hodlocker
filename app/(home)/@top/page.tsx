@@ -138,23 +138,18 @@ export default async function TopFeed({ searchParams }: TopFeedProps) {
         const topPosts = await getTopPosts(activeSort, activeFilter, currentPage, 30)
 
         return (
-            <>
-                <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
-                    {
-                        topPosts.map((transaction) => (
-                            <PostComponent
-                                key={transaction.txid} // Assuming transaction has an 'id' field
-                                transaction={transaction}
-                                postLockLike={postLockLike}
-                            />
-                        ))
-                    }
-
-                </div>
-                <div>
-                    <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} />
-                </div>
-            </>
+            <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
+                {
+                    topPosts.map((transaction) => (
+                        <PostComponent
+                            key={transaction.txid} // Assuming transaction has an 'id' field
+                            transaction={transaction}
+                            postLockLike={postLockLike}
+                        />
+                    ))
+                }
+                <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} />
+            </div>
         )
 
 

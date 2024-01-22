@@ -188,24 +188,20 @@ export default async function TrendingFeed({ searchParams }: TrendingFeedProps) 
         const trendingPosts = await getTrendingPosts(activeSort, activeFilter, currentPage, 30)
 
         return (
-            <>
-                <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
-                    {
-                        trendingPosts.filter(Boolean).map((item) => {
-                            return (
-                                <PostComponent
-                                    key={item.txid}
-                                    transaction={item}
-                                    postLockLike={postLockLike}
-                                />
-                            );
-                        })
-                    }
-                </div>
-                <div>
-                    <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} />
-                </div>
-            </>
+            <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
+                {
+                    trendingPosts.filter(Boolean).map((item) => {
+                        return (
+                            <PostComponent
+                                key={item.txid}
+                                transaction={item}
+                                postLockLike={postLockLike}
+                            />
+                        );
+                    })
+                }
+                <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} />
+            </div>
         )
     } else {
         return (

@@ -28,7 +28,7 @@ const Pagination = ({ handle, currentPage, tab, sort, filter }: PaginationProps)
   const prevLink = "/" + (handle ? handle : "") +  "?tab=" + tab + "&sort=" + sort + "&filter=" + filter + "&page=" + (Number(currentPage) - 1);
 
   return (
-    <div className="pt-4 px-4 flex justify-between">
+    <div className="pt-4 px-4 mb-8 flex justify-between">
       {currentPage > 1 ? (
         <Link key={"prev" + currentPage} onClick={scrollTop} scroll={true} href={prevLink}>
           <button className="relative inline-flex items-center justify-center p-0.5 mb-2 ml-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-orange-600 to-orange-300 group-hover:from-orange-600 group-hover:to-orange-300 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800">

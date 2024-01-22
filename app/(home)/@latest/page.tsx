@@ -172,8 +172,7 @@ export default async function LatestFeed({ searchParams }: LatestFeedProps) {
         const latestPosts = await getLatestPosts(activeSort, activeFilter, currentPage, 30)
 
         return (
-            <>
-                <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
+            <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
                 {
                     latestPosts.map((transaction) => (
                         <PostComponent
@@ -183,13 +182,8 @@ export default async function LatestFeed({ searchParams }: LatestFeedProps) {
                         />
                     ))
                 }
-
-            </div>
-            <div>
                 <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} />
             </div>
-            </>
-            
         )
     } else {
         return (
@@ -197,5 +191,5 @@ export default async function LatestFeed({ searchParams }: LatestFeedProps) {
         );
     }
 
-    
+
 }
