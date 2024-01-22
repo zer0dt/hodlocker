@@ -178,7 +178,7 @@ interface TrendingFeedProps {
 
 export default async function TrendingFeed({ searchParams }: TrendingFeedProps) {
 
-    const activeTab = searchParams.tab || "trending"
+    const activeTab = searchParams.tab
 
     const activeSort = searchParams.sort || "week";
 
