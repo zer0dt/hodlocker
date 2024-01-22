@@ -1,7 +1,7 @@
 
 import { Suspense } from "react";
 import Loading from "@/app/loading";
-import SublockerFeed from "@/app/components/feeds/sublockers/SublockerFeed";
+import SublockerFeed from "@/app/(home)/@sublockers/page";
 import { getSubTopPosts } from "@/app/utils/sublockers/get-sub-top-posts";
 import { getSubLatestPosts } from "@/app/utils/sublockers/get-sub-latest-posts";
 import { getSubTrendingPosts } from "@/app/utils/sublockers/get-sub-trending-posts";
@@ -42,7 +42,7 @@ export default async function SublockerFeeds({ params, searchParams }: Sublocker
                     key={activeSort + activeFilter + activeTab + currentPage}
                     fallback={<Loading />}
                   >
-                    <SublockerFeed />
+                    <SublockerFeed searchParams={searchParams} />
                   </Suspense>
                 </div>
               )} 

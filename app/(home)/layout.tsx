@@ -21,19 +21,19 @@ export default function Layout(props: {
 
         <div className="w-full">
           <div className="flex justify-center">
-            <Suspense fallback={<Loading />}>
+            <Suspense key="sublockers" fallback={<Loading />}>
               {props.sublockers}
             </Suspense>
-            <Suspense fallback={<Loading />}>
+            <Suspense key="top" fallback={<Loading />}>
             {props.top}
             </Suspense>
-            <Suspense fallback={<Loading />}>
+            <Suspense key="latest" fallback={<Loading />}>
             {props.latest}
             </Suspense>
-            <Suspense fallback={<Loading />}>
+            <Suspense key="trending" fallback={<Loading />}>
             {props.trending}
             </Suspense>
-            <Suspense fallback={<Loading />}>
+            <Suspense key="leaderboard" fallback={<Loading />}>
             {props.leaderboard}
             </Suspense>   
           </div>
