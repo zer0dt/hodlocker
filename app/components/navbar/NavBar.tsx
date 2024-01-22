@@ -29,7 +29,7 @@ export default async function NavBar() {
     <>
       <nav className="bg-gray border-gray-200">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
-          <Link href="/?tab=latest&sort=day" className="flex-1 flex justify-start lg:justify-start items-center lg:px-16">
+          <Link href="/" className="flex-1 flex justify-start lg:justify-start items-center lg:px-16">
             <h1 className={inter.className}><span className="pl-4 text-4xl font-bold dark:text-white">HL</span></h1>
           </Link>
 
