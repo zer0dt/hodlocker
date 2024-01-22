@@ -42,9 +42,6 @@ export default async function RootLayout({
       <div className="flex items-center justify-center min-h-screen">
 
         <div className="flex flex-col items-center space-x-2">
-          <h1 className={inter2.className + " pb-4"}>
-            <span className="pl-4 text-4xl font-bold dark:text-white">HL</span>
-          </h1>
           <div className="flex items-center space-x-2">
             <Infinity />
           </div>

@@ -3,11 +3,11 @@
 import React from 'react'
 
 import UseAnimations from "react-useanimations";
-import infinity from 'react-useanimations/lib/infinity';
+import loading2 from 'react-useanimations/lib/loading2';
 
 export default function Infinity() {
    
     return (
-        <UseAnimations animation={infinity} size={56} />
+        <UseAnimations animation={loading2} size={100} strokeColor={"rgb(251, 146, 0)"} fillColor={"rgb(251, 146, 0)"} />
     )
   }
