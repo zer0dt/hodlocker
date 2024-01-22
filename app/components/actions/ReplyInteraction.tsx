@@ -11,7 +11,6 @@ import { postNewBitcoiner, postNewReply, HODLTransactions, getAllBitcoinerHandle
 import { postAnonReply } from "./anon-reply-server-action"
 import { getLockupScript } from '../../utils/scrypt';
 import { WalletContext } from '../../context/WalletContextProvider';
-import { bsv } from 'scrypt-ts';
 
 import { toast } from 'sonner';
 import { Mention, MentionsInput, SuggestionDataItem } from 'react-mentions';
@@ -67,17 +66,6 @@ export default function replyInteraction({ transaction }: deployProps) {
     }
     isDarkMode()
   }, [])
-
-
-  useEffect(() => {
-    if (handle && pubkey) {
-      const publicKey = bsv.PublicKey.fromHex(pubkey)
-      let address = bsv.Address.fromPublicKey(publicKey)
-
-      console.log("pubkey address: ", address.toString())
-    }
-
-  }, [pubkey]);
 
   useEffect(() => {
     const fetchBitcoiners = async () => {

@@ -1,5 +1,6 @@
 import { cache } from 'react'
-import { fetchCurrentBlockHeight, postLockLike } from '@/app/server-actions'
+import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
+import { postLockLike } from '@/app/server-actions'
 import prisma from '@/app/db';
 import PostComponent from '@/app/components/posts/PostComponent';
 
@@ -132,12 +133,12 @@ export default async function TopFeed({ searchParams }: TopFeedProps) {
 
     const currentPage = searchParams.page || 1;
 
-    const topPosts = activeTab == "top" ? await getTopPosts(activeSort, activeFilter, currentPage, 30) : null
+    if (activeTab == "top") {
+        const topPosts = await getTopPosts(activeSort, activeFilter, currentPage, 30)
 
-    return (
-        activeTab == "top" ?
+        return (
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96 pb-20">
-                {topPosts ? (
+                {
                     topPosts.map((transaction) => (
                         <PostComponent
                             key={transaction.txid} // Assuming transaction has an 'id' field
@@ -145,8 +146,13 @@ export default async function TopFeed({ searchParams }: TopFeedProps) {
                             postLockLike={postLockLike}
                         />
                     ))
-                ) : null
                 }
-            </div> : null
-    )
+
+            </div>
+        )
+    } else {
+        return (
+            null
+        )
+    }
 }

@@ -1,5 +1,5 @@
 
-import { getBitcoinerLikedData } from "@/app/utils/get-bitcoiners-leaderboard";
+import { getBitcoinerLikedData } from "@/app/utils/get-bitcoiner-total-liked";
 import { NextRequest } from "next/server";
 
 export const revalidate = 600

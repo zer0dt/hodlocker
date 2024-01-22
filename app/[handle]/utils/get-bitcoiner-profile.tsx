@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { fetchCurrentBlockHeight } from "../../server-actions";
+import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import prisma from "../../db";
 
 export const dynamic = "force-dynamic";

@@ -1,11 +1,13 @@
 import { cache } from 'react'
-import { fetchCurrentBlockHeight } from '../server-actions'
+import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import prisma from '../db';
  
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 export const getAllBitcoinLocked = cache(async (): Promise<number> => {
     const currentBlockHeight = await fetchCurrentBlockHeight();
+
+    console.log("getting bitcoin locked")
   
     const bitcoiners = await prisma.bitcoiner.findMany({
         include: {
@@ -53,6 +55,7 @@ export const getAllBitcoinLocked = cache(async (): Promise<number> => {
         totalLockedBitcoin += totalLockedForBitcoiner;
     });
 
+    console.log(totalLockedBitcoin + " bitcoin locked")
     return totalLockedBitcoin;
   });
 

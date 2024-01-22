@@ -21,21 +21,21 @@ export default async function Layout(props: {
 
         <div className="w-full">
           <div className="flex justify-center">
-            <Suspense key="sublockers" fallback={<Loading />}>
+      
               {props.sublockers}
-            </Suspense>
-            <Suspense key="top" fallback={<Loading />}>
+     
+   
             {props.top}
-            </Suspense>
-            <Suspense key="latest" fallback={<Loading />}>
+       
+          
             {props.latest}
-            </Suspense>
-            <Suspense key="trending" fallback={<Loading />}>
+          
+      
             {props.trending}
-            </Suspense>
-            <Suspense key="leaderboard" fallback={<Loading />}>
+        
+   
             {props.leaderboard}
-            </Suspense>   
+        
           </div>
         </div>
 

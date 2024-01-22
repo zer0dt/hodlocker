@@ -2,7 +2,7 @@
 import React from 'react'
 import TransactionHistory from "./TransactionHistory";
 import { getBitcoinerLockedTxs } from './getBitcoinerLockedTxs';
-import { fetchCurrentBlockHeight } from '@/app/server-actions';
+import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 
 interface HandleDetailsProps {
     params: {

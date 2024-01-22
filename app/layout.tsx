@@ -52,8 +52,9 @@ export default async function RootLayout({
     <html lang="en" style={{ scrollBehavior: 'smooth' }}>
 
       <body className={inter.className}>
-        <Suspense fallback={fallback()}>
+        
           <WalletContextProvider>
+          <Suspense fallback={fallback()}>
             <ProgressBarProvider>
               <NavBar />
               {children}
@@ -61,8 +62,9 @@ export default async function RootLayout({
               <Analytics />
               <AppBar />
             </ProgressBarProvider>
+            </Suspense>
           </WalletContextProvider>
-        </Suspense>
+       
 
 
 

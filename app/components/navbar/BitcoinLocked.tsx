@@ -3,12 +3,11 @@ import { getAllBitcoinLocked } from '@/app/utils/get-all-bitcoin-locked';
 
 import { SiBitcoinsv } from 'react-icons/si';
 
+export const revalidate = 60
 
 export default async function BitcoinLocked() {
 
     const bitcoinLocked = await getAllBitcoinLocked()
-
-    console.log(bitcoinLocked.toFixed(2) + " total bitcoin locked")
 
     return (
         <span id="badge-dismiss-dark" className="inline-flex items-center px-2 py-1 mr-1 text-sm font-medium text-black bg-gray-100 rounded dark:bg-gray-700 dark:text-white">

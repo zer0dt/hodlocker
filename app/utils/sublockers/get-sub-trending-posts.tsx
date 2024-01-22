@@ -1,10 +1,7 @@
 import { cache } from "react";
 import prisma from "../../db";
-import {
-  HODLTransactions,
-  fetchCurrentBlockHeight,
-  postLockLike,
-} from "../../server-actions";
+import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
+import { HODLTransactions, postLockLike } from "../../server-actions";
 import PostComponent from "../../components/posts/PostComponent";
 import ReplyComponent from "../../components/posts/ReplyComponent";
 

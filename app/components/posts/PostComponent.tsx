@@ -179,7 +179,7 @@ function Post({ transaction, postLockLike }: PostProps) {
       }
   
       try {
-        const response = await fetch(`/api/bitcoiners/liked/${handle}`);
+        const response = await fetch(`/api/bitcoiners/liked/${handle}`, { next: { revalidate: 600 }});
   
         if (!response.ok) {
           throw new Error('Network response was not ok');

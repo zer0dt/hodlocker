@@ -21,10 +21,8 @@ interface LeaderboardProps {
 export default async function Leaderboard({ searchParams }: LeaderboardProps) {
 
     const activeTab = searchParams.tab || "trending"
-
     const ranked = searchParams.ranked || "liked"
-    const bitcoiners = activeTab == "leaderboard" ? ((ranked == "locked") ? await getBitcoinersforLocked() : await getBitcoinersforLiked()) : null
-
+    
     const getStatusEmoji = (bitcoin: number) => {
         if (bitcoin >= 1000) return "🧿"; // Evil eye
         if (bitcoin >= 750) return "🏦"; // Bank
@@ -74,10 +72,12 @@ export default async function Leaderboard({ searchParams }: LeaderboardProps) {
         return avatarUrl
     }
 
+    if (activeTab == "leaderboard") {
 
-    return (
-        activeTab == "leaderboard" ? 
-        <div>
+        const bitcoiners = ranked == "locked" ? await getBitcoinersforLocked() : await getBitcoinersforLiked()
+
+        return (
+            <div>
             <table className="w-full text-md text-gray-500 dark:text-gray-400">
                 <thead className="text-sm w-full text-gray-700 uppercase bg-gray-50 dark:bg-black dark:text-white">
                     <tr>
@@ -162,6 +162,11 @@ export default async function Leaderboard({ searchParams }: LeaderboardProps) {
                     ))}
                 </tbody>
             </table>
-        </div> : null
-    );
+        </div>
+        )
+    } else {
+        return (
+            null
+        );
+    }
 }

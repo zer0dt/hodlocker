@@ -133,14 +133,6 @@ export default function DeployInteraction({
     }
   }, [params]);
 
-  useEffect(() => {
-    if (handle && pubkey) {
-      const publicKey = bsv.PublicKey.fromHex(pubkey);
-      let address = bsv.Address.fromPublicKey(publicKey);
-
-      console.log("pubkey address: ", address.toString());
-    }
-  }, [pubkey]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

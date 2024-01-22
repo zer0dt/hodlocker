@@ -1,7 +1,7 @@
 
 import { getAllBitcoinLocked } from '@/app/utils/get-all-bitcoin-locked';
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 export async function GET(request: Request) {
     const bitcoinLocked = await getAllBitcoinLocked()

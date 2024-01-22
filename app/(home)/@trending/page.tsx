@@ -1,11 +1,8 @@
 
 import { cache } from "react";
 import prisma from "@/app/db";
-import {
-    HODLTransactions,
-    fetchCurrentBlockHeight,
-    postLockLike,
-} from "@/app/server-actions";
+import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
+import { HODLTransactions, postLockLike } from "@/app/server-actions";
 import PostComponent from "@/app/components/posts/PostComponent";
 
 
@@ -186,22 +183,27 @@ export default async function TrendingFeed({ searchParams }: TrendingFeedProps) 
 
     const currentPage = searchParams.page || 1;
 
-    const trendingPosts = activeTab == "trending" ? await getTrendingPosts(activeSort, activeFilter, currentPage, 30) : null
+    if (activeTab == "trending") {
+        const trendingPosts = await getTrendingPosts(activeSort, activeFilter, currentPage, 30)
 
-    return (
-        activeTab == "trending" ? 
-        <div className="grid grid-cols-1 gap-0 w-full lg:w-96 pb-20">
-            { trendingPosts ?
-                trendingPosts.filter(Boolean).map((item) => {
-                    return (
-                        <PostComponent
-                            key={item.txid}
-                            transaction={item}
-                            postLockLike={postLockLike}
-                        />
-                    );
-                }) : null
-            }
-        </div> : null
-    )
+        return (
+            <div className="grid grid-cols-1 gap-0 w-full lg:w-96 pb-20">
+                {
+                    trendingPosts.filter(Boolean).map((item) => {
+                        return (
+                            <PostComponent
+                                key={item.txid}
+                                transaction={item}
+                                postLockLike={postLockLike}
+                            />
+                        );
+                    })
+                }
+            </div>
+        )
+    } else {
+        return (     
+            null
+        )
+    }
 }

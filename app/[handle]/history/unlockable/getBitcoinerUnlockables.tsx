@@ -1,5 +1,6 @@
 import { cache } from 'react'
-import { HODLBitcoiners, fetchCurrentBlockHeight } from '../../../server-actions'
+import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
+import { HODLBitcoiners } from '../../../server-actions'
 import prisma from '../../../db';
 
 export const dynamic = 'force-dynamic'

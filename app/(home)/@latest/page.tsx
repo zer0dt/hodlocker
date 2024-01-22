@@ -1,10 +1,8 @@
 import React from "react";
 
 import { cache } from "react";
-import {
-    fetchCurrentBlockHeight,
-    postLockLike,
-} from "@/app/server-actions";
+import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
+import { postLockLike } from "@/app/server-actions";
 import prisma from "@/app/db";
 import PostComponent from "@/app/components/posts/PostComponent";
 
@@ -169,22 +167,28 @@ export default async function LatestFeed({ searchParams }: LatestFeedProps) {
 
     const currentPage = searchParams.page || 1;
 
-    const latestPosts = activeTab == "latest" ? await getLatestPosts(activeSort, activeFilter, currentPage, 30) : null
+    if (activeTab == "latest") {
+        const latestPosts = await getLatestPosts(activeSort, activeFilter, currentPage, 30)
 
-    return (
-        activeTab === "latest" ? (
+        return (
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96 pb-20">
-                {latestPosts ? (
+                {
                     latestPosts.map((transaction) => (
                         <PostComponent
                             key={transaction.txid} // Assuming transaction has an 'id' field
                             transaction={transaction}
                             postLockLike={postLockLike}
                         />
-                    )
-                    )) : null                    
+                    ))
                 }
+
             </div>
-        ) : null
-    );
+        )
+    } else {
+        return (
+            null
+        );
+    }
+
+    
 }

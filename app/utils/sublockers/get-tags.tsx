@@ -1,6 +1,6 @@
 import { cache } from 'react';
 import prisma from '../../db';
-import { fetchCurrentBlockHeight } from '../../server-actions';
+import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 
 
 export const getAllTags = cache(async (type: string) => {    

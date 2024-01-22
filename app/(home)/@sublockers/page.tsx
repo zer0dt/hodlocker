@@ -14,16 +14,20 @@ export const dynamic = "force-dynamic";
 export default async function SublockerFeed({ searchParams }: SublockersFeedProps) {
     const activeTab = searchParams.tab || "trending"
 
-    const coinTags = activeTab == "subs" ? await getAllTags("coin") : null
-    const topicTags = activeTab == "subs" ? await getAllTags("topic") : null
+    if (activeTab == "subs") {
+        const coinTags = await getAllTags("coin")
+        const topicTags = await getAllTags("topic")
 
-    return (
-        activeTab === "subs" ? (
+        return (
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96 pb-20">
                 <SublockersList searchParams={searchParams} coinTags={coinTags} topicTags={topicTags} />
             </div>
-        ) : null
-    )
+        )
+    } else {
+        return (
+            null
+        )
+    }    
 }
 
 

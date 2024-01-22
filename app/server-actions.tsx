@@ -3,6 +3,8 @@
 import prisma from './db'
 import { Bitcoiner, Transactions, LockLikes, Replies } from '@prisma/client'
 
+import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
+
 import sha256 from "crypto-js/sha256";
 import hexEnc from "crypto-js/enc-hex";
 
@@ -635,30 +637,6 @@ export async function getRawTx(txid: string, retries = 20) {
   }
 };
 
-
-export async function fetchCurrentBlockHeight() {
-  const url = 'https://api.bitails.io/block/latest';
-
-  try {
-    const res = await fetch(url, {
-      method: "GET",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      mode: "cors",
-    });
-
-    if (!res.ok) {
-      console.log("fetching current blockheight failed with status code " + res.status)
-    }
-
-    const data = await res.json();
-
-    return data.height;
-  } catch (error) {
-    throw error;
-  }
-}
 
 export async function getOpReturnData(txid: string) {
   const url = `https://api.whatsonchain.com/v1/bsv/main/tx/${txid}/opreturn`;

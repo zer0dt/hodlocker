@@ -4,7 +4,7 @@
 import Script from 'next/script';
 import React, { createContext, useState, useContext } from 'react';
 
-import { fetchCurrentBlockHeight } from '../server-actions'
+import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 
 const WalletTypes = {
   None: 'NONE',
@@ -68,14 +68,7 @@ export const WalletContextProvider = ({
   const [isLinked, setIsLinked] = useState<boolean | undefined>(undefined)
   const [currentBlockHeight, setCurrentBlockHeight] = useState<number | undefined>(undefined)
 
-  const loggedInBitcoiner = {
-    handle: handle,
-    balance: userBalance,
-    paymail: paymail,
-    pubkey: pubkey
-  }
 
-  console.log(loggedInBitcoiner)
 
   const checkIfLinked = async () => {
     const isLinked = await relayone.isLinked()
@@ -86,6 +79,7 @@ export const WalletContextProvider = ({
       setIsLinked(false)
     }
 
+    console.log("going to check block height")
     const currentBlockHeight = await fetchCurrentBlockHeight()
     setCurrentBlockHeight(currentBlockHeight)
   }
@@ -108,6 +102,16 @@ export const WalletContextProvider = ({
 
       const balance = await relayone.getBalance2();
       setUserBalance((balance.satoshis / 100000000).toFixed(2).toString())
+
+      const loggedInBitcoiner = {
+        handle: data.paymail.substring(0, data.paymail.lastIndexOf("@")),
+        balance: (balance.satoshis / 100000000).toFixed(2).toString(),
+        paymail: data.paymail,
+        pubkey: data.pubkey
+      }
+
+      console.log(loggedInBitcoiner)
+
     } catch (e) {
       if (e instanceof Error) {
         console.log(e.message);

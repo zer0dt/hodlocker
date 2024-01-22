@@ -11,8 +11,6 @@ import { SiBitcoinsv } from 'react-icons/si';
 
 const inter = Alumni_Sans({ subsets: ['latin'] })
 
-export const dynamic = 'force-dynamic'
-
 
 export default async function NavBar() {  
 

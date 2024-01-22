@@ -2,8 +2,7 @@
 import React from 'react'
 import TransactionHistory from "./TransactionHistory";
 import { getBitcoinerUnlockables } from './getBitcoinerUnlockables';
-import { fetchCurrentBlockHeight } from '@/app/server-actions';
-
+import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 
 export default async function HandleDetails({params}: {params: {handle: string}}) { 
     const bitcoiner = await getBitcoinerUnlockables(params.handle);
