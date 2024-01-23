@@ -18,6 +18,7 @@
     "@google/model-viewer": "^3.2.1",
     "@gorillapool/js-junglebus": "^0.4.1",
     "@huwyane/flywheel-leaderboard": "0.0.26",
+    "@next/bundle-analyzer": "^14.1.0",
     "@nextui-org/react": "^2.1.13",
     "@prisma/client": "^5.5.2",
     "@skyra/gifenc": "^1.0.1",

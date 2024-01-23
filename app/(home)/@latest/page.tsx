@@ -7,6 +7,7 @@ import prisma from "@/app/db";
 import PostComponent from "@/app/components/posts/PostComponent";
 import Pagination from "@/app/components/feeds/sorting-utils/Pagination";
 
+
 export const getLatestPosts = cache(
     async (
         sort: string,
