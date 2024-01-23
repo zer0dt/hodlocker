@@ -62,6 +62,7 @@ export const postAnonReply = async (postTxid: string, note: string, amountToLock
               "post",
               "context",
               "tx",
+              "tx",
               postTxid,
               "paymail",
               "anon",
