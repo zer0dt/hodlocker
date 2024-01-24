@@ -62,7 +62,7 @@ export default async function RootLayout({
               <Analytics />
               <AppBar />
             </ProgressBarProvider>
-            </Suspense>
+             </Suspense>
           </WalletContextProvider>
        
 

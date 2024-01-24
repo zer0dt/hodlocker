@@ -1,6 +1,5 @@
 import React, { Suspense } from "react"
 import FeedBar from "./feedBar"
-import Loading from "./loading"
 
 export default async function Layout(props: {
   children: React.ReactNode

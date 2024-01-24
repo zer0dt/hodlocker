@@ -289,7 +289,7 @@ function Post({ transaction, postLockLike }: PostProps) {
                 href={`/${transaction.handle_id}/post/${transaction.txid}`} // Define the desired URL
               >
                 {/* Display the HTML structure */}
-                {postImage && <img src={postImage} className="mb-1" />}
+                {postImage && <Image src={postImage} width={0} height={0} style={{ width: '100%', height: 'auto' }} sizes="100vw" alt="post image" className="mb-1" />}
               </Link>
             )}
 

@@ -21,8 +21,10 @@ export const fetchCurrentBlockHeight = cache(async (): Promise<number> => {
         console.log("fetching current blockheight failed with status code " + res.status)
       }
   
+
       const data = await res.json();
   
+      console.log("current blockheight: " + data.height)
       return data.height;
     } catch (error) {
       throw error;
