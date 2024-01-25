@@ -12,14 +12,14 @@ import { SiBitcoinsv } from 'react-icons/si';
 const inter = Alumni_Sans({ subsets: ['latin'] })
 
 
-export default async function NavBar() {  
+export default async function NavBar() {
 
   const fallback = () => {
     return (
       <span id="badge-dismiss-dark" className="inline-flex items-center px-2 py-1 mr-1 text-sm font-medium text-black bg-gray-100 rounded dark:bg-gray-700 dark:text-white">
-            <span className="text-md font-mono">total locked - 0000.00</span>
-            <SiBitcoinsv className="text-orange-400 ml-1 mr-1" />
-        </span>
+        <span className="text-md font-mono">total locked - 0000.00</span>
+        <SiBitcoinsv className="text-orange-400 ml-1 mr-1" />
+      </span>
     )
   }
 
@@ -27,19 +27,24 @@ export default async function NavBar() {
     <>
       <nav className="bg-gray border-gray-200">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
-          <Link href="/" className="flex-1 flex justify-start lg:justify-start items-center lg:px-16">
+          <Link
+            href="https://github.com/zer0dt/hodlocker"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 flex justify-start lg:justify-start items-center lg:px-16"
+          >
             <h1 className={inter.className}><span className="pl-4 text-4xl font-bold dark:text-white">HL</span></h1>
           </Link>
 
-          
-            <div className="flex flex-col justify-center">
-              <div>
-                <Suspense fallback={fallback()} >
+
+          <div className="flex flex-col justify-center">
+            <div>
+              <Suspense fallback={fallback()} >
                 <BitcoinLocked />
-                </Suspense>                
-              </div>
+              </Suspense>
             </div>
-       
+          </div>
+
 
           <div className="flex-1 flex justify-end items-center md:order-2 md:pt-2 lg:mr-36">
             <UserBalance />
