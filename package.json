@@ -12,7 +12,8 @@
     "build:contract": "npx scrypt-cli compile",
     "deploy:contract": "npx ts-node ./scripts/deploy.ts",
     "verify:contract": "npx scrypt-cli verify $(cat .scriptHash) ./src/contracts/hodlocker.ts",
-    "genprivkey": "npx ts-node ./scripts/privateKey.ts"
+    "genprivkey": "npx ts-node ./scripts/privateKey.ts",
+    "db:seed": "npx prisma db seed"
   },
   "dependencies": {
     "@google/model-viewer": "^3.2.1",
@@ -96,6 +97,10 @@
     "@types/gif.js": "^0.2.3",
     "@types/react-infinite-scroller": "^1.2.3",
     "@types/react-mentions": "^4.1.9",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "ts-node": "^10.9.2"
+  },
+  "prisma": {
+    "seed": "ts-node ./prisma/seed.ts"
   }
 }
