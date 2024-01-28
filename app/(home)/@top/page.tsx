@@ -4,8 +4,7 @@ import { postLockLike } from '@/app/server-actions'
 import prisma from '@/app/db';
 import PostComponent from '@/app/components/posts/PostComponent';
 import Pagination from '@/app/components/feeds/sorting-utils/Pagination';
-
-
+import PostFeedContainer from "@/app/components/feeds/PostFeedContainer";
 
 const getTopPosts = cache(async (sort: string, filter: number, page: number, limit: number): Promise<[]> => {
     console.log("getting top posts")
@@ -138,7 +137,7 @@ export default async function TopFeed({ searchParams }: TopFeedProps) {
         const topPosts = await getTopPosts(activeSort, activeFilter, currentPage, 30)
 
         return (
-            <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
+            <PostFeedContainer>
                 {
                     topPosts.map((transaction) => (
                         <PostComponent
@@ -149,7 +148,7 @@ export default async function TopFeed({ searchParams }: TopFeedProps) {
                     ))
                 }
                 <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} />
-            </div>
+            </PostFeedContainer>
         )
 
 

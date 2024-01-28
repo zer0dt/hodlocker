@@ -6,7 +6,7 @@ import { postLockLike } from "@/app/server-actions";
 import prisma from "@/app/db";
 import PostComponent from "@/app/components/posts/PostComponent";
 import Pagination from "@/app/components/feeds/sorting-utils/Pagination";
-
+import PostFeedContainer from "@/app/components/feeds/PostFeedContainer";
 
 export const getLatestPosts = cache(
     async (
@@ -173,7 +173,7 @@ export default async function LatestFeed({ searchParams }: LatestFeedProps) {
         const latestPosts = await getLatestPosts(activeSort, activeFilter, currentPage, 30)
 
         return (
-            <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
+            <PostFeedContainer>
                 {
                     latestPosts.map((transaction) => (
                         <PostComponent
@@ -184,7 +184,7 @@ export default async function LatestFeed({ searchParams }: LatestFeedProps) {
                     ))
                 }
                 <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} />
-            </div>
+            </PostFeedContainer>
         )
     } else {
         return (

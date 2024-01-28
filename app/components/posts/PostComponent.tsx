@@ -50,6 +50,7 @@ function Post({ transaction, postLockLike }: PostProps) {
   const { currentBlockHeight } = useContext(WalletContext)!;
 
   const [isExpanded, setIsExpanded] = useState(false);
+  const MAX_CHARS_PRE_EXPAND = 420;
 
   const [timeSincePost, setTimeSincePost] = useState<string>("");
 
@@ -293,10 +294,10 @@ function Post({ transaction, postLockLike }: PostProps) {
               </Link>
             )}
 
-            {note.length > 280 && !isExpanded ? (
+            {note.length > MAX_CHARS_PRE_EXPAND && !isExpanded ? (
               <div
                 dangerouslySetInnerHTML={{
-                  __html: formatNote(note.slice(0, 280)) + "...",
+                  __html: formatNote(note.slice(0, MAX_CHARS_PRE_EXPAND)) + "...",
                 }}
               ></div>
             ) : (
@@ -312,7 +313,7 @@ function Post({ transaction, postLockLike }: PostProps) {
               )
             )}
 
-            {note.length > 280 && (
+            {note.length > MAX_CHARS_PRE_EXPAND && (
               <div className="flex justify-end pr-2">
                 {" "}
                 {/* Use 'flex justify-end' to move buttons to the right */}
@@ -342,7 +343,7 @@ function Post({ transaction, postLockLike }: PostProps) {
             )}
           </div>
 
-          <div className="flex justify-between mx-2 my-1 relative">
+          <div className="flex justify-between mx-2 my-2 relative">
             <div className="ml-12 flex items-center">
               <LockLikeInteraction
                 postTxid={transaction.txid}
@@ -363,8 +364,8 @@ function Post({ transaction, postLockLike }: PostProps) {
             </div>
 
 
-            <div className="absolute left-56 top-0.5">  {/* Adjust right and top values as needed */}
-              <div onClick={() => setReplyDrawerVisible(!replyDrawerVisible)} className="flex gap-1 mb-1">
+            <div className="top-0.5">  {/* Adjust right and top values as needed */}
+              <div onClick={() => setReplyDrawerVisible(!replyDrawerVisible)} className="flex gap-1 mb-1 cursor-pointer">
                 <FaRegComment className="reply-button mt-1 h-4 w-4" />
                 <span className="text-sm font-medium font-mono">
                   {transaction.totalAmountandLockLikedForReplies
@@ -378,7 +379,7 @@ function Post({ transaction, postLockLike }: PostProps) {
               </div>
             </div>
 
-            <div className="flex gap-2">
+            <div className="mr-12 flex gap-2 cursor-pointer">
               <RWebShare
                 data={{
                   text:
