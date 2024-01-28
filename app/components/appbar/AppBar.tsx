@@ -5,6 +5,8 @@ import React, { useState, useContext, useEffect, useRef } from "react";
 import DeployInteraction from "../actions/deployPost";
 
 import { AiFillNotification } from "react-icons/ai";
+import { FaXTwitter } from "react-icons/fa6";
+import { FaGithub } from "react-icons/fa";
 
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
@@ -264,6 +266,26 @@ const AppBar = () => {
                 className="py-2 text-sm text-gray-700 dark:text-gray-200"
                 aria-labelledby="dropdownDefaultButton"
               >
+                <li className="flex justify-around items-center mb-2">
+                  <a
+                    href="https://github.com/zer0dt/hodlocker"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white w-full justify-center px-2 py-1"
+                  >
+                    <FaGithub size={24} />
+                  </a>
+                  <div className="border-r border-gray-100 dark:border-gray-600 h-6 my-1"></div>
+                  <a
+                    href="https://x.com/hodlocker"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white w-full justify-center px-2 py-1"
+                  >
+                    <FaXTwitter size={24} />
+                  </a>
+                </li>
+
                 {handle ? (
                   <li>
                     <Link
