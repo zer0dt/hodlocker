@@ -343,8 +343,8 @@ function Post({ transaction, postLockLike }: PostProps) {
             )}
           </div>
 
-          <div className="flex justify-between mx-2 my-2 relative">
-            <div className="ml-12 flex items-center">
+          <div className="flex justify-between mx-14 my-2 relative">
+            <div className="flex items-center">
               <LockLikeInteraction
                 postTxid={transaction.txid}
                 replyTxid={undefined}
@@ -379,7 +379,7 @@ function Post({ transaction, postLockLike }: PostProps) {
               </div>
             </div>
 
-            <div className="mr-12 flex gap-2 cursor-pointer">
+            <div className="flex gap-2 cursor-pointer">
               <RWebShare
                 data={{
                   text:
