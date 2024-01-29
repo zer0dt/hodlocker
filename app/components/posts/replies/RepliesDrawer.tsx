@@ -3,10 +3,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReplyComponent from "./ReplyComponent";
 import { LockLikes } from "@prisma/client";
-import ReplyInteraction from "../actions/ReplyInteraction";
+import ReplyInteraction from "@/app/components/actions/ReplyInteraction";
 
 import { FaRegComment } from "react-icons/fa";
 import { SiBitcoinsv } from "react-icons/si";
+import { HODLTransactions } from "@/app/server-actions";
 
 interface RepliesDrawerProps {
   transaction: any,
@@ -110,7 +111,7 @@ const RepliesDrawer = ({
             </button>
           </div>
 
-          {replies.map((reply, index) => (
+          {replies.map((reply: HODLTransactions, index: number) => (
             <div key={index}>
               <ReplyComponent reply={reply} postLockLike={postLockLike} />
             </div>

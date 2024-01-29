@@ -4,10 +4,11 @@ import { HiOutlineGif } from "react-icons/hi2";
 
 interface GifModalProps {
     gifUrl: string | undefined,
-    setGifUrl: any
+    setGifUrl: any,
+    uploadedImage: string | null
 }
 
-const GifModal = ({ gifUrl, setGifUrl }: GifModalProps) => {
+const GifModal = ({ gifUrl, setGifUrl, uploadedImage }: GifModalProps) => {
     const [modalVisible, setModalVisible] = useState(false);
     const modalRef = useRef(null);
 
@@ -37,7 +38,7 @@ const GifModal = ({ gifUrl, setGifUrl }: GifModalProps) => {
 
     return (
         <>
-            {gifUrl ? null : (
+            {gifUrl || uploadedImage ? null : (
                 <button onClick={toggleModal} className="text-black pr-2" type="button">
                     <HiOutlineGif h={10} w={10} />
                 </button>

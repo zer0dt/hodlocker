@@ -11,7 +11,7 @@ import { HODLTransactions } from "../../server-actions";
 import { LockLikes } from "@prisma/client";
 
 import LockLikeDrawer from "./LockLikeDrawer";
-import RepliesDrawer from "./RepliesDrawer";
+import RepliesDrawer from "./replies/RepliesDrawer";
 
 import PostProfileImage from './PostProfileImage'
 import PostContent from "./PostContent";

@@ -19,6 +19,7 @@ import {
 
 import { postAnon } from './anon-post-server-action'
 import { getLockupScript } from "../../utils/scrypt";
+import { bsv } from 'scrypt-ts'
 import { WalletContext } from "../../context/WalletContextProvider";
 
 import GifModal from '@/app/components/posts/GifModal'
@@ -206,31 +207,61 @@ export default function DeployInteraction({
         if (nLockTime && pubkey && paymail) {
           const lockupScript = await getLockupScript(nLockTime, pubkey);
 
-          const fullMessage = uploadedImage ? (note + " " + uploadedImage) : gifUrl ? (note + " " + gifUrl) : note;
 
-          console.log(fullMessage);
+
+          const fullMessage = gifUrl ? (note + " " + gifUrl) : note;
+
+          const noteOpReturn = [
+            "19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut",
+            fullMessage,
+            "text/markdown",
+            "UTF-8",
+            "|",
+            "1PuQa7K62MiKCtssSLKy1kh56WWU7MtUR5",
+            "SET",
+            "app",
+            "hodlocker.com",
+            "type",
+            "post",
+            "paymail",
+            paymail
+          ]
+
+          const tx = new bsv.Transaction();
+
+          tx.addOutput(
+            new bsv.Transaction.Output({
+              script: bsv.Script.fromASM(lockupScript),
+              satoshis: parseFloat(amountToLock) * 100000000,
+            })
+          )
+
+          tx.addOutput(
+            new bsv.Transaction.Output({
+              script: bsv.Script.buildSafeDataOut(noteOpReturn),
+              satoshis: 0,
+            })
+          )
+
+          let imageOpReturn;
+          if (uploadedImage) {
+
+            const imageOpReturn = [
+              uploadedImage
+            ]
+            
+            tx.addOutput(
+              new bsv.Transaction.Output({
+                script: bsv.Script.buildSafeDataOut(imageOpReturn),
+                satoshis: 0,
+              })
+            )
+          }
+
+          const serializedTx = tx.toString();
 
           const send = await relayone
-            .send({
-              to: lockupScript,
-              amount: amountToLock,
-              currency: "BSV",
-              opReturn: [
-                "19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut",
-                fullMessage,
-                "text/markdown",
-                "UTF-8",
-                "|",
-                "1PuQa7K62MiKCtssSLKy1kh56WWU7MtUR5",
-                "SET",
-                "app",
-                "hodlocker.com",
-                "type",
-                "post",
-                "paymail",
-                paymail,
-              ],
-            })
+            .send(serializedTx)
             .catch((e) => {
               console.log(e.message);
               toast.error("An error occurred: " + e.message);
@@ -252,7 +283,8 @@ export default function DeployInteraction({
                 send.paymail.substring(0, send.paymail.lastIndexOf("@")),
                 fullMessage,
                 nLockTime,
-                sub
+                sub,
+                uploadedImage ? true : false
               );
               console.log(newPost);
               toast.success(
@@ -303,7 +335,7 @@ export default function DeployInteraction({
         return;
       }
 
-      const fullMessage = uploadedImage ? (note + " " + uploadedImage) : gifUrl ? (note + " " + gifUrl) : note; 
+      const fullMessage = uploadedImage ? (note + " " + uploadedImage) : gifUrl ? (note + " " + gifUrl) : note;
 
       console.log("content: ", fullMessage);
 
@@ -367,7 +399,7 @@ export default function DeployInteraction({
 
   return (
     <>
-      <GifModal gifUrl={gifUrl} setGifUrl={setGifUrl} />
+
       <div className="z-10 flex flex-col justify-between">
         <button
           onClick={() => {
@@ -458,6 +490,7 @@ export default function DeployInteraction({
           </div>
 
           <div className="flex justify-end w-2/3 items-center mt-0 mb-0 pb-0">
+            <GifModal gifUrl={gifUrl} setGifUrl={setGifUrl} uploadedImage={uploadedImage} />
             {isLinked ? (
               <ImageUploader
                 gifUrl={gifUrl}
@@ -465,7 +498,7 @@ export default function DeployInteraction({
                 onImageUpload={handleImageUpload}
                 isDrawerVisible={isDrawerVisible}
               />
-            ) : null}            
+            ) : null}
           </div>
         </div>
 

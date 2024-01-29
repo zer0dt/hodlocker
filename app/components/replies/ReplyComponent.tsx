@@ -6,11 +6,11 @@ import DOMPurify from "isomorphic-dompurify";
 import { usePathname } from "next/navigation";
 import { TbShare2 } from "react-icons/tb";
 import { RWebShare } from "react-web-share";
-import LockLikeInteraction from "../actions/LockLikeInteraction";
+import LockLikeInteraction from "../../actions/LockLikeInteraction";
 
 import { LockLikes } from "@prisma/client";
 
-import { WalletContext } from "../../context/WalletContextProvider";
+import { WalletContext } from "../../../context/WalletContextProvider";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { AiOutlineBlock } from "react-icons/ai";
 import LockLikeDrawer from "./LockLikeDrawer";

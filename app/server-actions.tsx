@@ -334,7 +334,7 @@ export async function createNewTag(name: string, ticker: string) {
 }
 
 
-export async function postNewTransaction(txid: string, amount: number, handle: string, note: string, nLockTime: number, sub: string) {
+export async function postNewTransaction(txid: string, amount: number, handle: string, note: string, nLockTime: number, sub: string, hasImage: boolean) {
 
   // Calculate the size of the note string in bytes
   const noteSizeInBytes = Buffer.from(note).length; 
@@ -369,8 +369,9 @@ export async function postNewTransaction(txid: string, amount: number, handle: s
           id: tag?.id,
         },
       },
+      hasImage: hasImage
     },
-  });
+  })
 
   // Trigger Pusher if the message size is within the limit
   if (noteSizeInBytes <= maxPusherMessageSize) {

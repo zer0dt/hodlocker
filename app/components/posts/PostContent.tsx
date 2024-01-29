@@ -75,6 +75,20 @@ function containsTwitterLink(note: string | null | undefined) {
     return false; // Handle the case when note is null or undefined
 }
 
+function extractDataImageString(inputString: string) {
+    // Find the index where 'data:image' starts
+    const startIndex = inputString.indexOf('data:image');
+
+    if (startIndex !== -1) {
+        // Extract the substring starting from startIndex
+        const extractedString = inputString.substring(startIndex);
+        return extractedString;
+    } else {
+        return null; // Indicates that 'data:image' is not found in the string
+    }
+}
+
+
 function PostContent({ transaction }: PostContentProps) {
 
     const [postImage, setPostImage] = useState<string | null>();
@@ -87,18 +101,44 @@ function PostContent({ transaction }: PostContentProps) {
 
     useEffect(() => {
         setIsLoading(true);
-        // Extract the HTML structure from the note
-        const htmlStructure = extractDataUrl(transaction.note);
-        setPostImage(htmlStructure);
 
-        // Remove the HTML structure from the note
-        const noteWithoutHTMLStructure = transaction.note.replace(
-            htmlStructure,
-            ""
-        );
-        setNote(noteWithoutHTMLStructure);
-        setIsLoading(false);
-    }, []);
+        const fetchData = async () => {
+
+            if (transaction.hasImage) {
+                try {
+                    const response = await fetch(`https://api.bitails.io/download/tx/${transaction.txid}/output/2`, {
+                        headers: {
+                            'Content-Type': 'application/octet-stream'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch image data');
+                    }
+                    const responseData = await response.text()
+
+                    const base64Image = extractDataImageString(responseData);
+                    console.log(base64Image)
+
+                    setPostImage(base64Image);
+                } catch (error) {
+                    console.error('Error fetching image data:', error);
+                }
+            }
+
+            const htmlStructure = extractDataUrl(transaction.note);
+            if (htmlStructure) {
+                setPostImage(htmlStructure)
+            }
+
+            const noteWithoutHTMLStructure = transaction.note.replace(htmlStructure, "");
+            setNote(noteWithoutHTMLStructure);
+            setIsLoading(false);
+        };
+
+        fetchData();
+
+    }, [transaction.txid]);
 
 
 
