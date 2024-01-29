@@ -5,7 +5,9 @@ import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import { HODLTransactions, postLockLike } from "@/app/server-actions";
 import PostComponent from "@/app/components/posts/PostComponent";
 import Pagination from "@/app/components/feeds/sorting-utils/Pagination";
+
 import { unstable_cache } from "next/cache";
+import { parse, stringify } from "superjson";
 
 
 function enrichItem(item: HODLTransactions): any {
@@ -178,13 +180,17 @@ interface TrendingFeedProps {
 }
 
 const getCachedPosts = unstable_cache(
-    async (sort: string, filter: number, currentPage: number, limit: number) => getTrendingPosts(sort, filter, currentPage, limit),
-    ['top-posts'],
+    async (sort: string, filter: number, currentPage: number, limit: number) => {
+        const cachedPosts = await getTrendingPosts(sort, filter, currentPage, limit)
+
+        return stringify({...cachedPosts})
+    },
+    ['trending-posts'],
     {
         tags: ['trending', 'posts'], // Cache tags for invalidation
         revalidate: 60, // Revalidation time in seconds (e.g., 1 hour)
     }
-);
+);;
 
 export default async function TrendingFeed({ searchParams }: TrendingFeedProps) {
 
@@ -204,10 +210,12 @@ export default async function TrendingFeed({ searchParams }: TrendingFeedProps) 
         const sizeInMB = sizeInBytes / (1024 * 1024); // Convert bytes to MB
         console.log("Size of trendingPosts:", sizeInMB.toFixed(2), "MB");
 
+        const posts = parse<HODLTransactions[]>(trendingPosts)
+
         return (
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
                 {
-                    trendingPosts.filter(Boolean).map((item: HODLTransactions) => {
+                    Object.values(posts).filter(Boolean).map((item: HODLTransactions) => {
                         return (
                             <Suspense key={item.txid} fallback={"loading post"}>
                                 <PostComponent

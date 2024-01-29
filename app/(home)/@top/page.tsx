@@ -4,6 +4,8 @@ import { HODLTransactions, postLockLike } from '@/app/server-actions'
 import prisma from '@/app/db';
 import PostComponent from '@/app/components/posts/PostComponent';
 import Pagination from '@/app/components/feeds/sorting-utils/Pagination';
+
+import { parse, stringify } from "superjson";
 import { unstable_cache } from 'next/cache';
 
 
@@ -144,7 +146,11 @@ interface TopFeedProps {
 }
 
 const getCachedPosts = unstable_cache(
-    async (sort: string, filter: number, currentPage: number, limit: number) => getTopPosts(sort, filter, currentPage, limit),
+    async (sort: string, filter: number, currentPage: number, limit: number) => {
+        const cachedPosts = await getTopPosts(sort, filter, currentPage, limit)
+
+        return stringify({...cachedPosts})
+    },
     ['top-posts'],
     {
         tags: ['top', 'posts'], // Cache tags for invalidation
@@ -170,10 +176,12 @@ export default async function TopFeed({ searchParams }: TopFeedProps) {
         const sizeInMB = sizeInBytes / (1024 * 1024); // Convert bytes to MB
         console.log("Size of topPosts:", sizeInMB.toFixed(2), "MB");
 
+        const posts = parse<HODLTransactions[]>(topPosts)
+
         return (
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
                 {
-                    topPosts.map((transaction: HODLTransactions) => (
+                     Object.values(posts).map((transaction: HODLTransactions) => (
                         <Suspense key={transaction.txid} fallback={"loading post"}>
                             <PostComponent
                             key={transaction.txid} // Assuming transaction has an 'id' field

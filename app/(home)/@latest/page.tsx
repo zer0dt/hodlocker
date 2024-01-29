@@ -1,6 +1,8 @@
 import React, { Suspense } from "react";
 
 import { unstable_cache } from 'next/cache';
+import { parse, stringify } from "superjson";
+
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import { HODLTransactions, postLockLike } from "@/app/server-actions";
 import prisma from "@/app/db";
@@ -172,7 +174,11 @@ interface LatestFeedProps {
 }
 
 const getCachedPosts = unstable_cache(
-    async (sort: string, filter: number, currentPage: number, limit: number) => getLatestPosts(sort, filter, currentPage, limit),
+    async (sort: string, filter: number, currentPage: number, limit: number) => {
+        const cachedPosts = await getLatestPosts(sort, filter, currentPage, limit)
+
+        return stringify({...cachedPosts})
+    },
     ['latest-posts'],
     {
         tags: ['latest', 'posts'], // Cache tags for invalidation
@@ -198,11 +204,12 @@ export default async function LatestFeed({ searchParams }: LatestFeedProps) {
         const sizeInMB = sizeInBytes / (1024 * 1024); // Convert bytes to MB
         console.log("Size of latestPosts:", sizeInMB.toFixed(2), "MB");
 
-
+        const posts = parse<HODLTransactions[]>(latestPosts)
+        
         return (
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
                 {
-                    latestPosts.map((transaction: HODLTransactions) => (
+                    Object.values(posts).map((transaction: HODLTransactions) => (
                         <Suspense key={transaction.txid} fallback={"loading post"}>
                             <PostComponent
                                 key={transaction.txid} // Assuming transaction has an 'id' field
