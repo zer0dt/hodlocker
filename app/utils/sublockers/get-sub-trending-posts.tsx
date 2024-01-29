@@ -3,7 +3,7 @@ import prisma from "../../db";
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import { HODLTransactions, postLockLike } from "../../server-actions";
 import PostComponent from "../../components/posts/PostComponent";
-import ReplyComponent from "../../components/posts/ReplyComponent";
+import ReplyComponent from "../../components/posts/replies/ReplyComponent";
 
 export const dynamic = "force-dynamic";
 
