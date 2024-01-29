@@ -490,7 +490,7 @@ export default function DeployInteraction({
           </div>
 
           <div className="flex justify-end w-2/3 items-center mt-0 mb-0 pb-0">
-            <GifModal gifUrl={gifUrl} setGifUrl={setGifUrl} uploadedImage={uploadedImage} />
+            
             {isLinked ? (
               <ImageUploader
                 gifUrl={gifUrl}
