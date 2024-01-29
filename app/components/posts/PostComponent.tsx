@@ -16,10 +16,6 @@ import PostProfileImage from './PostProfileImage'
 import PostContent from "./PostContent";
 import WebShare from './WebShare'
 
-import { fetchCurrentBlockHeight } from "@/app/utils/fetch-current-block-height";
-
-
-
 
 interface PostProps {
   transaction: HODLTransactions;
@@ -35,8 +31,6 @@ interface PostProps {
 
 
 export default async function Post({ transaction, postLockLike }: PostProps) {
-
-  const currentBlockHeight = await fetchCurrentBlockHeight()
 
   const avatar = transaction.handle_id == "anon" ? (
     "https://api.dicebear.com/7.x/shapes/svg?seed=" + 
@@ -117,7 +111,7 @@ export default async function Post({ transaction, postLockLike }: PostProps) {
                 replyTxid={undefined}
                 postLockLike={postLockLike}
               />
-              <LockLikeDrawer transaction={transaction} currentBlockHeight={currentBlockHeight} />
+              <LockLikeDrawer transaction={transaction} />
             </div>
 
 

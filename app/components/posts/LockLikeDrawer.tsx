@@ -1,9 +1,11 @@
 'use client'
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Link from "next/link";
 import { SiBitcoinsv } from "react-icons/si";
 import { HODLTransactions } from "@/app/server-actions";
+
+import { WalletContext } from "../../context/WalletContextProvider";
 
 interface LockLikes {
   txid: string;
@@ -15,7 +17,6 @@ interface LockLikes {
 
 interface LockLikeDrawerProps {
   transaction: HODLTransactions
-  currentBlockHeight?: number; // Ensure you provide the correct type for this prop
 }
 
 function timeSinceLike(locklike: LockLikes) {
@@ -55,9 +56,9 @@ function formatBitcoinValue(initialPlusLikesTotal: number) {
 }
 
 const LockLikeDrawer = ({
-  transaction,
-  currentBlockHeight,
+  transaction
 }: LockLikeDrawerProps) => {
+  const { currentBlockHeight } = useContext(WalletContext)!;
 
   const [likeDrawerOpen, setLikeDrawerOpen] = useState(false)
 
