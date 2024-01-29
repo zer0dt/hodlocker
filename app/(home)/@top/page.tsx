@@ -5,7 +5,6 @@ import prisma from '@/app/db';
 import PostComponent from '@/app/components/posts/PostComponent';
 import Pagination from '@/app/components/feeds/sorting-utils/Pagination';
 
-import fs from 'fs';
 
 const getTopPosts = cache(async (sort: string, filter: number, page: number, limit: number): Promise<[]> => {
     console.log("getting top posts")
@@ -160,9 +159,6 @@ export default async function TopFeed({ searchParams }: TopFeedProps) {
         const sizeInBytes = new Blob([jsonPosts]).size;
         const sizeInMB = sizeInBytes / (1024 * 1024); // Convert bytes to MB
         console.log("Size of topPosts:", sizeInMB.toFixed(2), "MB");
-
-        // Write the prettified JSON to a file
-        fs.writeFileSync('topPosts.json', jsonPosts);
 
         return (
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
