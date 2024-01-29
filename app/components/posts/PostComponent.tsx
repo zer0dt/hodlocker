@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 import Link from "next/link";
+import Image from 'next/image'
 
 import { AiOutlineBlock } from "react-icons/ai";
 
@@ -59,6 +60,18 @@ export default async function Post({ transaction, postLockLike }: PostProps) {
     }
   }
 
+  const loadingAvatar = () => {
+    return (
+      <Image
+        src={"/bitcoin.png"}
+        alt={`Profile Picture`}
+        width={40} // width and height based on the given h-10 and w-10 classes
+        height={40}
+        className="rounded-full aspect-square ring-4 ring-orange-100"
+      />
+    )
+  }
+
   return (
     <React.Fragment key={transaction.txid}>
       <div className="bg-white-100 p-0 flex flex-col">
@@ -66,7 +79,7 @@ export default async function Post({ transaction, postLockLike }: PostProps) {
           <div className="flex justify-between px-2 pt-2 relative">
             <div className="flex items-center rounded-full">
               <Link href={"/" + transaction.handle_id}>
-                <Suspense fallback={"loading avy"}>
+                <Suspense fallback={loadingAvatar()}>
                   <PostProfileImage avatar={avatar} handle={transaction.handle_id} />
                 </Suspense>
               </Link>

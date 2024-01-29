@@ -135,10 +135,12 @@ export default function LockLikeInteraction({ postTxid, replyTxid, postLockLike 
                 toast.success("Transaction posted to hodlocker.com: " + returnedLockLike.txid.slice(0, 6) + "..." + returnedLockLike.txid.slice(-6))
   
                 console.log("done with lock like!")
-                
+
                 setLoading(false)
                 setPopoverVisible(false)
                 setLockLiked(true) 
+
+                router.refresh()
        
               } catch (err) {
                 console.error("Error posting lock like:", err);

@@ -7,6 +7,7 @@ export const revalidate = 300
 
 export const getBitcoinerLikedData = cache(async (bitcoinerHandle: string): Promise<HODLBitcoiners | null> => {
     const currentBlockHeight = await fetchCurrentBlockHeight();
+    
   
     const bitcoiner = await prisma.bitcoiner.findUnique({
       where: {
