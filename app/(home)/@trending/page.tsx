@@ -1,10 +1,11 @@
 
-import { Suspense, cache } from "react";
+import { Suspense } from "react";
 import prisma from "@/app/db";
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import { HODLTransactions, postLockLike } from "@/app/server-actions";
 import PostComponent from "@/app/components/posts/PostComponent";
 import Pagination from "@/app/components/feeds/sorting-utils/Pagination";
+import { unstable_cache } from "next/cache";
 
 
 function enrichItem(item: HODLTransactions): any {
@@ -62,7 +63,7 @@ function enrichItem(item: HODLTransactions): any {
     }
 }
 
-const fetchTransactions = async function cache(
+const getTrendingPosts = async function (
     sort: string,
     filter: number,
     page: number,
@@ -166,16 +167,6 @@ const fetchTransactions = async function cache(
     }
 }
 
-const getTrendingPosts = cache(
-    async (sort: string, filter: number, page: number, limit: number): Promise<[]> => {
-        console.log("getting trending posts")
-        const items = await fetchTransactions(sort, filter, page, limit);
-        console.log("finished getting " + items.length + " trending posts")
-        return items
-    }
-);
-
-
 interface TrendingFeedProps {
     searchParams: {
         tab: string,
@@ -185,6 +176,15 @@ interface TrendingFeedProps {
         limit: number
     }
 }
+
+const getCachedPosts = unstable_cache(
+    async (sort: string, filter: number, currentPage: number, limit: number) => getTrendingPosts(sort, filter, currentPage, limit),
+    ['top-posts'],
+    {
+        tags: ['trending', 'posts'], // Cache tags for invalidation
+        revalidate: 60, // Revalidation time in seconds (e.g., 1 hour)
+    }
+);
 
 export default async function TrendingFeed({ searchParams }: TrendingFeedProps) {
 
@@ -197,7 +197,7 @@ export default async function TrendingFeed({ searchParams }: TrendingFeedProps) 
     const currentPage = searchParams.page || 1;
 
     if (activeTab == "trending") {
-        const trendingPosts = await getTrendingPosts(activeSort, activeFilter, currentPage, 30)
+        const trendingPosts = await getCachedPosts(activeSort, activeFilter, currentPage, 30)
 
         const jsonPosts = JSON.stringify(trendingPosts, null, 2);
         const sizeInBytes = new Blob([jsonPosts]).size;

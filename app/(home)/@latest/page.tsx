@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 
-import { cache } from "react";
+import { unstable_cache } from 'next/cache';
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import { HODLTransactions, postLockLike } from "@/app/server-actions";
 import prisma from "@/app/db";
@@ -8,7 +8,7 @@ import PostComponent from "@/app/components/posts/PostComponent";
 import Pagination from "@/app/components/feeds/sorting-utils/Pagination";
 
 
-export const getLatestPosts = cache(
+export const getLatestPosts = (
     async (
         sort: string,
         filter: number,
@@ -120,7 +120,7 @@ export const getLatestPosts = cache(
                     const filteredNote = reply.note.split('data:image')[0];
 
                     reply.note = filteredNote
-                
+
                     // Return a new object with the filtered note and other properties
                     return {
                         ...reply,
@@ -171,6 +171,15 @@ interface LatestFeedProps {
     }
 }
 
+const getCachedPosts = unstable_cache(
+    async (sort: string, filter: number, currentPage: number, limit: number) => getLatestPosts(sort, filter, currentPage, limit),
+    ['latest-posts'],
+    {
+        tags: ['latest', 'posts'], // Cache tags for invalidation
+        revalidate: 60, // Revalidation time in seconds (e.g., 1 hour)
+    }
+);
+
 export default async function LatestFeed({ searchParams }: LatestFeedProps) {
 
     const activeTab = searchParams.tab || "trending"
@@ -182,7 +191,7 @@ export default async function LatestFeed({ searchParams }: LatestFeedProps) {
     const currentPage = searchParams.page || 1;
 
     if (activeTab == "latest") {
-        const latestPosts = await getLatestPosts(activeSort, activeFilter, currentPage, 30)
+        const latestPosts = await getCachedPosts(activeSort, activeFilter, currentPage, 30)
 
         const jsonPosts = JSON.stringify(latestPosts, null, 2);
         const sizeInBytes = new Blob([jsonPosts]).size;

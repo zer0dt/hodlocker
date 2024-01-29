@@ -1,12 +1,13 @@
-import { Suspense, cache } from 'react'
+import { Suspense } from 'react'
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import { HODLTransactions, postLockLike } from '@/app/server-actions'
 import prisma from '@/app/db';
 import PostComponent from '@/app/components/posts/PostComponent';
 import Pagination from '@/app/components/feeds/sorting-utils/Pagination';
+import { unstable_cache } from 'next/cache';
 
 
-const getTopPosts = cache(async (sort: string, filter: number, page: number, limit: number): Promise<[]> => {
+const getTopPosts = (async (sort: string, filter: number, page: number, limit: number): Promise<[]> => {
     console.log("getting top posts")
     const currentBlockHeight = await fetchCurrentBlockHeight();
 
@@ -142,6 +143,15 @@ interface TopFeedProps {
     }
 }
 
+const getCachedPosts = unstable_cache(
+    async (sort: string, filter: number, currentPage: number, limit: number) => getTopPosts(sort, filter, currentPage, limit),
+    ['top-posts'],
+    {
+        tags: ['top', 'posts'], // Cache tags for invalidation
+        revalidate: 60, // Revalidation time in seconds (e.g., 1 hour)
+    }
+);
+
 export default async function TopFeed({ searchParams }: TopFeedProps) {
 
     const activeTab = searchParams.tab || "trending"
@@ -153,7 +163,7 @@ export default async function TopFeed({ searchParams }: TopFeedProps) {
     const currentPage = searchParams.page || 1;
 
     if (activeTab == "top") {
-        const topPosts = await getTopPosts(activeSort, activeFilter, currentPage, 30)
+        const topPosts = await getCachedPosts(activeSort, activeFilter, currentPage, 30)
 
         const jsonPosts = JSON.stringify(topPosts, null, 2);
         const sizeInBytes = new Blob([jsonPosts]).size;

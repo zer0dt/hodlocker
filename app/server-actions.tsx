@@ -7,6 +7,7 @@ import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 
 import sha256 from "crypto-js/sha256";
 import hexEnc from "crypto-js/enc-hex";
+import { revalidateTag } from 'next/cache';
 
 const apiKey = process.env.TAAL_MAINNET_API_KEY as string; // Replace with your API key
 
@@ -300,6 +301,7 @@ export async function postLockLike(
       type: "locklike"
     })
 
+    revalidateTag('posts');
     return newLockLike;  
 };
 
@@ -392,6 +394,7 @@ export async function postNewTransaction(txid: string, amount: number, handle: s
     });
   }
 
+  revalidateTag('latest');
   return newTransaction;
 }
 
