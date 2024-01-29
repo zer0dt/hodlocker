@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 
 import { cache } from "react";
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
@@ -175,11 +175,14 @@ export default async function LatestFeed({ searchParams }: LatestFeedProps) {
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
                 {
                     latestPosts.map((transaction) => (
-                        <PostComponent
+                        <Suspense fallback={"loading post"}>
+                            <PostComponent
                             key={transaction.txid} // Assuming transaction has an 'id' field
                             transaction={transaction}
                             postLockLike={postLockLike}
                         />
+                        </Suspense>
+                        
                     ))
                 }
                 <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} />
