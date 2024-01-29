@@ -207,8 +207,6 @@ export default function DeployInteraction({
         if (nLockTime && pubkey && paymail) {
           const lockupScript = await getLockupScript(nLockTime, pubkey);
 
-
-
           const fullMessage = gifUrl ? (note + " " + gifUrl) : note;
 
           const noteOpReturn = [
