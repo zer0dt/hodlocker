@@ -5,6 +5,8 @@ import ImageUploading, { ImageListType } from "react-images-uploading";
 import { RiImageAddLine } from "react-icons/ri"
 import { CiCircleRemove } from 'react-icons/ci'
 
+import Image from 'next/image'
+
 import { toast } from "sonner";
 
 interface ImageUploaderProps {
@@ -75,7 +77,7 @@ export function ImageUploader({ gifUrl, setGifUrl, onImageUpload, isDrawerVisibl
           <div className="upload__image-wrapper mt-0 mr-0">
             {imageList.map((image, index) => (
               <div key={index} className="image-item mt-2 max-h-300 w-auto">
-                <img src={image.dataURL} className="rounded-l" alt="" />
+                <Image src={image.dataURL as string} width={0} height={0} style={{ width: '100%', height: 'auto' }} sizes="90vw" alt="" />
                 <div className="image-item__btn-wrapper flex justify-end pt-2">
                   <CiCircleRemove className="lock-icon h-6 w-6 cursor-pointer mr-1" onClick={() => handleRemoveImage(onImageRemove, index)} />
                 </div>
