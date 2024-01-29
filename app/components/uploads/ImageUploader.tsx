@@ -5,6 +5,8 @@ import ImageUploading, { ImageListType } from "react-images-uploading";
 import { RiImageAddLine } from "react-icons/ri"
 import { CiCircleRemove } from 'react-icons/ci'
 
+import { toast } from "sonner";
+
 interface ImageUploaderProps {
   gifUrl: string | undefined,
   setGifUrl: any,
@@ -88,11 +90,11 @@ export function ImageUploader({ gifUrl, setGifUrl, onImageUpload, isDrawerVisibl
             </div>
             {errors && (
               <div>
-                {errors.maxNumber && <span>Number of selected images exceed maxNumber</span>}
-                {errors.acceptType && <span>Your selected file type is not allowed</span>}
-                {errors.maxFileSize && <span>Selected file size exceeds maxFileSize</span>}
-                {errors.resolution && <span>Selected file does not match your desired resolution</span>}
-              </div>
+              {errors.maxNumber && toast.error('Number of selected images exceed maxNumber')}
+              {errors.acceptType && toast.error('Your selected file type is not allowed')}
+              {errors.maxFileSize && toast.error('Selected file size exceeds maxFileSize')}
+              {errors.resolution && toast.error('Selected file does not match your desired resolution')}
+          </div>
             )}
           </div>
 
