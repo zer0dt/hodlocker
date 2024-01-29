@@ -355,7 +355,7 @@ const AppBar = () => {
           </svg>
           <span className="sr-only">Close menu</span>
         </button>
-        <div className="pb-24 lg:pb-8">
+        <div className="z-30 pb-24 lg:pb-8">
           <DeployInteraction
             subs={sublockers}
             isDrawerVisible={isDrawerVisible}
