@@ -1,7 +1,7 @@
 import { cache } from 'react'
-import { HODLBitcoiners } from '../server-actions'
+import { HODLBitcoiners } from '@/app/server-actions'
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
-import prisma from '../db';
+import prisma from '@/app/db';
 
 export const revalidate = 300
 

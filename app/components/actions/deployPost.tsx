@@ -367,6 +367,7 @@ export default function DeployInteraction({
 
   return (
     <>
+      <GifModal gifUrl={gifUrl} setGifUrl={setGifUrl} />
       <div className="z-10 flex flex-col justify-between">
         <button
           onClick={() => {
@@ -457,7 +458,6 @@ export default function DeployInteraction({
           </div>
 
           <div className="flex justify-end w-2/3 items-center mt-0 mb-0 pb-0">
-          <GifModal gifUrl={gifUrl} setGifUrl={setGifUrl} />
             {isLinked ? (
               <ImageUploader
                 gifUrl={gifUrl}

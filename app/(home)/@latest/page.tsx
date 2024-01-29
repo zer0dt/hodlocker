@@ -37,7 +37,6 @@ export const getLatestPosts = cache(
             yourStartTime = new Date(currentTimestamp - 365 * 24 * 60 * 60 * 1000); // Subtract 365 days in milliseconds (approximate)
         }
 
-
         try {
             const transactions = await prisma.transactions.findMany({
                 where: {
