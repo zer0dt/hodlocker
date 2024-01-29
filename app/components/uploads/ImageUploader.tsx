@@ -35,7 +35,6 @@ export function ImageUploader({ gifUrl, setGifUrl, onImageUpload, isDrawerVisibl
     } else {
       // Image selected
       onImageUpload(imageList[0].dataURL as string);
-      toast.error(imageList[0].dataURL)
     }
     setImages(imageList);
   };
