@@ -6,6 +6,8 @@ import { HODLTransactions, postLockLike } from "@/app/server-actions";
 import PostComponent from "@/app/components/posts/PostComponent";
 import Pagination from "@/app/components/feeds/sorting-utils/Pagination";
 
+import fs from 'fs';
+
 
 function enrichItem(item: HODLTransactions): any {
     // Calculate the total amount lockliked to the post or reply
@@ -25,19 +27,32 @@ function enrichItem(item: HODLTransactions): any {
             totalAmountandLockLiked,
         };
     } else {
-        // It's a transaction
-        const repliesWithTotalAmount = (item.replies || []).map((reply) => ({
-            ...reply,
-            totalAmountandLockLiked: reply.locklikes.reduce(
-                (total, locklike) => total + locklike.amount,
-                reply.amount
-            ),
-        }));
+        // Calculate the total amount including locklikes for each reply
+        const repliesWithTotalAmount = (item.replies || []).map((reply) => {
+            // Remove 'data:image' and everything after it using regex
+            const filteredNote = reply.note.split('data:image')[0];
+
+            reply.note = filteredNote
+        
+            // Return a new object with the filtered note and other properties
+            return {
+                ...reply,
+                totalAmountandLockLiked: reply.locklikes.reduce(
+                    (total, locklike) => total + locklike.amount,
+                    reply.amount
+                )
+            };
+        });
 
         const totalAmountandLockLikedForReplies = repliesWithTotalAmount.reduce(
             (sum, reply) => sum + (reply.totalAmountandLockLiked || 0),
             0
         );
+
+        // Remove 'data:image' and everything after it using regex
+        const filteredNote = item.note.split('data:image')[0];
+
+        item.note = filteredNote;
 
         return {
             ...item,
@@ -110,7 +125,7 @@ const fetchTransactions = async function cache(
                         replies: {
                             include: {
                                 transaction: {
-                                    include: {
+                                    select: {
                                         tags: true,
                                         link: true // Include the associated Bitcoiner for the original transaction
                                     }
@@ -185,6 +200,14 @@ export default async function TrendingFeed({ searchParams }: TrendingFeedProps) 
 
     if (activeTab == "trending") {
         const trendingPosts = await getTrendingPosts(activeSort, activeFilter, currentPage, 30)
+
+        const jsonPosts = JSON.stringify(trendingPosts, null, 2);
+        const sizeInBytes = new Blob([jsonPosts]).size;
+        const sizeInMB = sizeInBytes / (1024 * 1024); // Convert bytes to MB
+        console.log("Size of trendingPosts:", sizeInMB.toFixed(2), "MB");
+
+        // Write the prettified JSON to a file
+        fs.writeFileSync('latestPosts.json', jsonPosts);
 
         return (
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96">

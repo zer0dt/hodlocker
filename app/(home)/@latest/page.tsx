@@ -7,6 +7,7 @@ import prisma from "@/app/db";
 import PostComponent from "@/app/components/posts/PostComponent";
 import Pagination from "@/app/components/feeds/sorting-utils/Pagination";
 
+import fs from 'fs';
 
 export const getLatestPosts = cache(
     async (
@@ -188,6 +189,9 @@ export default async function LatestFeed({ searchParams }: LatestFeedProps) {
         const sizeInBytes = new Blob([jsonPosts]).size;
         const sizeInMB = sizeInBytes / (1024 * 1024); // Convert bytes to MB
         console.log("Size of latestPosts:", sizeInMB.toFixed(2), "MB");
+
+        // Write the prettified JSON to a file
+        fs.writeFileSync('latestPosts.json', jsonPosts);
 
 
         return (

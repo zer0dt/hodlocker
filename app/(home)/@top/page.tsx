@@ -5,7 +5,7 @@ import prisma from '@/app/db';
 import PostComponent from '@/app/components/posts/PostComponent';
 import Pagination from '@/app/components/feeds/sorting-utils/Pagination';
 
-
+import fs from 'fs';
 
 const getTopPosts = cache(async (sort: string, filter: number, page: number, limit: number): Promise<[]> => {
     console.log("getting top posts")
@@ -62,6 +62,12 @@ const getTopPosts = cache(async (sort: string, filter: number, page: number, lim
                 replies: {
                     include: {
                         locklikes: true, // Include locklikes for replies
+                        transaction: {
+                            select: {
+                                tags: true,
+                                link: true // Include the associated Bitcoiner for the original transaction
+                            }
+                        },
                     },
                 },
             },
@@ -75,19 +81,32 @@ const getTopPosts = cache(async (sort: string, filter: number, page: number, lim
             const totalAmountandLockLiked = totalLockLiked + transaction.amount;
 
             // Calculate the total amount including locklikes for each reply
-            const repliesWithTotalAmount = transaction.replies.map((reply) => ({
-                ...reply,
-                totalAmountandLockLiked: reply.locklikes.reduce(
-                    (total, locklike) => total + locklike.amount,
-                    reply.amount
-                ),
-            }));
+            const repliesWithTotalAmount = transaction.replies.map((reply) => {
+                // Remove 'data:image' and everything after it using regex
+                const filteredNote = reply.note.split('data:image')[0];
+
+                reply.note = filteredNote
+            
+                // Return a new object with the filtered note and other properties
+                return {
+                    ...reply,
+                    totalAmountandLockLiked: reply.locklikes.reduce(
+                        (total, locklike) => total + locklike.amount,
+                        reply.amount
+                    )
+                };
+            });
 
             // Calculate the totalAmountandLockLikedFromReplies
             const totalAmountandLockLikedForReplies = repliesWithTotalAmount.reduce(
                 (sum, reply) => sum + (reply.totalAmountandLockLiked || 0),
                 0
             );
+
+            // Remove 'data:image' and everything after it using regex
+            const filteredNote = transaction.note.split('data:image')[0];
+
+            transaction.note = filteredNote;
 
             return {
                 ...transaction,
@@ -136,6 +155,14 @@ export default async function TopFeed({ searchParams }: TopFeedProps) {
 
     if (activeTab == "top") {
         const topPosts = await getTopPosts(activeSort, activeFilter, currentPage, 30)
+
+        const jsonPosts = JSON.stringify(topPosts, null, 2);
+        const sizeInBytes = new Blob([jsonPosts]).size;
+        const sizeInMB = sizeInBytes / (1024 * 1024); // Convert bytes to MB
+        console.log("Size of topPosts:", sizeInMB.toFixed(2), "MB");
+
+        // Write the prettified JSON to a file
+        fs.writeFileSync('topPosts.json', jsonPosts);
 
         return (
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
