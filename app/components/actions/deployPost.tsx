@@ -20,7 +20,8 @@ import {
 import { postAnon } from './anon-post-server-action'
 import { getLockupScript } from "../../utils/scrypt";
 import { WalletContext } from "../../context/WalletContextProvider";
-import { bsv } from "scrypt-ts";
+
+import GifModal from '@/app/components/posts/GifModal'
 
 
 interface deployProps {
@@ -59,6 +60,7 @@ export default function DeployInteraction({
   const [blocksToLock, setBlocksToLock] = useState<number>(144);
 
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [gifUrl, setGifUrl] = useState<string | undefined>();
 
   const [anonMode, setAnonMode] = useState(false);
   const anonBlocksToLock = 36;
@@ -204,7 +206,7 @@ export default function DeployInteraction({
         if (nLockTime && pubkey && paymail) {
           const lockupScript = await getLockupScript(nLockTime, pubkey);
 
-          const fullMessage = uploadedImage ? note + " " + uploadedImage : note;
+          const fullMessage = uploadedImage ? (note + " " + uploadedImage) : gifUrl ? (note + " " + gifUrl) : note;
 
           console.log(fullMessage);
 
@@ -301,7 +303,9 @@ export default function DeployInteraction({
         return;
       }
 
-      console.log("content: ", note);
+      const fullMessage = uploadedImage ? (note + " " + uploadedImage) : gifUrl ? (note + " " + gifUrl) : note; 
+
+      console.log("content: ", fullMessage);
 
       setPaying(true);
 
@@ -311,7 +315,7 @@ export default function DeployInteraction({
         blocksToLock + " blocks, locked until " + nLockTime
       );
 
-      const deployedAnonPost = await postAnon(note, sub, amountToLock, nLockTime)
+      const deployedAnonPost = await postAnon(fullMessage, sub, amountToLock, nLockTime)
 
       if (deployedAnonPost) {
 
@@ -435,7 +439,7 @@ export default function DeployInteraction({
           />
         </MentionsInput>
 
-        <div className="flex justify-between my-2">
+        <div className="flex z-20 justify-between my-2">
           <div className="flex mb-0 pl-2 justify-start">
             <input
               id="default-checkbox"
@@ -453,12 +457,14 @@ export default function DeployInteraction({
           </div>
 
           <div className="flex justify-end w-2/3 items-center mt-0 mb-0 pb-0">
+          <GifModal gifUrl={gifUrl} setGifUrl={setGifUrl} />
             {isLinked ? (
               <ImageUploader
+                gifUrl={gifUrl}
                 onImageUpload={handleImageUpload}
                 isDrawerVisible={isDrawerVisible}
               />
-            ) : null}
+            ) : null}            
           </div>
         </div>
 

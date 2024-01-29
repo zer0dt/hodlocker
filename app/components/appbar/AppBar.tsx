@@ -322,7 +322,7 @@ const AppBar = () => {
 
       <div
         id="drawer-bottom-example"
-        className={`rounded-lg fixed bottom-0 right-0 w-full lg:w-1/3 p-4 overflow-y-auto items-center transition-transform bg-white dark:bg-black ${
+        className={`rounded-lg fixed z-20 bottom-0 right-0 w-full lg:w-1/3 p-4 overflow-y-auto items-center transition-transform bg-white dark:bg-black ${
           isDrawerVisible ? "transform-none" : "transform translate-y-full"
         }`}
         tabIndex={-1}

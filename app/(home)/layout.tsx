@@ -18,7 +18,7 @@ export default async function Layout(props: {
         </Suspense>
       </div>
 
-      <div className="w-full">
+      <div className="w-full z-0">
         <div className="flex justify-center">
 
           {props.sublockers}

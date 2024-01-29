@@ -1,19 +1,27 @@
-'use client';
+'use client'
 
 import React, { useEffect, useState } from "react";
 import ImageUploading, { ImageListType } from "react-images-uploading";
-
 import { RiImageAddLine } from "react-icons/ri"
 import { CiCircleRemove } from 'react-icons/ci'
 
-
 interface ImageUploaderProps {
+    gifUrl: string | undefined,
     onImageUpload: (dataURL: string | null) => void;
     isDrawerVisible: boolean
 }
 
-export function ImageUploader({ onImageUpload, isDrawerVisible }: ImageUploaderProps) {
-  const [images, setImages] = useState([]);
+export function ImageUploader({ gifUrl, onImageUpload, isDrawerVisible }: ImageUploaderProps) {
+  const [images, setImages] = useState<ImageListType>([]);
+
+  useEffect(() => {
+    // Update images state when gifUrl changes
+    if (gifUrl) {
+      setImages([{ dataURL: gifUrl }]); // Add gifUrl to images state
+    } else {
+      setImages([]); // Clear images state when gifUrl is empty
+    }
+  }, [gifUrl]);
 
   const maxNumber = 1;
 
@@ -21,30 +29,16 @@ export function ImageUploader({ onImageUpload, isDrawerVisible }: ImageUploaderP
     if (imageList.length === 0) {
       // No image selected
       onImageUpload(null);
-      setImages([]);
-      return;
-    }
-  
-    const maxFileSizeInBytes = 1048576; // 1MB
-  
-    // Check the file size of the first image in the list
-    const file = imageList[0].file;
-    console.log("file size", file)
-    if (file && file.size > maxFileSizeInBytes) {
-      // The image file is too large
-      alert('Image file is larger than 1MB. Please upload a smaller image.');
-      setImages([]);
     } else {
-      // Image is within the acceptable size limit
+      // Image selected
       onImageUpload(imageList[0].dataURL as string);
-      setImages(imageList as never[]);
     }
+    setImages(imageList);
   };
 
   useEffect(() => {
-    // Check if isDrawerVisible becomes false
+    // Clear images state when isDrawerVisible becomes false
     if (!isDrawerVisible) {
-      // Clear the images state to remove all images
       setImages([]);
     }
   }, [isDrawerVisible]);
@@ -80,8 +74,7 @@ export function ImageUploader({ onImageUpload, isDrawerVisible }: ImageUploaderP
               {imageList.length > 0 ? 
                 null :
                 <RiImageAddLine className="lock-icon h-7 w-7 cursor-pointer mr-1" onClick={onImageUpload} {...dragProps} />
-              }
-                    
+              }       
             </div>
           </div>
         )}

@@ -28,6 +28,8 @@ import LockLikeDrawer from "./LockLikeDrawer";
 import RepliesDrawer from "./RepliesDrawer";
 
 
+
+
 interface PostProps {
   transaction: HODLTransactions;
   postLockLike: (
@@ -166,8 +168,19 @@ function Post({ transaction, postLockLike }: PostProps) {
 
   function extractDataUrl(note: string) {
     const dataUrlRegex = /data:image[^'"]*/;
-    const match = note.match(dataUrlRegex);
-    return match ? match[0] : null;
+    const matchDataUrl = note.match(dataUrlRegex);
+
+    // Check if the note contains a Tenor URL pattern
+    const tenorUrlRegex = /https:\/\/media\.tenor\.com\/.*/;
+    const matchTenorUrl = note.match(tenorUrlRegex);
+
+    if (matchDataUrl) {
+      return matchDataUrl[0]; // Return the data URL if found
+    } else if (matchTenorUrl) {
+      return matchTenorUrl[0]; // Return the Tenor URL if found
+    } else {
+      return null; // Return null if neither pattern is found
+    }
   }
 
   useEffect(() => {
@@ -177,29 +190,29 @@ function Post({ transaction, postLockLike }: PostProps) {
         console.log("Skipping data fetch for 'anon' handle.");
         return;
       }
-  
+
       try {
-        const response = await fetch(`/api/bitcoiners/liked/${handle}`, { next: { revalidate: 600 }});
-  
+        const response = await fetch(`/api/bitcoiners/liked/${handle}`, { next: { revalidate: 600 } });
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-  
+
         const data = await response.json();
-  
+
         if (data && data.totalLikedFromOthers !== undefined) {
           setAvatarRank(data.totalLikedFromOthers);
         } else {
           console.log(`No data found for bitcoiner with handle: ${handle}`);
           return null;
         }
-  
+
       } catch (error) {
         console.error("There was a problem fetching the bitcoiner's data:", error);
         return null;
       }
     };
-  
+
     getAvatarRank(transaction.handle_id);
   }, []);
 
