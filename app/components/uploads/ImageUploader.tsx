@@ -62,7 +62,6 @@ export function ImageUploader({ gifUrl, setGifUrl, onImageUpload, isDrawerVisibl
         value={images}
         onChange={onChange}
         maxNumber={maxNumber}
-        acceptType={['jpg', 'gif', 'png']}
         allowNonImageType={true}
       >
         {({
