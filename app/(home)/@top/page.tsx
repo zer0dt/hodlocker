@@ -1,6 +1,6 @@
-import { cache } from 'react'
+import { Suspense, cache } from 'react'
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
-import { postLockLike } from '@/app/server-actions'
+import { HODLTransactions, postLockLike } from '@/app/server-actions'
 import prisma from '@/app/db';
 import PostComponent from '@/app/components/posts/PostComponent';
 import Pagination from '@/app/components/feeds/sorting-utils/Pagination';
@@ -140,12 +140,14 @@ export default async function TopFeed({ searchParams }: TopFeedProps) {
         return (
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
                 {
-                    topPosts.map((transaction) => (
-                        <PostComponent
+                    topPosts.map((transaction: HODLTransactions) => (
+                        <Suspense key={transaction.txid} fallback={"loading post"}>
+                            <PostComponent
                             key={transaction.txid} // Assuming transaction has an 'id' field
                             transaction={transaction}
                             postLockLike={postLockLike}
                         />
+                        </Suspense>
                     ))
                 }
                 <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} />

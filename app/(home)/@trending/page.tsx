@@ -1,5 +1,5 @@
 
-import { cache } from "react";
+import { Suspense, cache } from "react";
 import prisma from "@/app/db";
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import { HODLTransactions, postLockLike } from "@/app/server-actions";
@@ -189,13 +189,15 @@ export default async function TrendingFeed({ searchParams }: TrendingFeedProps) 
         return (
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
                 {
-                    trendingPosts.filter(Boolean).map((item) => {
+                    trendingPosts.filter(Boolean).map((item: HODLTransactions) => {
                         return (
-                            <PostComponent
+                            <Suspense key={item.txid} fallback={"loading post"}>
+                                <PostComponent
                                 key={item.txid}
                                 transaction={item}
                                 postLockLike={postLockLike}
                             />
+                            </Suspense>                            
                         );
                     })
                 }

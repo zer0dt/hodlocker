@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 
 import { cache } from "react";
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
-import { postLockLike } from "@/app/server-actions";
+import { HODLTransactions, postLockLike } from "@/app/server-actions";
 import prisma from "@/app/db";
 import PostComponent from "@/app/components/posts/PostComponent";
 import Pagination from "@/app/components/feeds/sorting-utils/Pagination";
@@ -174,8 +174,8 @@ export default async function LatestFeed({ searchParams }: LatestFeedProps) {
         return (
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
                 {
-                    latestPosts.map((transaction) => (
-                        <Suspense fallback={"loading post"}>
+                    latestPosts.map((transaction: HODLTransactions) => (
+                        <Suspense key={transaction.txid} fallback={"loading post"}>
                             <PostComponent
                             key={transaction.txid} // Assuming transaction has an 'id' field
                             transaction={transaction}
