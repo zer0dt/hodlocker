@@ -2,7 +2,7 @@ import { cache } from "react";
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import { postLockLike } from "../../server-actions";
 import prisma from "../../db";
-import ReplyComponent from "../../components/posts/ReplyComponent";
+import ReplyComponent from "../../components/posts/replies/ReplyComponent";
 
 export const dynamic = "force-dynamic";
 
