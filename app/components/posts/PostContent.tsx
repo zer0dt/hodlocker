@@ -146,9 +146,6 @@ function PostContent({ transaction }: PostContentProps) {
             <PostPlaceHolder />
         ) : (
             <>
-                <Link href={`/${transaction.handle_id}/post/${transaction.txid}`}>
-                    {postImage && <Image src={postImage} width={0} height={0} style={{ width: '100%', height: 'auto' }} sizes="100vw" alt="post image" className="mb-1 rounded-lg" />}
-                </Link>
                 {note.length > 280 && !isExpanded ? (
                     <div dangerouslySetInnerHTML={{ __html: formatNote(note.slice(0, 280)) + "..." }}></div>
                 ) : (
@@ -187,6 +184,11 @@ function PostContent({ transaction }: PostContentProps) {
                         )}
                     </div>
                 )}
+                {postImage && 
+                    <Link href={`/${transaction.handle_id}/post/${transaction.txid}`}>
+                        <Image src={postImage} width={0} height={0} style={{ width: '100%', height: 'auto' }} sizes="100vw" alt="post image" className="mb-1 rounded-lg" />
+                    </Link>
+                }
             </>
         )
     );
