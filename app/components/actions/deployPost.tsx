@@ -461,6 +461,7 @@ export default function DeployInteraction({
             {isLinked ? (
               <ImageUploader
                 gifUrl={gifUrl}
+                setGifUrl={setGifUrl}
                 onImageUpload={handleImageUpload}
                 isDrawerVisible={isDrawerVisible}
               />

@@ -7,11 +7,12 @@ import { CiCircleRemove } from 'react-icons/ci'
 
 interface ImageUploaderProps {
     gifUrl: string | undefined,
+    setGifUrl: any,
     onImageUpload: (dataURL: string | null) => void;
     isDrawerVisible: boolean
 }
 
-export function ImageUploader({ gifUrl, onImageUpload, isDrawerVisible }: ImageUploaderProps) {
+export function ImageUploader({ gifUrl, setGifUrl, onImageUpload, isDrawerVisible }: ImageUploaderProps) {
   const [images, setImages] = useState<ImageListType>([]);
 
   useEffect(() => {
@@ -34,6 +35,14 @@ export function ImageUploader({ gifUrl, onImageUpload, isDrawerVisible }: ImageU
       onImageUpload(imageList[0].dataURL as string);
     }
     setImages(imageList);
+  };
+
+  const handleRemoveImage = (onImageRemove: (index: number) => void, index: number) => {
+    // Call the function to remove the image
+    onImageRemove(index);
+  
+    // Update the GIF URL state if necessary
+    setGifUrl(); // You should pass the appropriate value to setGifUrl if needed
   };
 
   useEffect(() => {
@@ -66,7 +75,7 @@ export function ImageUploader({ gifUrl, onImageUpload, isDrawerVisible }: ImageU
               <div key={index} className="image-item mt-2 max-h-300 w-auto">
                 <img src={image.dataURL} alt=""  />
                 <div className="image-item__btn-wrapper flex justify-end pt-2">
-                  <CiCircleRemove className="lock-icon h-6 w-6 cursor-pointer mr-1" onClick={() => onImageRemove(index)} />
+                  <CiCircleRemove className="lock-icon h-6 w-6 cursor-pointer mr-1" onClick={() => handleRemoveImage(onImageRemove, index)} />
                 </div>
               </div>
             ))}

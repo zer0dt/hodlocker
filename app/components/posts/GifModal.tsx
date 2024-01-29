@@ -44,7 +44,7 @@ const GifModal = ({ gifUrl, setGifUrl }: GifModalProps) => {
             )}
 
             {modalVisible && (
-                <div className="fixed inset-0 z-50 overflow-auto bg-gray-500 bg-opacity-75 flex items-center justify-center">
+                <div className="fixed inset-0 z-100 overflow-auto bg-gray-500 bg-opacity-75 flex items-center justify-center">
                     <div ref={modalRef} id="default-modal" tabIndex={-1} aria-hidden="true" className="relative bg-white rounded-lg shadow-lg">
                         <div className="p-4 md:p-5 space-y-4">
                             <GifPicker width={'auto'} tenorApiKey={"AIzaSyC5CkU-Qk9mPkWqhs_4z-rTVja0ZPFm0qY"} onGifClick={(TenorImage) => handleGifImageClick(TenorImage)} />
