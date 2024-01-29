@@ -6,10 +6,10 @@ import { RiImageAddLine } from "react-icons/ri"
 import { CiCircleRemove } from 'react-icons/ci'
 
 interface ImageUploaderProps {
-    gifUrl: string | undefined,
-    setGifUrl: any,
-    onImageUpload: (dataURL: string | null) => void;
-    isDrawerVisible: boolean
+  gifUrl: string | undefined,
+  setGifUrl: any,
+  onImageUpload: (dataURL: string | null) => void;
+  isDrawerVisible: boolean
 }
 
 export function ImageUploader({ gifUrl, setGifUrl, onImageUpload, isDrawerVisible }: ImageUploaderProps) {
@@ -40,7 +40,7 @@ export function ImageUploader({ gifUrl, setGifUrl, onImageUpload, isDrawerVisibl
   const handleRemoveImage = (onImageRemove: (index: number) => void, index: number) => {
     // Call the function to remove the image
     onImageRemove(index);
-  
+
     // Update the GIF URL state if necessary
     setGifUrl(); // You should pass the appropriate value to setGifUrl if needed
   };
@@ -68,25 +68,37 @@ export function ImageUploader({ gifUrl, setGifUrl, onImageUpload, isDrawerVisibl
           onImageUpdate,
           onImageRemove,
           isDragging,
-          dragProps
+          dragProps,
+          errors
         }) => (
           <div className="upload__image-wrapper mt-0 mr-0">
             {imageList.map((image, index) => (
               <div key={index} className="image-item mt-2 max-h-300 w-auto">
-                <img src={image.dataURL} alt=""  />
+                <img src={image.dataURL} alt="" />
                 <div className="image-item__btn-wrapper flex justify-end pt-2">
                   <CiCircleRemove className="lock-icon h-6 w-6 cursor-pointer mr-1" onClick={() => handleRemoveImage(onImageRemove, index)} />
                 </div>
               </div>
             ))}
             <div className="flex items-center mb-0">
-              {imageList.length > 0 ? 
+              {imageList.length > 0 ?
                 null :
                 <RiImageAddLine className="lock-icon h-7 w-7 cursor-pointer mr-1" onClick={onImageUpload} {...dragProps} />
-              }       
+              }
             </div>
+            {errors && (
+              <div>
+                {errors.maxNumber && <span>Number of selected images exceed maxNumber</span>}
+                {errors.acceptType && <span>Your selected file type is not allowed</span>}
+                {errors.maxFileSize && <span>Selected file size exceeds maxFileSize</span>}
+                {errors.resolution && <span>Selected file does not match your desired resolution</span>}
+              </div>
+            )}
           </div>
-        )}
+
+        )
+
+        }
       </ImageUploading>
     </div>
   );

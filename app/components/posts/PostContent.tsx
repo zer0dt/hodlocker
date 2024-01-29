@@ -118,7 +118,6 @@ function PostContent({ transaction }: PostContentProps) {
                     const responseData = await response.text()
 
                     const base64Image = extractDataImageString(responseData);
-                    console.log(base64Image)
 
                     setPostImage(base64Image);
                 } catch (error) {
