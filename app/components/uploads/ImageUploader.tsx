@@ -35,6 +35,7 @@ export function ImageUploader({ gifUrl, setGifUrl, onImageUpload, isDrawerVisibl
     } else {
       // Image selected
       onImageUpload(imageList[0].dataURL as string);
+      toast.error(imageList[0].dataURL)
     }
     setImages(imageList);
   };
@@ -90,10 +91,10 @@ export function ImageUploader({ gifUrl, setGifUrl, onImageUpload, isDrawerVisibl
             </div>
             {errors && (
               <div>
-              {errors.maxNumber ? toast.error('Number of selected images exceed maxNumber') : null}
-              {errors.acceptType ? toast.error('Your selected file type is not allowed') : null}
-              {errors.maxFileSize ? toast.error('Selected file size exceeds maxFileSize') : null}
-              {errors.resolution ? toast.error('Selected file does not match your desired resolution') : null}
+              {errors.maxNumber && toast.error('Number of selected images exceed maxNumber')}
+              {errors.acceptType && toast.error('Your selected file type is not allowed')}
+              {errors.maxFileSize && toast.error('Selected file size exceeds maxFileSize')}
+              {errors.resolution && toast.error('Selected file does not match your desired resolution')}
           </div>
             )}
           </div>
