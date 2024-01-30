@@ -17,16 +17,13 @@ import { Suspense } from 'react'
 const inter = Roboto_Flex({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('http://localhost:3000'),
   manifest: "/manifest.json",
   title: "Enter the center of Bitcoin.",
   openGraph: {
     title: "Enter the center of Bitcoin.",
-    images: ["/locked.jpg"]
-  }
+    images: ["/townsquare.png"]
+  },
 };
-
-
 export default async function RootLayout({
   children,
 }: {

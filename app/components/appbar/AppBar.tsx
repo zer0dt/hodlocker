@@ -51,7 +51,7 @@ const AppBar = () => {
   const [signInModalVisible, setSignInModalVisible] = useState(false);
   const [profileDropdownVisible, setProfileDropdownVisible] = useState(false);
 
-  const [sublockers, setSublockers] = useState([{id: 1, name: "BSV"}])
+  const [sublockers, setSublockers] = useState([{ id: 1, name: "BSV" }])
 
   const [avatar, setAvatar] = useState("https://a.relayx.com/u/" + handle + "@relayx.io")
 
@@ -142,9 +142,9 @@ const AppBar = () => {
   };
 
   const handleHomeClick = async () => {
-    await smoothScrollToTop();    
-      router.push("/")
-      router.refresh();
+    await smoothScrollToTop();
+    router.push("/")
+    router.refresh();
   };
 
   const closeDrawer = () => {
@@ -266,14 +266,14 @@ const AppBar = () => {
                 className="py-2 text-sm text-gray-700 dark:text-gray-200"
                 aria-labelledby="dropdownDefaultButton"
               >
-                <li className="flex justify-around items-center mb-2">
+                <li className="flex justify-around items-center">
                   <a
                     href="https://github.com/zer0dt/hodlocker"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white w-full justify-center px-2 py-1"
                   >
-                    <FaGithub size={24} />
+                    <FaGithub size={18} />
                   </a>
                   <div className="border-r border-gray-100 dark:border-gray-600 h-6 my-1"></div>
                   <a
@@ -282,21 +282,26 @@ const AppBar = () => {
                     rel="noopener noreferrer"
                     className="flex items-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white w-full justify-center px-2 py-1"
                   >
-                    <FaXTwitter size={24} />
+                    <FaXTwitter size={18} />
                   </a>
                 </li>
 
                 {handle ? (
-                  <li>
-                    <Link
-                      id="profile-button"
-                      href={"/" + handle}
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      onClick={() => setProfileDropdownVisible(false)}
-                    >
-                      Profile
-                    </Link>
-                  </li>
+                  <>
+                    <li>
+                      <Link
+                        id="profile-button"
+                        href={"/" + handle}
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                        onClick={() => setProfileDropdownVisible(false)}
+                      >
+                        Profile
+                      </Link>
+                    </li>
+                    <li className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                        Settings
+                    </li>
+                  </>
                 ) : null}
 
                 <li>
@@ -315,16 +320,14 @@ const AppBar = () => {
       </div>
 
       <div
-        className={`pointer-events-none fixed inset-0 bg-black duration-300 ${
-          isDrawerVisible ? "opacity-30" : "opacity-0"
-        }`}
+        className={`pointer-events-none fixed inset-0 bg-black duration-300 ${isDrawerVisible ? "opacity-30" : "opacity-0"
+          }`}
       ></div>
 
       <div
         id="drawer-bottom-example"
-        className={`rounded-lg fixed z-20 bottom-0 right-0 w-full lg:w-1/3 p-4 overflow-y-auto items-center transition-transform bg-white dark:bg-black ${
-          isDrawerVisible ? "transform-none" : "transform translate-y-full"
-        }`}
+        className={`rounded-lg fixed z-20 bottom-0 right-0 w-full lg:w-1/3 p-4 overflow-y-auto items-center transition-transform bg-white dark:bg-black ${isDrawerVisible ? "transform-none" : "transform translate-y-full"
+          }`}
         tabIndex={-1}
       >
         <h5
@@ -364,14 +367,14 @@ const AppBar = () => {
         </div>
       </div>
 
-      <NotificationsDrawer 
+      <NotificationsDrawer
         notifications={notifications}
         clearNotifications={clearNotifications}
-        notificationsDrawerVisible={notificationsDrawerVisible} 
+        notificationsDrawerVisible={notificationsDrawerVisible}
         setNotificationsDrawerVisible={setNotificationsDrawerVisible}
         currentBlockHeight={currentBlockHeight}
       />
-      
+
       {signInModalVisible && (
         <div
           id="crypto-modal"
@@ -427,7 +430,7 @@ const AppBar = () => {
                     </button>
                     <button
                       type="button"
-                
+
                       className="text-white bg-[#050708] hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30 mr-2 mb-2"
                     >
                       <img src="/relayx.png" className="w-6 h-6" />
