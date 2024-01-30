@@ -19,9 +19,10 @@ const inter = Roboto_Flex({ subsets: ['latin'] })
 export const metadata: Metadata = {
   manifest: "/manifest.json",
   title: "Enter the center of Bitcoin.",
+  description: "Rank content by locking bitcoin on the on-chain social platform.",
   openGraph: {
     title: "Enter the center of Bitcoin.",
-    description: "Rank content by locking bitcoin on hodlocker.com, an on-chain social media platform.",
+    description: "Rank content by locking bitcoin on the on-chain social platform.",
     images: ["/townsquare.png"],
     url: "https://hodlocker.com",
   },
