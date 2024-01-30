@@ -1,5 +1,16 @@
 import React, { Suspense } from "react"
 import FeedBar from "./feedBar"
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+  manifest: "/manifest.json",
+  title: "Enter the center of Bitcoin.",
+  openGraph: {
+    title: "Enter the center of Bitcoin.",
+    images: ["/townsquare.png"]
+  },
+};
 
 export default async function Layout(props: {
   children: React.ReactNode

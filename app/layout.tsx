@@ -24,6 +24,7 @@ export const metadata: Metadata = {
     images: ["/townsquare.png"]
   },
 };
+
 export default async function RootLayout({
   children,
 }: {
