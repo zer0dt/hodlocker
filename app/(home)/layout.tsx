@@ -8,7 +8,9 @@ export const metadata: Metadata = {
   title: "Enter the center of Bitcoin.",
   openGraph: {
     title: "Enter the center of Bitcoin.",
-    images: ["/townsquare.png"]
+    description: "Rank content by locking bitcoin on hodlocker.com, an on-chain social media platform.",
+    images: ["/townsquare.png"],
+    url: "https://hodlocker.com",
   },
 };
 
