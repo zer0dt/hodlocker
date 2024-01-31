@@ -64,7 +64,7 @@ const SettingsModal = ({ handle, setSettingsModalVisible }: SettingsModalProps) 
                 });
 
                 if (savedSettings) {
-                    toast.success("Your default locking settings have been saved.")
+                    toast.success("Your default lock settings have been saved.")
                     setBitcoinerSettings({
                         handle_id: handle, // Provide the Bitcoiner handle here
                         amountToLock: parseFloat(bitcoinAmount),
