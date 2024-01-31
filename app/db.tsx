@@ -2,7 +2,9 @@ import { PrismaClient } from '@prisma/client'
 import { withAccelerate } from '@prisma/extension-accelerate'
 
 const prismaClientSingleton = () => {
-
+  if (process.env.NODE_ENV === 'production') {
+    return new PrismaClient().$extends(withAccelerate())
+  }
   return new PrismaClient()
 }
 

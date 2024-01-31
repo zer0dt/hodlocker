@@ -108,8 +108,9 @@ export const WalletContextProvider = ({
       const balance = await relayone.getBalance2();
       setUserBalance((balance.satoshis / 100000000).toFixed(2).toString())
 
-      const response = await fetch(`/api/bitcoiners/settings/${handle}`);
-
+      const response = await fetch(`/api/bitcoiners/settings/${handle}`, {
+        cache: "no-store"
+      });
       const responseJson = await response.json();
       console.log(responseJson);
       if (responseJson) {
@@ -138,7 +139,7 @@ export const WalletContextProvider = ({
   return (
     <>
       <Script src="https://one.relayx.io/relayone.js" onLoad={() => checkIfLinked()} />
-      <WalletContext.Provider value={{ fetchRelayOneData, pubkey, handle, userBalance, paymail, isLinked, bitcoinerSettings, setBitcoinerSettings currentBlockHeight }}>
+      <WalletContext.Provider value={{ fetchRelayOneData, pubkey, handle, userBalance, paymail, isLinked, bitcoinerSettings, currentBlockHeight }}>
         {children}
       </WalletContext.Provider>
     </>
