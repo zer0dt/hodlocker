@@ -15,8 +15,8 @@ const SettingsModal = ({ handle, setSettingsModalVisible }: SettingsModalProps) 
     const { bitcoinerSettings, setBitcoinerSettings } = useContext(WalletContext)!;
     const router = useRouter()
 
-    const [bitcoinAmount, setBitcoinAmount] = useState<number>();
-    const [blocksAmount, setBlocksAmount] = useState<number>();
+    const [bitcoinAmount, setBitcoinAmount] = useState('1000');
+    const [blocksAmount, setBlocksAmount] = useState('0.01');
 
     const [isLoading, setIsLoading] = useState(false)
 
@@ -24,8 +24,8 @@ const SettingsModal = ({ handle, setSettingsModalVisible }: SettingsModalProps) 
 
     useEffect(() => {
         if (bitcoinerSettings) {
-            setBitcoinAmount(bitcoinerSettings.amountToLock)
-            setBlocksAmount(bitcoinerSettings.blocksToLock)
+            setBitcoinAmount(bitcoinerSettings.amountToLock.toString())
+            setBlocksAmount(bitcoinerSettings.blocksToLock.toString())
         }
     }, [bitcoinerSettings])
 
@@ -48,11 +48,11 @@ const SettingsModal = ({ handle, setSettingsModalVisible }: SettingsModalProps) 
     };
 
     const handleBitcoinChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setBitcoinAmount(parseFloat(event.target.value));
+        setBitcoinAmount(event.target.value);
     };
 
     const handleBlocksChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setBlocksAmount(parseInt(event.target.value));
+        setBlocksAmount(event.target.value);
     };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -67,16 +67,16 @@ const SettingsModal = ({ handle, setSettingsModalVisible }: SettingsModalProps) 
             try {
                 const savedSettings = await saveBitcoinerSettings({
                     handle_id: handle, // Provide the Bitcoiner handle here
-                    amountToLock: bitcoinAmount,
-                    blocksToLock: blocksAmount
+                    amountToLock: parseFloat(bitcoinAmount),
+                    blocksToLock: parseInt(blocksAmount)
                 });
 
                 if (savedSettings) {
                     toast.success("Your default locking settings have been saved.")
                     setBitcoinerSettings({
                         handle_id: handle, // Provide the Bitcoiner handle here
-                        amountToLock: bitcoinAmount,
-                        blocksToLock: blocksAmount
+                        amountToLock: parseFloat(bitcoinAmount),
+                        blocksToLock: parseInt(blocksAmount)
                     })
                 }
 
