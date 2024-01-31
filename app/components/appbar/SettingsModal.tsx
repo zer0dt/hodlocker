@@ -110,12 +110,12 @@ const SettingsModal = ({ handle, setSettingsModalVisible }: SettingsModalProps) 
                 <form onSubmit={handleSubmit} className="p-4 md:p-5">
                     <div className="flex gap-2">
                         <div className="w-1/2">
-                            <label htmlFor="bitcoin" className="block mb-2 text-lg font-medium text-gray-900 dark:text-white">bitcoin</label>
-                            <input type="number" name="bitcoin" id="bitcoin" value={bitcoinAmount} onChange={handleBitcoinChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="0.01" required={true} />
+                            <label htmlFor="bitcoin" className="block mb-2 text-md font-medium text-gray-900 dark:text-white">bitcoin</label>
+                            <input type="number" name="bitcoin" id="bitcoin" value={bitcoinAmount} onChange={handleBitcoinChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="0.01" required={true} />
                         </div>
                         <div className="w-1/2">
-                            <label htmlFor="blocks" className="block mb-2 text-lg font-medium text-gray-900 dark:text-white">blocks</label>
-                            <input type="number" name="blocks" id="blocks" value={blocksAmount} onChange={handleBlocksChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="1000" required={true} />
+                            <label htmlFor="blocks" className="block mb-2 text-md font-medium text-gray-900 dark:text-white">blocks</label>
+                            <input type="number" name="blocks" id="blocks" value={blocksAmount} onChange={handleBlocksChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="1000" required={true} />
                         </div>
                     </div>
                     <div className="flex justify-end mt-4">
