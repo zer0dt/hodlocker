@@ -434,29 +434,55 @@ const AppBar = () => {
                 </h3>
               </div>
 
-              <div className="p-6 flex flex-col items-center">
-                <h1 className="text-xl font-normal text-black dark:text-white pb-8">
+              <div className="p-6 flex flex-col items-center justify-center">
+                <h1 className="text-xl font-mono text-black dark:text-white pb-4">
                   Enter the center of Bitcoin.
                 </h1>
                 <ul className="my-4 space-y-3">
-                  <li className="justify-center items-center">
+                  <li className="items-center flex flex-col justify-center pb-4">
                     <button
                       type="button"
                       onClick={() => fetchRelayOneData()}
-                      className="text-white bg-[#050708] hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30 mr-2 mb-2"
+                      className="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
                     >
-                      <img src="/relayx.png" className="w-6 h-6" />
-                      <span className="pl-4">Sign in with RelayX</span>
+                      <div className="flex items-center justify-center">
+                        <img src="/relayx.png" className="w-6 h-6 mr-2" />
+                        <span>
+                          RelayX
+                        </span>
+                      </div>
                     </button>
                     <button
                       type="button"
-
-                      className="text-white bg-[#050708] hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30 mr-2 mb-2"
+                      onClick={() => alert("not implemented yet")}
+                      className="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
                     >
-                      <img src="/relayx.png" className="w-6 h-6" />
-                      <span className="pl-4">Sign in with PandaWallet</span>
+                      <div className="flex items-center justify-center">
+                        <img src="/panda.png" className="w-6 h-6 mr-2" />
+                        <span>
+                          PandaWallet
+                        </span>
+                      </div>
+
                     </button>
                   </li>
+                    <div className="flex items-center p-4 mb-4 text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+                      <svg className="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                      </svg>
+                      <span className="sr-only">Info</span>
+                      <div className="ms-3 text-sm font-medium">
+                        Having trouble connecting? {' '}
+                        <a
+                          href="https://github.com/pow-co/relay-browser-extension/releases" 
+                          className="font-semibold underline hover:no-underline" 
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Install the RelayX browser extension for desktop
+                        </a>.
+                      </div>
+                    </div>
                 </ul>
               </div>
             </div>
