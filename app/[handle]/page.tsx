@@ -33,6 +33,8 @@ type Props = {
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
     const totalFollowingAmount = await getFollowersTotal(params.handle);
 
+    console.log(params.handle)
+
     const title = params.handle + " (" + (totalFollowingAmount.totalLocklikedFromAllBitcoiners / 100000000).toFixed(2) + " bitcoin following)";
     let description = "hodlocker.com - Enter the center of Bitcoin.";
     let image = 'https://a.relayx.com/u/' + params.handle + '@relayx.io';
