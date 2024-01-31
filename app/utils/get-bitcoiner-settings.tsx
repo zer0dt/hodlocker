@@ -1,6 +1,7 @@
 
 import prisma from '@/app/db';
 
+export const dynamic = 'force-dynamic'
 
 export interface BitcoinerSettings {
     handle_id: string;
