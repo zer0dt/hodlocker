@@ -438,8 +438,8 @@ const AppBar = () => {
                 <h1 className="text-xl font-mono text-black dark:text-white pb-4">
                   Enter the center of Bitcoin.
                 </h1>
-                <ul className="my-4 space-y-3">
-                  <li className="items-center flex flex-col justify-center pb-4">
+                <ul className="my-2 space-y-3">
+                  <li className="items-center flex flex-col justify-center">
                     <button
                       type="button"
                       onClick={() => fetchRelayOneData()}
@@ -452,24 +452,6 @@ const AppBar = () => {
                         </span>
                       </div>
                     </button>
-                    <br/>
-                    <div className="flex items-center p-4 mb-4 text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
-                      <svg className="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                      </svg>
-                      <span className="sr-only">Info</span>
-                      <div className="ms-3 text-sm font-medium">
-                        Having trouble connecting? {' '}
-                        <a
-                          href="https://github.com/pow-co/relay-browser-extension/releases" 
-                          className="font-semibold underline hover:no-underline" 
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Install the RelayX browser extension
-                        </a>.
-                      </div>
-                    </div>
                   </li>
                   <li>
                     <button
@@ -483,27 +465,27 @@ const AppBar = () => {
                           PandaWallet
                         </span>
                       </div>
-
                     </button>
-                  </li>
-                    <div className="flex items-center p-4 mb-4 text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
-                      <svg className="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                      </svg>
-                      <span className="sr-only">Info</span>
-                      <div className="ms-3 text-sm font-medium">
-                        Having trouble connecting? {' '}
-                        <a
-                          href="https://github.com/pow-co/relay-browser-extension/releases" 
-                          className="font-semibold underline hover:no-underline" 
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Install the RelayX browser extension for desktop
-                        </a>.
-                      </div>
-                    </div>
+                  </li>                  
                 </ul>
+
+                <div className="flex items-center p-4 my-4 text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+                    <svg className="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span className="sr-only">Info</span>
+                    <div className="ms-3 text-sm font-medium">
+                      Having trouble connecting? {' '}
+                      <a
+                        href="https://github.com/pow-co/relay-browser-extension/releases"
+                        className="font-semibold underline hover:no-underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Install the RelayX browser extension for desktop
+                      </a>.
+                    </div>
+                  </div>
               </div>
             </div>
           </div>
