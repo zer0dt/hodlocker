@@ -9,6 +9,7 @@ import FeedPlaceholder from '@/app/components/posts/placeholders/FeedPlaceholder
 
 import { parse, stringify } from "superjson";
 import { unstable_cache } from 'next/cache';
+import PostComponentPlaceholder from '@/app/components/posts/placeholders/PostComponentPlaceholder';
 
 
 const getTopPosts = (async (sort: string, filter: number, page: number, limit: number): Promise<[]> => {
@@ -184,7 +185,7 @@ export default async function TopFeed({ searchParams }: TopFeedProps) {
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
                 {
                      Object.values(posts).map((transaction: HODLTransactions) => (
-                        <Suspense key={transaction.txid} fallback={"loading post"}>
+                        <Suspense key={transaction.txid} fallback={<PostComponentPlaceholder />}>
                             <PostComponent
                             key={transaction.txid} // Assuming transaction has an 'id' field
                             transaction={transaction}

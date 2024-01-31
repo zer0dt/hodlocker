@@ -8,6 +8,7 @@ import Pagination from "@/app/components/feeds/sorting-utils/Pagination";
 
 import { unstable_cache } from "next/cache";
 import { parse, stringify } from "superjson";
+import PostComponentPlaceholder from "@/app/components/posts/placeholders/PostComponentPlaceholder";
 
 
 function enrichItem(item: HODLTransactions): any {
@@ -217,7 +218,7 @@ export default async function TrendingFeed({ searchParams }: TrendingFeedProps) 
                 {
                     Object.values(posts).filter(Boolean).map((item: HODLTransactions) => {
                         return (
-                            <Suspense key={item.txid} fallback={"loading post"}>
+                            <Suspense key={item.txid} fallback={<PostComponentPlaceholder />}>
                                 <PostComponent
                                 key={item.txid}
                                 transaction={item}

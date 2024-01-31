@@ -9,7 +9,7 @@ import prisma from "@/app/db";
 import PostComponent from "@/app/components/posts/PostComponent";
 import Pagination from "@/app/components/feeds/sorting-utils/Pagination";
 
-import FeedPlaceholder from '@/app/components/posts/placeholders/FeedPlaceholder'
+import PostComponentPlaceholder from '@/app/components/posts/placeholders/PostComponentPlaceholder'
 
 
 export const getLatestPosts = (
@@ -212,7 +212,7 @@ export default async function LatestFeed({ searchParams }: LatestFeedProps) {
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
                 {
                     Object.values(posts).map((transaction: HODLTransactions) => (
-                        <Suspense key={transaction.txid} fallback={<FeedPlaceholder />}>
+                        <Suspense key={transaction.txid} fallback={<PostComponentPlaceholder />}>
                             <PostComponent
                                 key={transaction.txid} // Assuming transaction has an 'id' field
                                 transaction={transaction}

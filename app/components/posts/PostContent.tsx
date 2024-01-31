@@ -15,6 +15,7 @@ import { MdExpandLess } from "react-icons/md";
 import { HODLTransactions } from "../../server-actions";
 
 import PostPlaceHolder from './placeholders/PostPlaceholder'
+import ImagePlaceholder from './placeholders/ImagePlaceholder';
 
 interface PostContentProps {
     transaction: HODLTransactions
@@ -97,6 +98,8 @@ function PostContent({ transaction }: PostContentProps) {
     const [isLoading, setIsLoading] = useState(true);
     const [isExpanded, setIsExpanded] = useState(false);
 
+    const [imageLoading, setImageLoading] = useState(false)
+
     const toggleExpansion = () => setIsExpanded(!isExpanded);
 
     useEffect(() => {
@@ -105,6 +108,7 @@ function PostContent({ transaction }: PostContentProps) {
         const fetchData = async () => {
 
             if (transaction.hasImage) {
+                setImageLoading(true)
                 try {
                     const response = await fetch(`https://api.bitails.io/download/tx/${transaction.txid}/output/2`, {
                         headers: {
@@ -120,6 +124,7 @@ function PostContent({ transaction }: PostContentProps) {
                     const base64Image = extractDataImageString(responseData);
 
                     setPostImage(base64Image);
+                    setImageLoading(false)
                 } catch (error) {
                     console.error('Error fetching image data:', error);
                 }
@@ -142,55 +147,59 @@ function PostContent({ transaction }: PostContentProps) {
 
 
     return (
-        isLoading ? (
-            <PostPlaceHolder />
-        ) : (
-            <>
-                {note.length > 280 && !isExpanded ? (
-                    <div dangerouslySetInnerHTML={{ __html: formatNote(note.slice(0, 280)) + "..." }}></div>
-                ) : (
-                    containsTwitterLink(note) ? (
-                        <>
-                            <div dangerouslySetInnerHTML={{ __html: formatNote(note) }} />
-                            <Tweet id={note.match(/\/status\/([0-9]+)/)[1]} />
-                        </>
+        <>
+            {isLoading ? (
+                <PostPlaceHolder />
+            ) : (
+                <>
+                    {note.length > 280 && !isExpanded ? (
+                        <div dangerouslySetInnerHTML={{ __html: formatNote(note.slice(0, 280)) + "..." }}></div>
                     ) : (
-                        <div dangerouslySetInnerHTML={{ __html: formatNote(note) }} />
-                    )
-                )}
-                {note.length > 280 && (
-                    <div className="flex justify-end pr-2">
-                        {!isExpanded && (
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleExpansion();
-                                }}
-                                className="text-black-400 dark:text-white hover:underline text-sm pl-2 pb-1"
-                            >
-                                <MdExpandMore className="h-6 w-6" />
-                            </button>
-                        )}
-                        {isExpanded && (
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleExpansion();
-                                }}
-                                className="text-black-400 dark:text-white hover:underline text-sm pl-2 pb-1"
-                            >
-                                <MdExpandLess className="h-6 w-6" />
-                            </button>
-                        )}
-                    </div>
-                )}
-                {postImage && 
-                    <Link href={`/${transaction.handle_id}/post/${transaction.txid}`}>
-                        <Image src={postImage} width={0} height={0} style={{ width: '100%', height: 'auto' }} sizes="100vw" alt="post image" className="mb-1 rounded-lg" />
-                    </Link>
-                }
-            </>
-        )
+                        containsTwitterLink(note) ? (
+                            <>
+                                <div dangerouslySetInnerHTML={{ __html: formatNote(note) }} />
+                                <Tweet id={note.match(/\/status\/([0-9]+)/)[1]} />
+                            </>
+                        ) : (
+                            <div dangerouslySetInnerHTML={{ __html: formatNote(note) }} />
+                        )
+                    )}
+                    {note.length > 280 && (
+                        <div className="flex justify-end pr-2">
+                            {!isExpanded && (
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleExpansion();
+                                    }}
+                                    className="text-black-400 dark:text-white hover:underline text-sm pl-2 pb-1"
+                                >
+                                    <MdExpandMore className="h-6 w-6" />
+                                </button>
+                            )}
+                            {isExpanded && (
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleExpansion();
+                                    }}
+                                    className="text-black-400 dark:text-white hover:underline text-sm pl-2 pb-1"
+                                >
+                                    <MdExpandLess className="h-6 w-6" />
+                                </button>
+                            )}
+                        </div>
+                    )}
+                </>
+            )}
+            {/* Moved outside of isLoading check */}
+            {imageLoading ? <ImagePlaceholder /> : (
+                postImage &&
+                <Link href={`/${transaction.handle_id}/post/${transaction.txid}`}>
+                    <Image src={postImage} width={0} height={0} style={{ width: '100%', height: 'auto' }} sizes="100vw" alt="post image" className="mb-1 rounded-lg" />
+                </Link>
+            )}
+        </>
     );
 }
 
