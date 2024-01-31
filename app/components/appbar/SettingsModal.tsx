@@ -15,8 +15,8 @@ const SettingsModal = ({ handle, setSettingsModalVisible }: SettingsModalProps) 
     const { bitcoinerSettings, setBitcoinerSettings } = useContext(WalletContext)!;
     const router = useRouter()
 
-    const [bitcoinAmount, setBitcoinAmount] = useState('1000');
-    const [blocksAmount, setBlocksAmount] = useState('0.01');
+    const [bitcoinAmount, setBitcoinAmount] = useState('0.01');
+    const [blocksAmount, setBlocksAmount] = useState('1000');
 
     const [isLoading, setIsLoading] = useState(false)
 
