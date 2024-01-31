@@ -77,6 +77,7 @@ const SettingsModal = ({ handle, setSettingsModalVisible }: SettingsModalProps) 
                     })
                 }
 
+                router.refresh()
                 setSettingsModalVisible(false);
             } catch (error) {
                 console.error('Error saving Bitcoiner settings:', error);
