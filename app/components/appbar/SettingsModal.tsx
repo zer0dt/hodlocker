@@ -94,7 +94,7 @@ const SettingsModal = ({ handle, setSettingsModalVisible }: SettingsModalProps) 
     return (
 
         <div id="crud-modal" ref={modalRef} tabIndex={-1} aria-hidden="true" className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden max-w-sm w-full">
+            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden max-w-xs w-full">
                 <div className="flex items-center justify-between p-4 md:p-5 border-b dark:border-gray-600">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                         Default Lock Settings
@@ -110,15 +110,15 @@ const SettingsModal = ({ handle, setSettingsModalVisible }: SettingsModalProps) 
                 <form onSubmit={handleSubmit} className="p-4 md:p-5">
                     <div className="flex gap-2">
                         <div className="w-1/2">
-                            <label htmlFor="bitcoin" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">bitcoin</label>
+                            <label htmlFor="bitcoin" className="block mb-2 text-lg font-medium text-gray-900 dark:text-white">bitcoin</label>
                             <input type="number" name="bitcoin" id="bitcoin" value={bitcoinAmount} onChange={handleBitcoinChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="0.01" required={true} />
                         </div>
                         <div className="w-1/2">
-                            <label htmlFor="blocks" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">blocks</label>
+                            <label htmlFor="blocks" className="block mb-2 text-lg font-medium text-gray-900 dark:text-white">blocks</label>
                             <input type="number" name="blocks" id="blocks" value={blocksAmount} onChange={handleBlocksChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="1000" required={true} />
                         </div>
                     </div>
-                    <div className="flex justify-end mt-2">
+                    <div className="flex justify-end mt-4">
                         <button type="submit" className="text-white inline-flex items-center bg-orange-400 hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-400 dark:hover:bg-orange-600 dark:focus:ring-orange-300">
                             {isLoading && (
                                 <svg aria-hidden="true" role="status" className="inline w-4 h-4 me-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
