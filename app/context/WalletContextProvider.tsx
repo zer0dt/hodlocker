@@ -108,7 +108,7 @@ export const WalletContextProvider = ({
       const balance = await relayone.getBalance2();
       setUserBalance((balance.satoshis / 100000000).toFixed(2).toString())
 
-      const response = await fetch(`/api/bitcoiners/settings/${handle}`, { cache: 'no-store' });
+      const response = await fetch(`/api/bitcoiners/settings/${handle}`);
 
       const responseJson = await response.json();
       console.log(responseJson);
