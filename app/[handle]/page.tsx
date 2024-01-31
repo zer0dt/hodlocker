@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
     const totalFollowingAmount = await getFollowersTotal(params.handle);
 
     const title = params.handle + " (" + (totalFollowingAmount.totalLocklikedFromAllBitcoiners / 100000000).toFixed(2) + " bitcoin following)";
-    let description = "hodlocker.com - Don't get psyoped, be locked in.";
+    let description = "hodlocker.com - Enter the center of Bitcoin.";
     let image = 'https://a.relayx.com/u/' + params.handle + '@relayx.io';
 
     return {
