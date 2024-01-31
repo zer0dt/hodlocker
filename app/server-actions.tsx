@@ -340,7 +340,6 @@ export async function saveBitcoinerSettings(settings: BitcoinerSettings) {
           }
       });
 
-      revalidateTag('settings')
       return newBitcoinerSettings;
   } catch (error) {
       console.error('Error saving Bitcoiner settings:', error);
