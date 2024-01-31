@@ -19,6 +19,7 @@ import Pusher from "pusher-js";
 import Image from "next/image";
 
 import NotificationsDrawer from "./NotificationsDrawer";
+import SettingsModal from "./SettingsModal";
 
 
 interface NewNotifications {
@@ -50,6 +51,8 @@ const AppBar = () => {
 
   const [signInModalVisible, setSignInModalVisible] = useState(false);
   const [profileDropdownVisible, setProfileDropdownVisible] = useState(false);
+
+  const [settingsModalVisible, setSettingsModalVisible] = useState(false);
 
   const [sublockers, setSublockers] = useState([{ id: 1, name: "BSV" }])
 
@@ -271,7 +274,7 @@ const AppBar = () => {
                     href="https://github.com/zer0dt/hodlocker"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white w-full justify-center px-2 py-1"
+                    className="flex items-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white w-full justify-center py-1"
                   >
                     <FaGithub size={18} />
                   </a>
@@ -280,7 +283,7 @@ const AppBar = () => {
                     href="https://x.com/hodlocker"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white w-full justify-center px-2 py-1"
+                    className="flex items-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white w-full justify-center py-1"
                   >
                     <FaXTwitter size={18} />
                   </a>
@@ -298,8 +301,11 @@ const AppBar = () => {
                         Profile
                       </Link>
                     </li>
-                    <li className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                    <li>
+                      <button onClick={() => setSettingsModalVisible(!settingsModalVisible)}
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                         Settings
+                      </button>
                     </li>
                   </>
                 ) : null}
@@ -375,6 +381,15 @@ const AppBar = () => {
         currentBlockHeight={currentBlockHeight}
       />
 
+      <div
+        className={`pointer-events-none fixed inset-0 bg-black transition-opacity duration-300 ${settingsModalVisible ? "opacity-50" : "opacity-0"
+          }`}
+      ></div>
+
+      {settingsModalVisible && (
+        <SettingsModal handle={handle} setSettingsModalVisible={setSettingsModalVisible} />
+      )}
+
       {signInModalVisible && (
         <div
           id="crypto-modal"
@@ -416,10 +431,10 @@ const AppBar = () => {
 
               <div className="p-6 flex flex-col items-center">
                 <h1 className="text-xl font-normal text-black dark:text-white pb-8">
-                  Don't get psyoped, be locked in.
+                  Enter the center of Bitcoin.
                 </h1>
                 <ul className="my-4 space-y-3">
-                  <li className="items-center">
+                  <li className="justify-center items-center">
                     <button
                       type="button"
                       onClick={() => fetchRelayOneData()}

@@ -26,7 +26,7 @@ interface LockLikeInteractionProps {
 }
 
 export default function LockLikeInteraction({ postTxid, replyTxid, postLockLike }: LockLikeInteractionProps) {    
-    const { currentBlockHeight, pubkey, fetchRelayOneData, handle, isLinked } = useContext(WalletContext)!;
+    const { currentBlockHeight, pubkey, fetchRelayOneData, handle, isLinked, bitcoinerSettings } = useContext(WalletContext)!;
 
     const router = useRouter()
 
@@ -39,6 +39,13 @@ export default function LockLikeInteraction({ postTxid, replyTxid, postLockLike 
     const popoverRef = useRef(null);
 
     const [lockLiked, setLockLiked] = useState(false)
+
+    useEffect(() => {
+      if (bitcoinerSettings) {
+        setAmountToLock(bitcoinerSettings.amountToLock.toString())
+        setBlocksToLock(bitcoinerSettings.blocksToLock.toString())
+      }
+    }, [bitcoinerSettings])
  
 
     useEffect(() => {
@@ -193,7 +200,7 @@ export default function LockLikeInteraction({ postTxid, replyTxid, postLockLike 
                           </div>
                           <div className="text-center text-l w-1/2 pl-1">
                               <label htmlFor="block-input" className="w-full block mb-1 text-sm font-medium text-gray-900 dark:text-white">blocks</label>
-                              <input onClick={(e) => e.stopPropagation()} type="number" autoComplete="off" id="block-input" placeholder="1000" min={1} required defaultValue={1000} onChange={e => setBlocksToLock(e.target.value)} className="text-l bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-slate-900 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                              <input onClick={(e) => e.stopPropagation()} type="number" autoComplete="off" id="block-input" placeholder="1000" min={1} required value={blocksToLock} onChange={e => setBlocksToLock(e.target.value)} className="text-l bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-slate-900 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                           </div>
                       </div>
                       <button

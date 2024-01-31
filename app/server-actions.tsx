@@ -8,6 +8,7 @@ import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import sha256 from "crypto-js/sha256";
 import hexEnc from "crypto-js/enc-hex";
 import { revalidateTag } from 'next/cache';
+import { BitcoinerSettings } from './utils/get-bitcoiner-settings';
 
 const apiKey = process.env.TAAL_MAINNET_API_KEY as string; // Replace with your API key
 
@@ -317,6 +318,34 @@ export async function postNewBitcoiner(handle: string, pubkey: string) {
       pubkey: pubkey
     }
   })
+}
+
+export async function saveBitcoinerSettings(settings: BitcoinerSettings) {
+  try {
+      const { handle_id, amountToLock, blocksToLock } = settings;
+
+      // Use upsert to either create or update the Bitcoiner settings
+      const newBitcoinerSettings = await prisma.settings.upsert({
+          where: {
+              handle_id: handle_id
+          },
+          update: {
+              amountToLock: amountToLock,
+              blocksToLock: blocksToLock
+          },
+          create: {
+              handle_id: handle_id,
+              amountToLock: amountToLock,
+              blocksToLock: blocksToLock
+          }
+      });
+
+      revalidateTag('settings')
+      return newBitcoinerSettings;
+  } catch (error) {
+      console.error('Error saving Bitcoiner settings:', error);
+      throw error; // You can handle the error further up the call stack
+  }
 }
 
 export async function createNewTag(name: string, ticker: string) {
