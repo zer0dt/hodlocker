@@ -139,7 +139,7 @@ export const WalletContextProvider = ({
   return (
     <>
       <Script src="https://one.relayx.io/relayone.js" onLoad={() => checkIfLinked()} />
-      <WalletContext.Provider value={{ fetchRelayOneData, pubkey, handle, userBalance, paymail, isLinked, bitcoinerSettings, currentBlockHeight }}>
+      <WalletContext.Provider value={{ fetchRelayOneData, pubkey, handle, userBalance, paymail, isLinked, bitcoinerSettings, setBitcoinerSettings, currentBlockHeight }}>
         {children}
       </WalletContext.Provider>
     </>
