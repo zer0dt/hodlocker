@@ -22,8 +22,6 @@ import { getLockupScript } from "../../utils/scrypt";
 import { bsv } from 'scrypt-ts'
 import { WalletContext } from "../../context/WalletContextProvider";
 
-import GifModal from '@/app/components/posts/GifModal'
-
 
 interface deployProps {
   subs: {
@@ -247,7 +245,7 @@ export default function DeployInteraction({
             const imageOpReturn = [
               uploadedImage
             ]
-            
+
             tx.addOutput(
               new bsv.Transaction.Output({
                 script: bsv.Script.buildSafeDataOut(imageOpReturn),
@@ -397,21 +395,20 @@ export default function DeployInteraction({
 
   return (
     <>
-
-      <div className="z-10 flex flex-col justify-between">
+      <div className="z-10 flex flex-col -mt-6 justify-between">
         <button
           onClick={() => {
             setSubDropdownVisible(!subDropdownVisible);
           }}
           id="dropdownNavbarLink"
           data-dropdown-toggle="dropdownNavbar"
-          className="flex items-center justify-end w-full my-2 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-gray-400 dark:hover:text-white dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
+          className="flex items-center justify-start w-1/4 mb-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-gray-400 dark:hover:text-white dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
         >
           <span className="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
             {sub}
           </span>
           <svg
-            className="w-2.5 h-2.5 ml-2.5"
+            className="w-2.5 h-2.5 ml-1"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -431,7 +428,7 @@ export default function DeployInteraction({
           <div
             id="dropdownNavbar"
             ref={dropdownRef}
-            className="z-30 absolute top-20 right-2 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+            className="z-30 absolute top-4 left-2 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
           >
             <ul
               className="py-2 text-sm text-gray-700 dark:text-gray-400 overflow-y-auto max-h-40"
@@ -471,7 +468,7 @@ export default function DeployInteraction({
         </MentionsInput>
 
         <div className="flex z-20 justify-between my-2">
-          <div className="flex mb-0 pl-2 justify-start">
+          <div className="flex mb-0 pl-2 mt-1 justify-start">
             <input
               id="default-checkbox"
               type="checkbox"
@@ -481,14 +478,14 @@ export default function DeployInteraction({
             />
             <label
               htmlFor="default-checkbox"
-              className="flex ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              className="flex ml-2 -mt-1 text-sm font-mono text-gray-900 dark:text-gray-300"
             >
               anon mode
             </label>
           </div>
 
           <div className="flex justify-end w-2/3 items-center mt-0 mb-0 pb-0">
-            
+
             {isLinked ? (
               <ImageUploader
                 gifUrl={gifUrl}
@@ -500,16 +497,19 @@ export default function DeployInteraction({
           </div>
         </div>
 
-        <div className="pt-4 flex justify-center items-center">
+        <div className="flex justify-center items-center -mb-4">
           <button
             onClick={() => {
               {
                 anonMode ? AnonPost() : Post();
               }
             }}
-            className="w-1/4 justify-center items-center transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:bg-gradient-to-br hover:from-orange-300 hover:to-orange-600 duration-300 inline-block rounded-md border border-transparent bg-gradient-to-br from-orange-300 to-orange-600 shadow-lg shadow-orange-500/50 dark:shadow-lg dark:shadow-orange-800/80 mt-0 py-2 px-2 text-base font-medium text-white"
+            className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-orange-500 to-orange-400 group-hover:from-orange-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-orange-200 dark:focus:ring-orange-800"
           >
-            {paying || loading ? spinner() : "Post"}
+            {paying || loading ? spinner() : 
+            <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+              Post
+            </span>}
           </button>
         </div>
       </div>

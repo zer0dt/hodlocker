@@ -497,7 +497,7 @@ export async function postNewReply(txid: string, amount: number, postTxid: strin
       note: note,
       amount: amount,
       locked_until: nLockTime,
-      hasImage,
+      hasImage: hasImage
       },
   })  
 
@@ -520,6 +520,7 @@ export async function postNewReply(txid: string, amount: number, postTxid: strin
     })
   }   
 
+  revalidateTag("posts")
   return newReply  
 }
 
