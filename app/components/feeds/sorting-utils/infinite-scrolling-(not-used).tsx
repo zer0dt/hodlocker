@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import InfiniteScroll from 'react-infinite-scroller';
-import Loading from "@/app/(home)/loading-spinner";
+import Loading from "@/app/(home)/loading";
 import { LockLikes } from "@prisma/client";
 import { HODLTransactions } from "../../../server-actions";
 import ReplyComponent from "../../posts/ReplyComponent";
