@@ -9,6 +9,8 @@ import { FaRegComment } from "react-icons/fa";
 import { SiBitcoinsv } from "react-icons/si";
 import { HODLTransactions } from "@/app/server-actions";
 
+import { usePathname } from 'next/navigation'
+
 interface RepliesDrawerProps {
   transaction: any,
   replies: any,
@@ -27,11 +29,13 @@ const RepliesDrawer = ({
   replies,
   postLockLike
 }: RepliesDrawerProps) => {
+  const pathname = usePathname()
 
   const [replyDrawerVisible, setReplyDrawerVisible] = useState(false);
   const drawerRef = useRef(null);
 
   useEffect(() => {
+    scrollBottom()
     // Function to handle outside clicks
     function handleClickOutside(event) {
       if (drawerRef.current && !drawerRef.current.contains(event.target)) {
@@ -49,6 +53,23 @@ const RepliesDrawer = ({
     };
   }, [setReplyDrawerVisible, replyDrawerVisible]);
 
+  const toggleReplyDrawer = () => {
+    // Check if the pathname includes "post"
+    if (!pathname.includes('post')) {
+      setReplyDrawerVisible(!replyDrawerVisible);
+    }
+  };
+
+  const scrollBottom = () => {
+    if (replyDrawerVisible && drawerRef.current) {
+      setTimeout(() => {
+        drawerRef.current.scrollTo({
+          top: drawerRef.current.scrollHeight,
+          behavior: "smooth",
+        });
+      }, 20); // Adjust the delay as needed
+    }
+  };
 
   return (
     <>
@@ -58,7 +79,7 @@ const RepliesDrawer = ({
           }`}>
       </div>
 
-      <div onClick={() => setReplyDrawerVisible(!replyDrawerVisible)} className="flex gap-1 mb-1">
+      <div onClick={toggleReplyDrawer} className="flex gap-1 mb-1">
         <FaRegComment className="reply-button mt-1 h-4 w-4" />
         <span className="text-sm font-medium font-mono">
           {transaction.totalAmountandLockLikedForReplies
@@ -117,7 +138,7 @@ const RepliesDrawer = ({
             </div>
           ))}
 
-          <div className="py-4 pb-24 lg:pb-6">
+          <div className="pt-4 pb-20 lg:pb-6">
             <ReplyInteraction transaction={transaction} />
           </div>
 

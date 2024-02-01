@@ -476,7 +476,7 @@ export async function postNewNFTPost(txid: string, amount: number, handle: strin
 }
 
 
-export async function postNewReply(txid: string, amount: number, postTxid: string, handle: string, note: string, nLockTime: number) {
+export async function postNewReply(txid: string, amount: number, postTxid: string, handle: string, note: string, nLockTime: number, hasImage: boolean) {
   
   // Calculate the size of the note string in bytes
   const noteSizeInBytes = Buffer.from(note).length;
@@ -496,7 +496,8 @@ export async function postNewReply(txid: string, amount: number, postTxid: strin
       post_id: postTxid,
       note: note,
       amount: amount,
-      locked_until: nLockTime
+      locked_until: nLockTime,
+      hasImage: hasImage
       },
   })  
 

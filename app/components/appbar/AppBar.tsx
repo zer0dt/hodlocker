@@ -343,9 +343,9 @@ const AppBar = () => {
       >
         <h5
           id="drawer-bottom-label"
-          className="inline-flex items-center mb-1 text-base font-semibold text-black dark:text-white"
+          className="inline-flex items-center mb-1 text-base font-mono text-black dark:text-white"
         >
-          hodlocker.com
+          
         </h5>
         <button
           onClick={() => setIsDrawerVisible(!isDrawerVisible)}

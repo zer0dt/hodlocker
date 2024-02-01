@@ -2,12 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import ImageUploading, { ImageListType } from "react-images-uploading";
-import { RiImageAddLine } from "react-icons/ri"
 import { CiCircleRemove } from 'react-icons/ci'
 
 import Image from 'next/image'
 
 import { toast } from "sonner";
+import { PiImageLight } from "react-icons/pi";
 
 interface ImageUploaderProps {
   gifUrl: string | undefined,
@@ -86,16 +86,16 @@ export function ImageUploader({ gifUrl, setGifUrl, onImageUpload, isDrawerVisibl
             <div className="flex items-center mb-0">
               {imageList.length > 0 ?
                 null :
-                <RiImageAddLine className="lock-icon h-7 w-7 cursor-pointer mr-1" onClick={onImageUpload} {...dragProps} />
+                <PiImageLight className="lock-icon h-7 w-7 cursor-pointer mr-1" onClick={onImageUpload} {...dragProps} />
               }
             </div>
             {errors && (
               <div>
-              {errors.maxNumber && toast.error('Number of selected images exceed maxNumber')}
-              {errors.acceptType && toast.error('Your selected file type is not allowed')}
-              {errors.maxFileSize && toast.error('Selected file size exceeds maxFileSize')}
-              {errors.resolution && toast.error('Selected file does not match your desired resolution')}
-          </div>
+                {errors.maxNumber && toast.error('Number of selected images exceed maxNumber')}
+                {errors.acceptType && toast.error('Your selected file type is not allowed')}
+                {errors.maxFileSize && toast.error('Selected file size exceeds maxFileSize')}
+                {errors.resolution && toast.error('Selected file does not match your desired resolution')}
+              </div>
             )}
           </div>
 
