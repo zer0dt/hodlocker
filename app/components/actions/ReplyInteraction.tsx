@@ -265,7 +265,6 @@ export default function replyInteraction({ transaction }: deployProps) {
   }
 
   const handleImageUpload = (dataURL: string | null) => {
-    console.log('handleImageUpload')
     if (dataURL) {
       setUploadedImage(dataURL);
     } else {
