@@ -224,7 +224,10 @@ export default async function LatestFeed({ searchParams }: LatestFeedProps) {
         const posts = parse<HODLTransactions[]>(latestPosts)
         
         return (
-            <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
+            <div 
+                key={"latest" + activeSort + activeFilter + activeFilter2 + currentPage} 
+                className="grid grid-cols-1 gap-0 w-full lg:w-96"
+            >
                 {
                     Object.values(posts).map((transaction: HODLTransactions) => (
                         <Suspense key={transaction.txid} fallback={<PostComponentPlaceholder />}>

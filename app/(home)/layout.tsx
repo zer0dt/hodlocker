@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Layout(props: {
+export default async function FeedLayout(props: {
   children: React.ReactNode
   sublockers: React.ReactNode
   top: React.ReactNode
@@ -37,7 +37,9 @@ export default async function Layout(props: {
 
           {props.sublockers}
           {props.top}
-          {props.latest}
+          <Suspense fallback={"loading feed"}>
+            {props.latest}
+          </Suspense>
           {props.trending}
           {props.leaderboard}
 
