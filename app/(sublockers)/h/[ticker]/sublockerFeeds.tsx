@@ -16,6 +16,7 @@ interface SublockerFeedsProps {
         page: number;
         sort: string;
         filter: string;
+        filter2: string;
         ranked: string;
       };
 }
@@ -29,6 +30,8 @@ export default async function SublockerFeeds({ params, searchParams }: Sublocker
     const activeSort = searchParams.sort || "week";
 
     const activeFilter = searchParams.filter !== undefined ? parseFloat(searchParams.filter) : 0;
+    
+    const activeFilter2 = searchParams.filter2 !== undefined ? parseFloat(searchParams.filter2) : 0;
 
     const currentPage = searchParams.page || 1;
 
@@ -39,7 +42,7 @@ export default async function SublockerFeeds({ params, searchParams }: Sublocker
              {activeTab === "subs" && (
                 <div>
                   <Suspense
-                    key={activeSort + activeFilter + activeTab + currentPage}
+                    key={activeSort + activeFilter + activeFilter2 + activeTab + currentPage}
                     fallback={<Loading />}
                   >
                     <SublockerFeed searchParams={searchParams} />
@@ -53,7 +56,7 @@ export default async function SublockerFeeds({ params, searchParams }: Sublocker
                     key={activeSort + activeFilter + activeTab + currentPage}
                     fallback={<Loading />}
                   >
-                    {getSubTopPosts(activeSub, activeSort, activeFilter, currentPage, 30)}
+                    {getSubTopPosts(activeSub, activeSort, activeFilter, activeFilter2, currentPage, 30)}
                     
                   </Suspense>
                 </div>
@@ -65,7 +68,7 @@ export default async function SublockerFeeds({ params, searchParams }: Sublocker
                     key={activeSort + activeFilter + activeTab + currentPage}
                     fallback={<Loading />}
                   >
-                    {getSubLatestPosts(activeSub, activeSort, activeFilter, currentPage, 30)}
+                    {getSubLatestPosts(activeSub, activeSort, activeFilter, activeFilter2, currentPage, 30)}
                     
                   </Suspense>
                 </div>
@@ -77,7 +80,7 @@ export default async function SublockerFeeds({ params, searchParams }: Sublocker
                     key={activeSort + activeFilter + activeTab + currentPage}
                     fallback={<Loading />}
                   >
-                    {getSubTrendingPosts(activeSub, activeSort, activeFilter, currentPage, 50)}
+                    {getSubTrendingPosts(activeSub, activeSort, activeFilter, activeFilter2, currentPage, 50)}
                     
                   </Suspense>
                 </div>

@@ -4,6 +4,7 @@ import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import { HODLTransactions, postLockLike } from "../../server-actions";
 import PostComponent from "../../components/posts/PostComponent";
 import ReplyComponent from "../../components/posts/replies/ReplyComponent";
+import { RankedBitcoiners } from "@/app/api/bitcoiners/route";
 
 export const dynamic = "force-dynamic";
 
@@ -53,6 +54,7 @@ export async function fetchTransactions(
   sub: string,
   sort: string,
   filter: number,
+  filter2: number,
   page: number,
   limit: number
 ): Promise<HODLTransactions[]> {
@@ -79,7 +81,19 @@ export async function fetchTransactions(
   } else if (sort === "year") {
     yourStartTime = new Date(currentTimestamp - 365 * 24 * 60 * 60 * 1000); // Subtract 365 days in milliseconds (approximate)
   }
-  
+
+  const baseUrl = process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3000'
+  let handles: string[] = [];
+  if (filter2 > 0) {
+      const response = await fetch(`${baseUrl}/api/bitcoiners/`)
+      if (response.ok) {
+          const bitcoiners = (await response.json()).rankedBitcoiners as RankedBitcoiners
+          console.log('bitcoiners', bitcoiners)
+          handles = bitcoiners.filter(b => b.totalAmountLocked >= filter2).map(b => b.handle)
+      } else {
+          console.error("Error fetching bitcoiners", response.status, response.statusText)
+      }
+  }
   
   try {
     const recentLocklikes = await prisma.lockLikes.findMany({
@@ -104,6 +118,7 @@ export async function fetchTransactions(
               },
             },
           },
+        ...(filter2 > 0 ? { handle_id: { in: handles } } : {}),
       },
       include: {
         post: {
@@ -175,8 +190,8 @@ export async function fetchTransactions(
 }
 
 export const getSubTrendingPosts = cache(
-  async (sub: string, sort: string, filter: number, page: number, limit: number): Promise<JSX.Element> => {
-    const items = await fetchTransactions(sub, sort, filter, page, limit);
+  async (sub: string, sort: string, filter: number, filter2: number, page: number, limit: number): Promise<JSX.Element> => {
+    const items = await fetchTransactions(sub, sort, filter, filter2, page, limit);
 
     return (
       <>

@@ -18,7 +18,8 @@ export default function FeedBar() {
     const activeSort = searchParams.get("sort") || "week";
 
     const activeFilter = searchParams.get("filter") || 0;
-
+    
+    const activeFilter2 = searchParams.get("filter2") || 0;
 
     let notActiveClassName =
         "inline-block px-3 py-1 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 border-b-2 border-transparent";
@@ -35,7 +36,7 @@ export default function FeedBar() {
         <ul className="flex flex-wrap -mb-px justify-evenly">
 
             <li className="flex pt-1 pr-2 inline-block relative items-center justify-center rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 border-b-2 border-transparent">
-                <SortingDropdown sub={activeSub} tab={activeTab} sort={activeSort} filter={activeFilter ? parseFloat(activeFilter) : 0} />
+                <SortingDropdown sub={activeSub} tab={activeTab} sort={activeSort} filter={activeFilter ? parseFloat(activeFilter) : 0} filter2={activeFilter2 ? parseFloat(activeFilter2) : 0} />
             </li>
 
             <Link
@@ -44,7 +45,8 @@ export default function FeedBar() {
                     query: {
                         tab: 'subs',
                         sort: activeSort,
-                        filter: activeFilter
+                        filter: activeFilter,
+                        filter2: activeFilter2,
                     },
                 }}
                 prefetch={true}
@@ -63,7 +65,8 @@ export default function FeedBar() {
                     query: {
                         tab: 'top',
                         sort: activeSort,
-                        filter: activeFilter
+                        filter: activeFilter,
+                        filter2: activeFilter2,
                     },
                 }}
                 prefetch={true}
@@ -81,7 +84,8 @@ export default function FeedBar() {
                     query: {
                         tab: 'latest',
                         sort: activeSort,
-                        filter: activeFilter
+                        filter: activeFilter,
+                        filter2: activeFilter2,
                     },
                 }}
                 prefetch={true}
@@ -99,7 +103,8 @@ export default function FeedBar() {
                     query: {
                         tab: 'trending',
                         sort: activeSort,
-                        filter: activeFilter
+                        filter: activeFilter,
+                        filter2: activeFilter2,
                     },
                 }}
                 prefetch={true}

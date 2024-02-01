@@ -9,7 +9,8 @@ interface PaginationProps {
     currentPage: number,
     tab: string,
     sort: string,
-    filter: number
+    filter: number,
+    filter2: number,
 }
 
 const scrollTop = () => {
@@ -22,10 +23,10 @@ const scrollTop = () => {
 };
 
 
-const Pagination = ({ handle, currentPage, tab, sort, filter }: PaginationProps) => {
+const Pagination = ({ handle, currentPage, tab, sort, filter, filter2 }: PaginationProps) => {
 
-  const nextLink = "/" + (handle ? handle : "") +  "?tab=" + tab + "&sort=" + sort + "&filter=" + filter + "&page=" + (Number(currentPage) + 1);
-  const prevLink = "/" + (handle ? handle : "") +  "?tab=" + tab + "&sort=" + sort + "&filter=" + filter + "&page=" + (Number(currentPage) - 1);
+  const nextLink = "/" + (handle ? handle : "") +  "?tab=" + tab + "&sort=" + sort + "&filter=" + filter + "&filter2=" + filter2 + "&page=" + (Number(currentPage) + 1);
+  const prevLink = "/" + (handle ? handle : "") +  "?tab=" + tab + "&sort=" + sort + "&filter=" + filter + "&filter2=" + filter2 + "&page=" + (Number(currentPage) - 1);
 
   return (
     <div className="pt-4 px-4 mb-8 flex justify-between">

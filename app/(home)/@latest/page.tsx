@@ -10,12 +10,13 @@ import PostComponent from "@/app/components/posts/PostComponent";
 import Pagination from "@/app/components/feeds/sorting-utils/Pagination";
 
 import PostComponentPlaceholder from '@/app/components/posts/placeholders/PostComponentPlaceholder'
-
+import type { RankedBitcoiners } from "@/app/api/bitcoiners/route";
 
 export const getLatestPosts = (
     async (
         sort: string,
         filter: number,
+        filter2: number,
         page: number,
         limit: number
     ): Promise<[]> => {
@@ -41,9 +42,20 @@ export const getLatestPosts = (
             yourStartTime = new Date(currentTimestamp - 365 * 24 * 60 * 60 * 1000); // Subtract 365 days in milliseconds (approximate)
         }
 
+        const baseUrl = process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3000'
+        let handles: string[] = [];
+        if (filter2 > 0) {
+            const response = await fetch(`${baseUrl}/api/bitcoiners/`)
+            if (response.ok) {
+                const bitcoiners = (await response.json()).rankedBitcoiners as RankedBitcoiners
+                handles = bitcoiners.filter(b => b.totalAmountLocked >= filter2).map(b => b.handle)
+            }
+        }
+
         try {
             const transactions = await prisma.transactions.findMany({
                 where: {
+                    ...(filter2 > 0 ? { handle_id: { in: handles } } : {}),
                     AND: [
                         {
                             created_at: {
@@ -170,14 +182,15 @@ interface LatestFeedProps {
         tab: string,
         sort: string,
         filter: string,
+        filter2: string,
         page: number,
         limit: number
     }
 }
 
 const getCachedPosts = unstable_cache(
-    async (sort: string, filter: number, currentPage: number, limit: number) => {
-        const cachedPosts = await getLatestPosts(sort, filter, currentPage, limit)
+    async (sort: string, filter: number, filter2: number, currentPage: number, limit: number) => {
+        const cachedPosts = await getLatestPosts(sort, filter, filter2, currentPage, limit)
 
         return stringify({...cachedPosts})
     },
@@ -195,11 +208,13 @@ export default async function LatestFeed({ searchParams }: LatestFeedProps) {
     const activeSort = searchParams.sort || "week";
 
     const activeFilter = searchParams.filter !== undefined ? parseFloat(searchParams.filter) : 0;
+    
+    const activeFilter2 = searchParams.filter2 !== undefined ? parseFloat(searchParams.filter2) : 0;
 
     const currentPage = searchParams.page || 1;
 
     if (activeTab == "latest") {
-        const latestPosts = await getCachedPosts(activeSort, activeFilter, currentPage, 30)
+        const latestPosts = await getCachedPosts(activeSort, activeFilter, activeFilter2, currentPage, 30)
 
         const jsonPosts = JSON.stringify(latestPosts, null, 2);
         const sizeInBytes = new Blob([jsonPosts]).size;
@@ -222,7 +237,7 @@ export default async function LatestFeed({ searchParams }: LatestFeedProps) {
 
                     ))
                 }
-                <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} />
+                <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} filter2={activeFilter2} />
             </div>
         )
     } else {

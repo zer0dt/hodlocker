@@ -5,7 +5,11 @@ import prisma from '../db';
  
 export const dynamic = "force-dynamic"
 
-export const getBitcoinersforLocked = cache(async (): Promise<HODLBitcoiners[]> => {
+interface BitcoinersWithTotalLocked extends HODLBitcoiners {
+  totalAmountLocked: number
+}
+
+export const getBitcoinersforLocked = cache(async (): Promise<BitcoinersWithTotalLocked[]> => {
   const currentBlockHeight = await fetchCurrentBlockHeight();
 
   console.log("getting 'locked' leaderboard: how much bitcoiners have locked themselves")

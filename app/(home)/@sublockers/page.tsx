@@ -5,7 +5,8 @@ import { getAllTags } from '@/app/utils/sublockers/get-tags'
 interface SublockersFeedProps {
     searchParams: {
         tab: string,
-        filter: string
+        filter: string,
+        filter2: string,
     }
 }
 export const dynamic = "force-dynamic";
