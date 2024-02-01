@@ -5,6 +5,8 @@ import Disclaimer from "@/app/components/Disclaimer";
 import SublockerFeedBar from "./sublockerFeedBar";
 import SublockerFeeds from "./sublockerFeeds";
 
+import Loading from "@/app/(home)/loading";
+
 interface SublockerPageProps {
   params: {
     ticker: string;
@@ -27,7 +29,7 @@ export default async function SublockerPage({ params, searchParams }: SublockerP
       <Disclaimer />
       <main className="pb-24 flex flex-col items-center justify-center pt-2 lg:p-12 lg:pt-6">
         <div className="text-md font-medium text-gray-500 border-b border-gray-200 dark:text-white dark:border-gray-700">
-          <Suspense fallback={<p>🔒</p>}>
+          <Suspense fallback={<Loading />}>
             <SublockerFeedBar params={params} />
           </Suspense>
         </div>

@@ -37,9 +37,7 @@ export default async function FeedLayout(props: {
 
           {props.sublockers}
           {props.top}
-          <Suspense fallback={"loading feed"}>
-            {props.latest}
-          </Suspense>
+          {props.latest}
           {props.trending}
           {props.leaderboard}
 
