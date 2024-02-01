@@ -173,7 +173,8 @@ export default function replyInteraction({ transaction }: deployProps) {
                 transaction.txid,
                 send.paymail.substring(0, send.paymail.lastIndexOf("@")),
                 fullMessage,
-                nLockTime
+                nLockTime,
+                uploadedImage ? true : false
               )
               console.log(newReply)
               toast.success("Transaction posted to hodlocker.com: " + newReply.txid.slice(0, 6) + "..." + newReply.txid.slice(-6))
@@ -264,6 +265,7 @@ export default function replyInteraction({ transaction }: deployProps) {
   }
 
   const handleImageUpload = (dataURL: string | null) => {
+    console.log('handleImageUpload')
     if (dataURL) {
       setUploadedImage(dataURL);
     } else {
