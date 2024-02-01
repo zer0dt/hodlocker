@@ -50,7 +50,7 @@ function formatNote(note: string) {
 
         // Otherwise, create an anchor tag for the URL
         const href = url.startsWith('www.') ? 'https://' + url : url;
-        return `<a href="${href}" target="_blank" rel="noopener noreferrer"><span class="text-orange-400">${url}</span></a>`;
+        return `<a href="${href}" target="_blank" rel="noopener noreferrer"><span class="text-orange-400 whitespace-normal break-words">${url}</span></a>`;
     });
 
     // Convert newlines to <br/>
