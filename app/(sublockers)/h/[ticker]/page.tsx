@@ -16,6 +16,7 @@ interface SublockerPageProps {
     page: number;
     sort: string;
     filter: string;
+    filter2: string
     ranked: string;
   }
 }

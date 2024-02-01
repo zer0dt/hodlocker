@@ -12,6 +12,7 @@ import { toast } from "sonner";
 interface SublockersProps {
   searchParams: {
     filter: string
+    filter2: string
   }
   coinTags: any,
   topicTags: any,
@@ -20,6 +21,7 @@ interface SublockersProps {
 export default function Sublockers({ searchParams, coinTags, topicTags }: SublockersProps) {
 
   const activeFilter = searchParams.filter || 0;
+  const activeFilter2 = searchParams.filter2 || 0;
 
   const sortedCoinTags = [...coinTags].sort((a, b) => b.totalAmountLocked - a.totalAmountLocked);
   const sortedTopicTags = [...topicTags].sort((a, b) => b.totalAmountLocked - a.totalAmountLocked);
@@ -147,7 +149,7 @@ export default function Sublockers({ searchParams, coinTags, topicTags }: Subloc
                     className="flex items-center px-3 py-4 text-gray-900 whitespace-nowrap dark:text-white"
                   >
                     <span className="mr-4">{index + 1}.</span>
-                    <Link href={`/h/${tag.name}/?tab=trending&sort=year&filter=${activeFilter}`} className="flex items-center">
+                    <Link href={`/h/${tag.name}/?tab=trending&sort=year&filter=${activeFilter}&filter2=${activeFilter2}`} className="flex items-center">
                       {type === "coins" && (
                         <img
                           src={tag.name === "SHIB"

@@ -1,4 +1,3 @@
-
 import { Suspense } from "react";
 import prisma from "@/app/db";
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
@@ -9,6 +8,7 @@ import Pagination from "@/app/components/feeds/sorting-utils/Pagination";
 import { unstable_cache } from "next/cache";
 import { parse, stringify } from "superjson";
 import PostComponentPlaceholder from "@/app/components/posts/placeholders/PostComponentPlaceholder";
+import { RankedBitcoiners } from "@/app/api/bitcoiners/route";
 
 
 function enrichItem(item: HODLTransactions): any {
@@ -69,10 +69,10 @@ function enrichItem(item: HODLTransactions): any {
 const getTrendingPosts = async function (
     sort: string,
     filter: number,
+    filter2: number,
     page: number,
     limit: number
 ): Promise<HODLTransactions[]> {
-
     const currentBlockHeight = await fetchCurrentBlockHeight();
 
     const skip = (page - 1) * limit
@@ -94,6 +94,18 @@ const getTrendingPosts = async function (
         yourStartTime = new Date(currentTimestamp - 365 * 24 * 60 * 60 * 1000); // Subtract 365 days in milliseconds (approximate)
     }
 
+    const baseUrl = process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3000'
+    let handles: string[] = [];
+    if (filter2 > 0) {
+        const response = await fetch(`${baseUrl}/api/bitcoiners/`)
+        if (response.ok) {
+            const bitcoiners = (await response.json()).rankedBitcoiners as RankedBitcoiners
+            console.log('bitcoiners', bitcoiners)
+            handles = bitcoiners.filter(b => b.totalAmountLocked >= filter2).map(b => b.handle)
+        } else {
+            console.error("Error fetching bitcoiners", response.status, response.statusText)
+        }
+    }
 
     try {
         const recentLocklikes = await prisma.lockLikes.findMany({
@@ -111,6 +123,7 @@ const getTrendingPosts = async function (
                 amount: {
                     gte: filter * 100000000, // Filter locklikes where the 'amount' is greater than or equal to the 'filter' amount
                 },
+                ...(filter2 > 0 ? { handle_id: { in: handles } } : {}),
             },
             include: {
                 post: {
@@ -175,14 +188,15 @@ interface TrendingFeedProps {
         tab: string,
         sort: string,
         filter: string,
+        filter2: string,
         page: number,
         limit: number
     }
 }
 
 const getCachedPosts = unstable_cache(
-    async (sort: string, filter: number, currentPage: number, limit: number) => {
-        const cachedPosts = await getTrendingPosts(sort, filter, currentPage, limit)
+    async (sort: string, filter: number, filter2: number, currentPage: number, limit: number) => {
+        const cachedPosts = await getTrendingPosts(sort, filter, filter2, currentPage, limit)
 
         return stringify({...cachedPosts})
     },
@@ -200,11 +214,13 @@ export default async function TrendingFeed({ searchParams }: TrendingFeedProps) 
     const activeSort = searchParams.sort || "week";
 
     const activeFilter = searchParams.filter !== undefined ? parseFloat(searchParams.filter) : 0;
+    
+    const activeFilter2 = searchParams.filter2 !== undefined ? parseFloat(searchParams.filter2) : 0;
 
     const currentPage = searchParams.page || 1;
 
     if (activeTab == "trending") {
-        const trendingPosts = await getCachedPosts(activeSort, activeFilter, currentPage, 30)
+        const trendingPosts = await getCachedPosts(activeSort, activeFilter, activeFilter2, currentPage, 30)
 
         const jsonPosts = JSON.stringify(trendingPosts, null, 2);
         const sizeInBytes = new Blob([jsonPosts]).size;
@@ -228,7 +244,7 @@ export default async function TrendingFeed({ searchParams }: TrendingFeedProps) 
                         );
                     })
                 }
-                <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} />
+                <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} filter2={activeFilter2}/>
             </div>
         )
     } else {

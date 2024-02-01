@@ -5,14 +5,13 @@ import prisma from '@/app/db';
 import PostComponent from '@/app/components/posts/PostComponent';
 import Pagination from '@/app/components/feeds/sorting-utils/Pagination';
 
-import FeedPlaceholder from '@/app/components/posts/placeholders/FeedPlaceholder'
-
 import { parse, stringify } from "superjson";
 import { unstable_cache } from 'next/cache';
 import PostComponentPlaceholder from '@/app/components/posts/placeholders/PostComponentPlaceholder';
+import { RankedBitcoiners } from '@/app/api/bitcoiners/route';
 
 
-const getTopPosts = (async (sort: string, filter: number, page: number, limit: number): Promise<[]> => {
+const getTopPosts = (async (sort: string, filter: number, filter2: number, page: number, limit: number): Promise<[]> => {
     console.log("getting top posts")
     const currentBlockHeight = await fetchCurrentBlockHeight();
 
@@ -35,6 +34,16 @@ const getTopPosts = (async (sort: string, filter: number, page: number, limit: n
         yourStartTime = new Date(currentTimestamp - 365 * 24 * 60 * 60 * 1000); // Subtract 365 days in milliseconds (approximate)
     }
 
+    const baseUrl = process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3000'
+    let handles: string[] = [];
+    if (filter2 > 0) {
+        const response = await fetch(`${baseUrl}/api/bitcoiners/`)
+        if (response.ok) {
+            const bitcoiners = (await response.json()).rankedBitcoiners as RankedBitcoiners
+            handles = bitcoiners.filter(b => b.totalAmountLocked >= filter2).map(b => b.handle)
+        }
+    }
+
     try {
         const transactions = await prisma.transactions.findMany({
             where: {
@@ -42,6 +51,7 @@ const getTopPosts = (async (sort: string, filter: number, page: number, limit: n
                     gte: yourStartTime,
                     lte: yourEndTime,
                 },
+                ...(filter2 > 0 ? { handle_id: { in: handles } } : {}),
             },
             include: {
                 tags: true,
@@ -143,14 +153,15 @@ interface TopFeedProps {
         tab: string,
         sort: string,
         filter: string,
+        filter2: string,
         page: number,
         limit: number
     }
 }
 
 const getCachedPosts = unstable_cache(
-    async (sort: string, filter: number, currentPage: number, limit: number) => {
-        const cachedPosts = await getTopPosts(sort, filter, currentPage, limit)
+    async (sort: string, filter: number, filter2: number, currentPage: number, limit: number) => {
+        const cachedPosts = await getTopPosts(sort, filter, filter2, currentPage, limit)
 
         return stringify({...cachedPosts})
     },
@@ -168,11 +179,13 @@ export default async function TopFeed({ searchParams }: TopFeedProps) {
     const activeSort = searchParams.sort || "week";
 
     const activeFilter = searchParams.filter !== undefined ? parseFloat(searchParams.filter) : 0;
+    
+    const activeFilter2 = searchParams.filter2 !== undefined ? parseFloat(searchParams.filter2) : 0;
 
     const currentPage = searchParams.page || 1;
 
     if (activeTab == "top") {
-        const topPosts = await getCachedPosts(activeSort, activeFilter, currentPage, 30)
+        const topPosts = await getCachedPosts(activeSort, activeFilter, activeFilter2, currentPage, 30)
 
         const jsonPosts = JSON.stringify(topPosts, null, 2);
         const sizeInBytes = new Blob([jsonPosts]).size;
@@ -194,7 +207,7 @@ export default async function TopFeed({ searchParams }: TopFeedProps) {
                         </Suspense>
                     ))
                 }
-                <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} />
+                <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} filter2={activeFilter2}/>
             </div>
         )
 
