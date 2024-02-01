@@ -5,8 +5,6 @@ import prisma from '@/app/db';
 import PostComponent from '@/app/components/posts/PostComponent';
 import Pagination from '@/app/components/feeds/sorting-utils/Pagination';
 
-import FeedPlaceholder from '@/app/components/posts/placeholders/FeedPlaceholder'
-
 import { parse, stringify } from "superjson";
 import { unstable_cache } from 'next/cache';
 import PostComponentPlaceholder from '@/app/components/posts/placeholders/PostComponentPlaceholder';

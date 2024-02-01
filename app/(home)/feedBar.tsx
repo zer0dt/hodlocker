@@ -20,8 +20,6 @@ export default function FeedBar() {
     const activeFilter = searchParams.get("filter") || 0;
 
 
-
-
     let notActiveClassName =
         "inline-block px-3 py-1 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 border-b-2 border-transparent";
     let activeClassName =
@@ -32,7 +30,6 @@ export default function FeedBar() {
         " sm:inline-block sm:px-3 sm:py-1 sm:text-sm sm:border-b-2 sm:hover:border-gray-300";
     activeClassName +=
         " sm:inline-block sm:px-3 sm:py-1 sm:text-sm sm:border-b-2 sm:hover:border-gray-300";
-
 
     return (
         <ul className="flex flex-wrap -mb-px justify-evenly">

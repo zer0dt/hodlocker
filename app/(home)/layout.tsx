@@ -1,7 +1,7 @@
 import React, { Suspense } from "react"
 import FeedBar from "./feedBar"
 import { Metadata } from "next";
-import Loading from "../loading";
+import Loading from "./loading-spinner";
 
 
 export const metadata: Metadata = {
@@ -36,13 +36,26 @@ export default async function Layout(props: {
       <div className="w-full z-0">
         <div className="flex justify-center">
 
-          {props.sublockers}
-          {props.top}
-          <Suspense fallback={<Loading />}>
+          <Suspense fallback={<Loading />} key={"subs"}>
+            {props.sublockers}
+          </Suspense>
+          <Suspense fallback={<Loading />} key={"top"}>
+            {props.top}
+          </Suspense>
+          <Suspense fallback={<Loading />} key={"latest"}>
             {props.latest}
-          </Suspense>          
-          {props.trending}
-          {props.leaderboard}
+          </Suspense>
+          <Suspense fallback={<Loading />} key={"trending"}>
+            {props.trending}
+          </Suspense>
+          <Suspense fallback={<Loading />} key={"leaderboard"}>
+            {props.leaderboard}
+          </Suspense>
+
+
+
+
+
 
         </div>
       </div>
