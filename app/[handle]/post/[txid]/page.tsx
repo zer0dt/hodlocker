@@ -10,6 +10,7 @@ import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from 'next/navigation';
 import ReplyComponent from '@/app/components/posts/replies/ReplyComponent';
 import DeployInteraction from '@/app/components/actions/deployPost';
+import ReplyInteraction from '@/app/components/actions/ReplyInteraction';
 
 type Props = {
     params: {
@@ -118,7 +119,7 @@ export default async function TransactionDetail({ params }: { params: { txid: st
         <main className="flex flex-col items-center justify-center pt-4 lg:p-12 lg:pt-6">
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96 p-0">
                 <PostComponent transaction={transaction} postLockLike={postLockLike} />
-                
+                <ReplyInteraction transaction={transaction} />
                 <div className="pt-8 pb-24">
                     {transaction.replies.map((reply, index) => (
                         <ReplyComponent key={index} reply={reply} postLockLike={postLockLike} />

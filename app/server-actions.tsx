@@ -520,6 +520,7 @@ export async function postNewReply(txid: string, amount: number, postTxid: strin
     })
   }   
 
+  revalidateTag("posts")
   return newReply  
 }
 
