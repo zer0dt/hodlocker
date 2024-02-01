@@ -304,7 +304,7 @@ export default function replyInteraction({ transaction }: deployProps) {
   
   return (
     <>
-      <div className="flex flex-col">
+      <div className="flex flex-col pt-4">
         <div className="rounded-lg w-full flex justify-start items-center bg-white dark:bg-black">
           <div className="flex w-full justify-center items-center pl-4">
             <MentionsInput

@@ -166,6 +166,13 @@ body {
     color: #ffffff;
     font-size: 14px;
   }
+  /* Hide scrollbar for WebKit browsers */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
 }
 .dark-comments-textarea__highlighter{
   padding: 10px;
