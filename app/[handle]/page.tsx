@@ -1,6 +1,6 @@
 
 
-import { getBitcoinerProfile, getFollowersTotal } from './utils/get-bitcoiner-profile';
+import { getFollowersTotal } from './utils/get-bitcoiner-profile';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { getBitcoinerTopPosts } from './utils/get-bitcoiner-top-posts';
@@ -8,7 +8,7 @@ import { getBitcoinerMentions } from './utils/get-bitcoiner-mentions';
 
 import { getBitcoinerReplies } from './utils/get-bitcoiner-replies';
 import ProfileInfo from './components/ProfileInfo';
-import Loading from './loading';
+import Loading from '@/app/loading';
 import Pagination from '../components/feeds/sorting-utils/Pagination';
 import { Metadata, ResolvingMetadata } from 'next';
 import { getBitcoinerLocks } from './utils/get-bitcoiner-locks';
@@ -61,22 +61,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 
 export default async function ProfilePage({ params, searchParams }: ProfilePageProps) {
 
-    let bitcoiner;
-
-    try {
-        bitcoiner = await getBitcoinerProfile(params.handle);
-        
-    } catch (error) {
-        console.error("Error fetching Bitcoiner profile:", error);
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center p-10 bg-white shadow-md rounded-lg">
-                    <p className="text-xl mt-4 text-gray-700">Bitcoiner "{params.handle}" not found</p>
-                </div>
-            </div>
-        );
-    }
-
+    
     const activeTab = searchParams.tab ? searchParams.tab : "posts";
 
     const currentPage = searchParams.page || 1;
@@ -88,7 +73,7 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
                     <div className="w-full rounded-lg border-x border-gray-100 dark:border-gray-800">
 
                         <Suspense fallback={<ProfileInfoPlaceholder />}>
-                            <ProfileInfo handle={bitcoiner.handle} totalAmountandLockLiked={bitcoiner.totalAmountandLockLiked} created_at={bitcoiner.created_at} />
+                            <ProfileInfo handle={params.handle} />
                         </Suspense>
                         
 
