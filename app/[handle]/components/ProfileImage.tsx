@@ -2,7 +2,7 @@
 import React from 'react'
 import Image from 'next/image'
 
-import { getBitcoinerLikedData } from "../../utils/get-bitcoiner-avatar-rank"
+import { getBitcoinerLikedData } from "@/app/utils/get-bitcoiner-avatar-rank"
 
 interface PostProfileImageProps {
   avatar: string,
@@ -42,8 +42,8 @@ export default async function PostProfileImage({ avatar, handle }: PostProfileIm
     <Image
       src={avatar}
       alt={`Profile Picture`}
-      width={40} // width and height based on the given h-10 and w-10 classes
-      height={40}
+      width={100} // width and height based on the given h-10 and w-10 classes
+      height={100}
       className={`rounded-full aspect-square ring-4 ${bitcoiner ? getRingColor(bitcoiner.totalLockLikedFromOthers) : "ring-orange-100"}`}
     />
   )

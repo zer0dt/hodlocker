@@ -34,10 +34,10 @@ interface PostProps {
 export default async function Post({ transaction, postLockLike }: PostProps) {
 
   const avatar = transaction.handle_id == "anon" ? (
-    "https://api.dicebear.com/7.x/shapes/svg?seed=" + 
-    transaction.txid + 
+    "https://api.dicebear.com/7.x/shapes/svg?seed=" +
+    transaction.txid +
     "&backgroundColor=f88c49&shape1Color=0a5b83&shape2Color=f88c49&shape3Color=f1f4dc"
-    ) : "https://a.relayx.com/u/" + transaction.handle_id + "@relayx.io"
+  ) : "https://a.relayx.com/u/" + transaction.handle_id + "@relayx.io"
 
 
   function timeSincePost(transaction: HODLTransactions) {
@@ -90,7 +90,9 @@ export default async function Post({ transaction, postLockLike }: PostProps) {
                   </Link>
                 </div>
                 <div className="pl-2 text-gray-600 dark:text-gray-300 text-sm block">
-                  · {timeSincePost(transaction)}
+                  <Link href={"/" + transaction.handle_id + "/post/" + transaction.txid}>
+                    · {timeSincePost(transaction)}
+                  </Link>
                 </div>
               </div>
             </div>
@@ -114,7 +116,7 @@ export default async function Post({ transaction, postLockLike }: PostProps) {
             </a>
           </div>
           <div className="text-md text-black-600 dark:text-white px-3 pb-0 ml-12 -mt-3 overflow-auto">
-            <PostContent transaction={transaction}/>            
+            <PostContent transaction={transaction} />
           </div>
 
           <div className="flex justify-between mx-2 my-1 relative">

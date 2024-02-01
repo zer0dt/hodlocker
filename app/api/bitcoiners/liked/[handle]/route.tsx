@@ -1,5 +1,5 @@
 
-import { getBitcoinerLikedData } from "@/app/components/posts/get-bitcoiner-avatar-rank";
+import { getBitcoinerLikedData } from "@/app/utils/get-bitcoiner-avatar-rank";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest, {params}: {params: {handle: string}}) {

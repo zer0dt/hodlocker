@@ -1,6 +1,6 @@
 
 
-import { getBitcoinerProfile, getFollowersTotal, getFollowingTotal } from './utils/get-bitcoiner-profile';
+import { getBitcoinerProfile, getFollowersTotal } from './utils/get-bitcoiner-profile';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { getBitcoinerTopPosts } from './utils/get-bitcoiner-top-posts';
@@ -12,6 +12,8 @@ import Loading from './loading';
 import Pagination from '../components/feeds/sorting-utils/Pagination';
 import { Metadata, ResolvingMetadata } from 'next';
 import { getBitcoinerLocks } from './utils/get-bitcoiner-locks';
+
+import ProfileInfoPlaceholder from './components/ProfileInfoPlaceholder'
 
 interface ProfilePageProps {
     params: {
@@ -75,9 +77,6 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
         );
     }
 
-    const followingItems = await getFollowingTotal(bitcoiner.handle)
-    const followerItems = await getFollowersTotal(bitcoiner.handle)
-
     const activeTab = searchParams.tab ? searchParams.tab : "posts";
 
     const currentPage = searchParams.page || 1;
@@ -88,8 +87,8 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
                 <div className="min-w-full rounded-lg mx-auto flex h-screen w-full justify-center bg-white text-sm text-gray-900 antialiased dark:bg-black dark:text-white">
                     <div className="w-full rounded-lg border-x border-gray-100 dark:border-gray-800">
 
-                        <Suspense fallback={<p>Profile fallback</p>}>
-                            <ProfileInfo handle={bitcoiner.handle} followingItems={followingItems} followerItems={followerItems} totalAmountandLockLiked={bitcoiner.totalAmountandLockLiked} created_at={bitcoiner.created_at} />
+                        <Suspense fallback={<ProfileInfoPlaceholder />}>
+                            <ProfileInfo handle={bitcoiner.handle} totalAmountandLockLiked={bitcoiner.totalAmountandLockLiked} created_at={bitcoiner.created_at} />
                         </Suspense>
                         
 
