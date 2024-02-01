@@ -1,6 +1,7 @@
 import React, { Suspense } from "react"
 import FeedBar from "./feedBar"
 import { Metadata } from "next";
+import Loading from "../loading";
 
 
 export const metadata: Metadata = {
@@ -37,7 +38,9 @@ export default async function Layout(props: {
 
           {props.sublockers}
           {props.top}
-          {props.latest}
+          <Suspense fallback={<Loading />}>
+            {props.latest}
+          </Suspense>          
           {props.trending}
           {props.leaderboard}
 
