@@ -79,10 +79,11 @@ function containsTwitterLink(note: string | null | undefined) {
 function extractDataImageString(inputString: string) {
     // Find the index where 'data:image' starts
     const startIndex = inputString.indexOf('data:image');
+    const endIndex = inputString.indexOf('text/markdown')
 
     if (startIndex !== -1) {
         // Extract the substring starting from startIndex
-        const extractedString = inputString.substring(startIndex);
+        const extractedString = inputString.substring(startIndex, endIndex);
         return extractedString;
     } else {
         return null; // Indicates that 'data:image' is not found in the string
@@ -110,7 +111,7 @@ function PostContent({ transaction }: PostContentProps) {
             if (transaction.hasImage) {
                 setImageLoading(true)
                 try {
-                    const response = await fetch(`https://api.bitails.io/download/tx/${transaction.txid}/output/2`, {
+                    const response = await fetch(`https://api.bitails.io/download/tx/${transaction.txid}/output/1`, {
                         headers: {
                             'Content-Type': 'application/octet-stream'
                         }
