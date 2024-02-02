@@ -21,6 +21,7 @@ import { postAnon } from './anon-post-server-action'
 import { getLockupScript } from "../../utils/scrypt";
 import { bsv } from 'scrypt-ts'
 import { WalletContext } from "../../context/WalletContextProvider";
+import { DEFAULT_LOCK_AMOUNT, DEFAULT_LOCK_BLOCKS, LockInput } from "../LockInput";
 
 
 interface deployProps {
@@ -47,6 +48,7 @@ export default function DeployInteraction({
     isLinked,
     fetchRelayOneData,
     currentBlockHeight,
+    bitcoinerSettings,
   } = useContext(WalletContext)!;
 
   const [darkMode, setDarkMode] = useState(false);
@@ -83,9 +85,26 @@ export default function DeployInteraction({
       if (base64Regex.test(note)) {
         setNote("");
       }
+      setAmountToLock(DEFAULT_LOCK_AMOUNT)
+      setBlocksToLock(DEFAULT_LOCK_BLOCKS)
+    } else {
+      if (bitcoinerSettings) {
+        setAmountToLock(bitcoinerSettings.amountToLock.toString())
+        setBlocksToLock(bitcoinerSettings.blocksToLock)
+      }
     }
     setAnonMode(e.target.checked);
   };
+
+  useEffect(() => {
+    if (bitcoinerSettings) {
+      setAmountToLock(bitcoinerSettings.amountToLock.toString())
+      setBlocksToLock(bitcoinerSettings.blocksToLock)
+    } else {
+      setAmountToLock(DEFAULT_LOCK_AMOUNT)
+      setBlocksToLock(DEFAULT_LOCK_BLOCKS)
+    }
+  }, [bitcoinerSettings])
 
   useEffect(() => {
     function isDarkMode() {
@@ -496,6 +515,14 @@ export default function DeployInteraction({
             ) : null}
           </div>
         </div>
+
+        <LockInput
+          bitcoinAmount={amountToLock}
+          setBitcoinAmount={setAmountToLock}
+          blocksAmount={blocksToLock.toString()}
+          setBlocksAmount={(value) => setBlocksToLock(parseFloat(value))}
+          isDisabled={anonMode}
+        />
 
         <div className="flex justify-center items-center -mb-4">
           <button
