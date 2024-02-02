@@ -172,7 +172,7 @@ function PostContent({ transaction }: PostContentProps) {
                                         e.stopPropagation();
                                         toggleExpansion();
                                     }}
-                                    className="text-black-400 dark:text-white hover:underline text-sm pl-2 pb-1"
+                                    className="text-black-400 dark:text-white hover:text-orange-400 text-sm pl-2 pb-1"
                                 >
                                     <MdExpandMore className="h-6 w-6" />
                                 </button>
@@ -183,7 +183,7 @@ function PostContent({ transaction }: PostContentProps) {
                                         e.stopPropagation();
                                         toggleExpansion();
                                     }}
-                                    className="text-black-400 dark:text-white hover:underline text-sm pl-2 pb-1"
+                                    className="text-black-400 dark:text-white hover:text-orange-400 text-sm pl-2 pb-1"
                                 >
                                     <MdExpandLess className="h-6 w-6" />
                                 </button>

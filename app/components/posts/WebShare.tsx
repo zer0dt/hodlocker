@@ -14,6 +14,7 @@ interface WebShareProps {
 export default function WebShare({ transaction }: WebShareProps) {
 
     return (
+      <div className="cursor-pointer">
         <RWebShare
                 data={{
                   text:
@@ -33,7 +34,8 @@ export default function WebShare({ transaction }: WebShareProps) {
                     transaction.txid,
                 }}
               >
-                <TbShare2 className="h-5 w-5 text-black dark:text-white" />
+                <TbShare2 className="h-5 w-5 text-black dark:text-white hover:text-orange-400" />
               </RWebShare>
+      </div>
     )
 }
