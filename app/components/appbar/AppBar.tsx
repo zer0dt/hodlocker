@@ -5,6 +5,8 @@ import React, { useState, useContext, useEffect, useRef } from "react";
 import DeployInteraction from "../actions/deployPost";
 
 import { AiFillNotification } from "react-icons/ai";
+import { FaXTwitter } from "react-icons/fa6";
+import { FaGithub } from "react-icons/fa";
 
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
@@ -17,6 +19,7 @@ import Pusher from "pusher-js";
 import Image from "next/image";
 
 import NotificationsDrawer from "./NotificationsDrawer";
+import SettingsModal from "./SettingsModal";
 
 
 interface NewNotifications {
@@ -49,7 +52,9 @@ const AppBar = () => {
   const [signInModalVisible, setSignInModalVisible] = useState(false);
   const [profileDropdownVisible, setProfileDropdownVisible] = useState(false);
 
-  const [sublockers, setSublockers] = useState([{id: 1, name: "BSV"}])
+  const [settingsModalVisible, setSettingsModalVisible] = useState(false);
+
+  const [sublockers, setSublockers] = useState([{ id: 1, name: "BSV" }])
 
   const [avatar, setAvatar] = useState("https://a.relayx.com/u/" + handle + "@relayx.io")
 
@@ -140,9 +145,9 @@ const AppBar = () => {
   };
 
   const handleHomeClick = async () => {
-    await smoothScrollToTop();    
-      router.push("/")
-      router.refresh();
+    await smoothScrollToTop();
+    router.push("/")
+    router.refresh();
   };
 
   const closeDrawer = () => {
@@ -153,6 +158,11 @@ const AppBar = () => {
     setNotifications([]);
     setNotificationsDrawerVisible(!notificationsDrawerVisible);
   };
+
+  const handleSettingsClick = () => {
+    setProfileDropdownVisible(false)
+    setSettingsModalVisible(true)
+  }
 
 
   return (
@@ -264,17 +274,45 @@ const AppBar = () => {
                 className="py-2 text-sm text-gray-700 dark:text-gray-200"
                 aria-labelledby="dropdownDefaultButton"
               >
+                <li className="flex justify-around items-center">
+                  <a
+                    href="https://github.com/zer0dt/hodlocker"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white w-full justify-center py-1"
+                  >
+                    <FaGithub size={18} />
+                  </a>
+                  <div className="border-r border-gray-100 dark:border-gray-600 h-6 my-1"></div>
+                  <a
+                    href="https://x.com/hodlocker"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white w-full justify-center py-1"
+                  >
+                    <FaXTwitter size={18} />
+                  </a>
+                </li>
+
                 {handle ? (
-                  <li>
-                    <Link
-                      id="profile-button"
-                      href={"/" + handle}
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      onClick={() => setProfileDropdownVisible(false)}
-                    >
-                      Profile
-                    </Link>
-                  </li>
+                  <>
+                    <li>
+                      <Link
+                        id="profile-button"
+                        href={"/" + handle}
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                        onClick={() => setProfileDropdownVisible(false)}
+                      >
+                        Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <button onClick={() => handleSettingsClick()}
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                        Settings
+                      </button>
+                    </li>
+                  </>
                 ) : null}
 
                 <li>
@@ -293,23 +331,21 @@ const AppBar = () => {
       </div>
 
       <div
-        className={`pointer-events-none fixed inset-0 bg-black duration-300 ${
-          isDrawerVisible ? "opacity-30" : "opacity-0"
-        }`}
+        className={`pointer-events-none fixed inset-0 bg-black duration-300 ${isDrawerVisible ? "opacity-30" : "opacity-0"
+          }`}
       ></div>
 
       <div
         id="drawer-bottom-example"
-        className={`rounded-lg fixed bottom-0 right-0 w-full lg:w-1/3 p-4 overflow-y-auto items-center transition-transform bg-white dark:bg-black ${
-          isDrawerVisible ? "transform-none" : "transform translate-y-full"
-        }`}
+        className={`rounded-lg fixed z-20 bottom-0 right-0 w-full lg:w-1/3 p-4 overflow-y-auto items-center transition-transform bg-white dark:bg-black ${isDrawerVisible ? "transform-none" : "transform translate-y-full"
+          }`}
         tabIndex={-1}
       >
         <h5
           id="drawer-bottom-label"
-          className="inline-flex items-center mb-1 text-base font-semibold text-black dark:text-white"
+          className="inline-flex items-center mb-1 text-base font-mono text-black dark:text-white"
         >
-          hodlocker.com
+          
         </h5>
         <button
           onClick={() => setIsDrawerVisible(!isDrawerVisible)}
@@ -333,7 +369,7 @@ const AppBar = () => {
           </svg>
           <span className="sr-only">Close menu</span>
         </button>
-        <div className="pb-24 lg:pb-8">
+        <div className="z-30 pb-24 lg:pb-8">
           <DeployInteraction
             subs={sublockers}
             isDrawerVisible={isDrawerVisible}
@@ -342,14 +378,23 @@ const AppBar = () => {
         </div>
       </div>
 
-      <NotificationsDrawer 
+      <NotificationsDrawer
         notifications={notifications}
         clearNotifications={clearNotifications}
-        notificationsDrawerVisible={notificationsDrawerVisible} 
+        notificationsDrawerVisible={notificationsDrawerVisible}
         setNotificationsDrawerVisible={setNotificationsDrawerVisible}
         currentBlockHeight={currentBlockHeight}
       />
-      
+
+      <div
+        className={`pointer-events-none fixed inset-0 bg-black transition-opacity duration-300 ${settingsModalVisible ? "opacity-50" : "opacity-0"
+          }`}
+      ></div>
+
+      {settingsModalVisible && (
+        <SettingsModal handle={handle} setSettingsModalVisible={setSettingsModalVisible} />
+      )}
+
       {signInModalVisible && (
         <div
           id="crypto-modal"
@@ -389,30 +434,58 @@ const AppBar = () => {
                 </h3>
               </div>
 
-              <div className="p-6 flex flex-col items-center">
-                <h1 className="text-xl font-normal text-black dark:text-white pb-8">
-                  Don't get psyoped, be locked in.
+              <div className="p-6 flex flex-col items-center justify-center">
+                <h1 className="text-xl font-mono text-black dark:text-white pb-4">
+                  Enter the center of Bitcoin.
                 </h1>
-                <ul className="my-4 space-y-3">
-                  <li className="items-center">
+                <ul className="my-2 space-y-3">
+                  <li className="items-center flex flex-col justify-center">
                     <button
                       type="button"
                       onClick={() => fetchRelayOneData()}
-                      className="text-white bg-[#050708] hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30 mr-2 mb-2"
+                      className="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
                     >
-                      <img src="/relayx.png" className="w-6 h-6" />
-                      <span className="pl-4">Sign in with RelayX</span>
-                    </button>
-                    <button
-                      type="button"
-                
-                      className="text-white bg-[#050708] hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30 mr-2 mb-2"
-                    >
-                      <img src="/relayx.png" className="w-6 h-6" />
-                      <span className="pl-4">Sign in with PandaWallet</span>
+                      <div className="flex items-center justify-center">
+                        <img src="/relayx.png" className="w-6 h-6 mr-2" />
+                        <span>
+                          RelayX
+                        </span>
+                      </div>
                     </button>
                   </li>
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => alert("not implemented yet")}
+                      className="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                    >
+                      <div className="flex items-center justify-center">
+                        <img src="/panda.png" className="w-6 h-6 mr-2" />
+                        <span>
+                          PandaWallet
+                        </span>
+                      </div>
+                    </button>
+                  </li>                  
                 </ul>
+
+                <div className="flex items-center p-4 my-4 text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+                    <svg className="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span className="sr-only">Info</span>
+                    <div className="ms-3 text-sm font-medium">
+                      Having trouble connecting? {' '}
+                      <a
+                        href="https://github.com/pow-co/relay-browser-extension/releases"
+                        className="font-semibold underline hover:no-underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Install the RelayX browser extension for desktop
+                      </a>.
+                    </div>
+                  </div>
               </div>
             </div>
           </div>

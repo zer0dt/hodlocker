@@ -18,9 +18,8 @@ export default function FeedBar() {
     const activeSort = searchParams.get("sort") || "week";
 
     const activeFilter = searchParams.get("filter") || 0;
-
-
-
+    
+    const activeFilter2 = searchParams.get("filter2") || 0;
 
     let notActiveClassName =
         "inline-block px-3 py-1 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 border-b-2 border-transparent";
@@ -33,15 +32,25 @@ export default function FeedBar() {
     activeClassName +=
         " sm:inline-block sm:px-3 sm:py-1 sm:text-sm sm:border-b-2 sm:hover:border-gray-300";
 
-
     return (
         <ul className="flex flex-wrap -mb-px justify-evenly">
 
             <li className="flex pt-1 pr-2 inline-block relative items-center justify-center rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 border-b-2 border-transparent">
-                <SortingDropdown sub={activeSub} tab={activeTab} sort={activeSort} filter={activeFilter ? parseFloat(activeFilter) : 0} />
+                <SortingDropdown sub={activeSub} tab={activeTab} sort={activeSort} filter={activeFilter ? parseFloat(activeFilter) : 0} filter2={activeFilter2 ? parseFloat(activeFilter2) : 0} />
             </li>
 
-            <Link href={`/?tab=subs&sort=${activeSort}&filter=${activeFilter}`}>
+            <Link
+                href={{
+                    pathname: '/',
+                    query: {
+                        tab: 'subs',
+                        sort: activeSort,
+                        filter: activeFilter,
+                        filter2: activeFilter2,
+                    },
+                }}
+                prefetch={true}
+            >
                 <li className={activeTab == "subs" ? activeClassName : notActiveClassName}>
                     <div className="flex">
                         <p className="text-md dark:text-white">{activeSub == "all" ? (activeSub) : ("h/" + activeSub)}</p>
@@ -50,7 +59,18 @@ export default function FeedBar() {
                 </li>
             </Link>
 
-            <Link href={`/?tab=top&sort=${activeSort}&filter=${activeFilter}`}>
+            <Link
+                href={{
+                    pathname: '/',
+                    query: {
+                        tab: 'top',
+                        sort: activeSort,
+                        filter: activeFilter,
+                        filter2: activeFilter2,
+                    },
+                }}
+                prefetch={true}
+            >
                 <li className={activeTab == "top" ? activeClassName : notActiveClassName}>
                     <div>
                         <p className="text-md dark:text-white">top</p>
@@ -58,7 +78,18 @@ export default function FeedBar() {
                 </li>
             </Link>
 
-            <Link href={`/?tab=latest&sort=${activeSort}&filter=${activeFilter}`}>
+            <Link
+                href={{
+                    pathname: '/',
+                    query: {
+                        tab: 'latest',
+                        sort: activeSort,
+                        filter: activeFilter,
+                        filter2: activeFilter2,
+                    },
+                }}
+                prefetch={true}
+            >
                 <li className={activeTab == "latest" ? activeClassName : notActiveClassName}>
                     <div>
                         <p className="text-md dark:text-white">latest</p>
@@ -66,7 +97,18 @@ export default function FeedBar() {
                 </li>
             </Link>
 
-            <Link href={`/?tab=trending&sort=${activeSort}&filter=${activeFilter}`}>
+            <Link
+                href={{
+                    pathname: '/',
+                    query: {
+                        tab: 'trending',
+                        sort: activeSort,
+                        filter: activeFilter,
+                        filter2: activeFilter2,
+                    },
+                }}
+                prefetch={true}
+            >
                 <li className={activeTab == "trending" ? activeClassName : notActiveClassName}>
                     <div>
                         <p className="text-md dark:text-white">trending</p>
@@ -74,7 +116,16 @@ export default function FeedBar() {
                 </li>
             </Link>
 
-            <Link href="/?tab=leaderboard&ranked=liked">
+            <Link
+                href={{
+                    pathname: '/',
+                    query: {
+                        tab: 'leaderboard',
+                        ranked: 'liked'
+                    },
+                }}
+                prefetch={true}
+            >
                 <li className={activeTab == "leaderboard" ? activeClassName : notActiveClassName}>
                     <div>
                         <p className="text-md dark:text-white">🏆</p>

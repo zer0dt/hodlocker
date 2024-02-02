@@ -1,12 +1,13 @@
 import { cache } from 'react'
-import { HODLBitcoiners } from '../server-actions'
+import { HODLBitcoiners } from '@/app/server-actions'
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
-import prisma from '../db';
+import prisma from '@/app/db';
 
 export const revalidate = 300
 
 export const getBitcoinerLikedData = cache(async (bitcoinerHandle: string): Promise<HODLBitcoiners | null> => {
     const currentBlockHeight = await fetchCurrentBlockHeight();
+    
   
     const bitcoiner = await prisma.bitcoiner.findUnique({
       where: {

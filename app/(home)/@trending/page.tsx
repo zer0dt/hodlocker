@@ -1,11 +1,15 @@
-
-import { cache } from "react";
+import { Suspense } from "react";
 import prisma from "@/app/db";
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import { HODLTransactions, postLockLike } from "@/app/server-actions";
 import PostComponent from "@/app/components/posts/PostComponent";
 import Pagination from "@/app/components/feeds/sorting-utils/Pagination";
 import PostFeedContainer from "@/app/components/feeds/PostFeedContainer";
+
+import { unstable_cache } from "next/cache";
+import { parse, stringify } from "superjson";
+import PostComponentPlaceholder from "@/app/components/posts/placeholders/PostComponentPlaceholder";
+import { RankedBitcoiners } from "@/app/api/bitcoiners/route";
 
 
 function enrichItem(item: HODLTransactions): any {
@@ -26,19 +30,32 @@ function enrichItem(item: HODLTransactions): any {
             totalAmountandLockLiked,
         };
     } else {
-        // It's a transaction
-        const repliesWithTotalAmount = (item.replies || []).map((reply) => ({
-            ...reply,
-            totalAmountandLockLiked: reply.locklikes.reduce(
-                (total, locklike) => total + locklike.amount,
-                reply.amount
-            ),
-        }));
+        // Calculate the total amount including locklikes for each reply
+        const repliesWithTotalAmount = (item.replies || []).map((reply) => {
+            // Remove 'data:image' and everything after it using regex
+            const filteredNote = reply.note.split('data:image')[0];
+
+            reply.note = filteredNote
+        
+            // Return a new object with the filtered note and other properties
+            return {
+                ...reply,
+                totalAmountandLockLiked: reply.locklikes.reduce(
+                    (total, locklike) => total + locklike.amount,
+                    reply.amount
+                )
+            };
+        });
 
         const totalAmountandLockLikedForReplies = repliesWithTotalAmount.reduce(
             (sum, reply) => sum + (reply.totalAmountandLockLiked || 0),
             0
         );
+
+        // Remove 'data:image' and everything after it using regex
+        const filteredNote = item.note.split('data:image')[0];
+
+        item.note = filteredNote;
 
         return {
             ...item,
@@ -50,13 +67,13 @@ function enrichItem(item: HODLTransactions): any {
     }
 }
 
-const fetchTransactions = async function cache(
+const getTrendingPosts = async function (
     sort: string,
     filter: number,
+    filter2: number,
     page: number,
     limit: number
 ): Promise<HODLTransactions[]> {
-
     const currentBlockHeight = await fetchCurrentBlockHeight();
 
     const skip = (page - 1) * limit
@@ -78,6 +95,18 @@ const fetchTransactions = async function cache(
         yourStartTime = new Date(currentTimestamp - 365 * 24 * 60 * 60 * 1000); // Subtract 365 days in milliseconds (approximate)
     }
 
+    const baseUrl = process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3000'
+    let handles: string[] = [];
+    if (filter2 > 0) {
+        const response = await fetch(`${baseUrl}/api/bitcoiners/`)
+        if (response.ok) {
+            const bitcoiners = (await response.json()).rankedBitcoiners as RankedBitcoiners
+            console.log('bitcoiners', bitcoiners)
+            handles = bitcoiners.filter(b => b.totalAmountLocked >= filter2).map(b => b.handle)
+        } else {
+            console.error("Error fetching bitcoiners", response.status, response.statusText)
+        }
+    }
 
     try {
         const recentLocklikes = await prisma.lockLikes.findMany({
@@ -95,6 +124,7 @@ const fetchTransactions = async function cache(
                 amount: {
                     gte: filter * 100000000, // Filter locklikes where the 'amount' is greater than or equal to the 'filter' amount
                 },
+                ...(filter2 > 0 ? { handle_id: { in: handles } } : {}),
             },
             include: {
                 post: {
@@ -111,7 +141,7 @@ const fetchTransactions = async function cache(
                         replies: {
                             include: {
                                 transaction: {
-                                    include: {
+                                    select: {
                                         tags: true,
                                         link: true // Include the associated Bitcoiner for the original transaction
                                     }
@@ -154,25 +184,29 @@ const fetchTransactions = async function cache(
     }
 }
 
-const getTrendingPosts = cache(
-    async (sort: string, filter: number, page: number, limit: number): Promise<[]> => {
-        console.log("getting trending posts")
-        const items = await fetchTransactions(sort, filter, page, limit);
-        console.log("finished getting " + items.length + " trending posts")
-        return items
-    }
-);
-
-
 interface TrendingFeedProps {
     searchParams: {
         tab: string,
         sort: string,
         filter: string,
+        filter2: string,
         page: number,
         limit: number
     }
 }
+
+const getCachedPosts = unstable_cache(
+    async (sort: string, filter: number, filter2: number, currentPage: number, limit: number) => {
+        const cachedPosts = await getTrendingPosts(sort, filter, filter2, currentPage, limit)
+
+        return stringify({...cachedPosts})
+    },
+    ['trending-posts'],
+    {
+        tags: ['trending', 'posts'], // Cache tags for invalidation
+        revalidate: 60, // Revalidation time in seconds (e.g., 1 hour)
+    }
+);;
 
 export default async function TrendingFeed({ searchParams }: TrendingFeedProps) {
 
@@ -181,26 +215,37 @@ export default async function TrendingFeed({ searchParams }: TrendingFeedProps) 
     const activeSort = searchParams.sort || "week";
 
     const activeFilter = searchParams.filter !== undefined ? parseFloat(searchParams.filter) : 0;
+    
+    const activeFilter2 = searchParams.filter2 !== undefined ? parseFloat(searchParams.filter2) : 0;
 
     const currentPage = searchParams.page || 1;
 
     if (activeTab == "trending") {
-        const trendingPosts = await getTrendingPosts(activeSort, activeFilter, currentPage, 30)
+        const trendingPosts = await getCachedPosts(activeSort, activeFilter, activeFilter2, currentPage, 30)
+
+        const jsonPosts = JSON.stringify(trendingPosts, null, 2);
+        const sizeInBytes = new Blob([jsonPosts]).size;
+        const sizeInMB = sizeInBytes / (1024 * 1024); // Convert bytes to MB
+        console.log("Size of trendingPosts:", sizeInMB.toFixed(2), "MB");
+
+        const posts = parse<HODLTransactions[]>(trendingPosts)
 
         return (
             <PostFeedContainer>
                 {
-                    trendingPosts.filter(Boolean).map((item) => {
+                    Object.values(posts).filter(Boolean).map((item: HODLTransactions) => {
                         return (
-                            <PostComponent
+                            <Suspense key={item.txid} fallback={<PostComponentPlaceholder />}>
+                                <PostComponent
                                 key={item.txid}
                                 transaction={item}
                                 postLockLike={postLockLike}
                             />
+                            </Suspense>                            
                         );
                     })
                 }
-                <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} />
+                <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} filter2={activeFilter2}/>
             </PostFeedContainer>
         )
     } else {

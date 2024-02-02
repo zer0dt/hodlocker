@@ -1,4 +1,3 @@
-
 import { getBitcoinersforLiked } from "../../../utils/get-bitcoiners-leaderboard";
 
 export const revalidate = 600
@@ -18,4 +17,3 @@ export async function GET(request: Request) {
         headers: { 'Content-Type': 'application/json' }
     });
 }
-

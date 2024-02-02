@@ -41,6 +41,7 @@ model Transactions {
   note         String      @default("")
   created_at   DateTime    @default(now())
   locked_until Int         @default(0)
+  hasImage     Boolean     @default(false)
   tags         Tag[]       // Add a 'tags' field to Transactions
   locklikes    LockLikes[]
   replies      Replies[]
@@ -54,6 +55,7 @@ model Replies {
   note         String
   created_at   DateTime     @default(now())
   locked_until Int          @default(0)  
+  hasImage     Boolean     @default(false)
   locklikes    LockLikes[]
   post_id      String 
   nftpost_id   String?      

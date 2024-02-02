@@ -29,6 +29,12 @@ const nextConfig = {
         port: '',
         pathname: '**', // Update this if you have a specific pattern
       },
+      {
+        protocol: 'https',
+        hostname: 'media.tenor.com',
+        port: '',
+        pathname: '**', // Update this if you have a specific pattern
+      },
     ],
   },
   typescript: {

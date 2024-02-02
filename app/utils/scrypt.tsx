@@ -170,16 +170,23 @@ const callRedeem = async (
 };
 
 const getUTXOsToUnlock = async (txids: string[], index: number) => {
-  const utxos = await Promise.all(
-    txids.map(async (txid) => {
-      console.log("getting rawtx for txid: ", txid);
-      toast('Getting rawtx for txid: ' + txid.slice(0, 6) + "..." + txid.slice(-6))
+  try {
+    const utxos = [];
+
+    for (const txid of txids) {
+      console.log("Getting rawtx for txid: ", txid);
+      toast('Getting rawtx for txid: ' + txid.slice(0, 6) + "..." + txid.slice(-6));
 
       const rawtx = await getRawTx(txid);
-      return getUTXO(rawtx, index, txid);
-    })
-  );
-  return utxos;
+      const utxo = getUTXO(rawtx, index, txid);
+      utxos.push(utxo);
+    }
+
+    return utxos;
+  } catch (error) {
+    console.error("Error in getUTXOsToUnlock:", error);
+    throw error; // Re-throw the error to propagate it to the caller
+  }
 };
 
 

@@ -29,7 +29,7 @@ body {
 }
 
 .lock-icon:hover {
-  color: #ffac33; /* Corrected the color value */
+  color: #ff7033; /* Corrected the color value */
 }
 
 .transition-all {
@@ -100,13 +100,13 @@ body {
   max-height: 200px; /* Set your desired maximum height */
   overflow-y: scroll !important;
   background-color: #fff;
-  border-radius: 3px;
+  border-radius: 10px;
   transition: 0.3s ease-in-out;
   padding: 9px;
   font-size: 14px;
   line-height: 1.4;
   color: #333;
-  border: 1px solid #FF9900;
+  border: 1px solid #080808;
   &:focus,&:active{
     outline: none;
     border: 1px solid #3fb9de;
@@ -115,6 +115,13 @@ body {
     color: #a4b0be;
     font-size: 14px;
   }
+  /* Hide scrollbar for WebKit browsers */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
 }
 .comments-textarea__highlighter{
   padding: 10px;
@@ -159,6 +166,13 @@ body {
     color: #ffffff;
     font-size: 14px;
   }
+  /* Hide scrollbar for WebKit browsers */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
 }
 .dark-comments-textarea__highlighter{
   padding: 10px;

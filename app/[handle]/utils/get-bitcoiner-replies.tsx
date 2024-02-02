@@ -2,7 +2,8 @@ import { cache } from "react";
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import { postLockLike } from "../../server-actions";
 import prisma from "../../db";
-import ReplyComponent from "../../components/posts/ReplyComponent";
+import ReplyComponent from "../../components/posts/replies/ReplyComponent";
+
 
 export const dynamic = "force-dynamic";
 
@@ -68,6 +69,10 @@ export const getBitcoinerReplies = cache(
         };
       });
          
+      const jsonPosts = JSON.stringify(enrichedReplies, null, 2);
+      const sizeInBytes = new Blob([jsonPosts]).size;
+      const sizeInMB = sizeInBytes / (1024 * 1024); // Convert bytes to MB
+      console.log("Size of bitcoinerReplies:", sizeInMB.toFixed(2), "MB");
 
       const renderReplies = enrichedReplies.map(
         (reply, index: number) => (

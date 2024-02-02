@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useRef } from 'react'
 import { ThreeDots } from 'react-loader-spinner'
 
 import { ImageUploader } from '../uploads/ImageUploader'
@@ -14,6 +14,8 @@ import { WalletContext } from '../../context/WalletContextProvider';
 
 import { toast } from 'sonner';
 import { Mention, MentionsInput, SuggestionDataItem } from 'react-mentions';
+import { bsv } from 'scrypt-ts';
+import { RiSendPlane2Line } from 'react-icons/ri';
 
 
 interface deployProps {
@@ -130,38 +132,66 @@ export default function replyInteraction({ transaction }: deployProps) {
         if (nLockTime && pubkey && paymail) {
           const lockupScript = await getLockupScript(nLockTime, pubkey)
 
-          const fullMessage = uploadedImage ? (note + " " + uploadedImage) : note
+          const replyOpReturn = [
+            "19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut",
+            note,
+            "text/markdown",
+            "UTF-8",
+            "|",
+            "1PuQa7K62MiKCtssSLKy1kh56WWU7MtUR5",
+            "SET",
+            "app",
+            "hodlocker.com",
+            "type",
+            "post",
+            "context",
+            "tx",
+            "tx",
+            transaction.txid,
+            "paymail",
+            paymail
+          ]
 
-          console.log(fullMessage)
+          const tx = new bsv.Transaction();
 
-          const send = await relayone.send({
-            to: lockupScript,
-            amount: amountToLock,
-            currency: "BSV",
-            opReturn:
-              ["19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut",
-                fullMessage,
-                "text/markdown",
-                "UTF-8",
-                "|",
-                "1PuQa7K62MiKCtssSLKy1kh56WWU7MtUR5",
-                "SET",
-                "app",
-                "hodlocker.com",
-                "type",
-                "post",
-                "context",
-                "tx",
-                "tx",
-                transaction.txid,
-                "paymail",
-                paymail
-              ]
-          }).catch(e => {
-            console.log(e.message);
-            toast.error("An error has occurred: " + e.message)
-            setLoading(false)
-          });
+          tx.addOutput(
+            new bsv.Transaction.Output({
+              script: bsv.Script.fromASM(lockupScript),
+              satoshis: parseFloat(amountToLock) * 100000000,
+            })
+          )
+
+          tx.addOutput(
+            new bsv.Transaction.Output({
+              script: bsv.Script.buildSafeDataOut(replyOpReturn),
+              satoshis: 0,
+            })
+          )
+
+          let imageOpReturn;
+          if (uploadedImage) {
+
+            const imageOpReturn = [
+              uploadedImage
+            ]
+            
+            tx.addOutput(
+              new bsv.Transaction.Output({
+                script: bsv.Script.buildSafeDataOut(imageOpReturn),
+                satoshis: 0,
+              })
+            )
+          }
+
+          const serializedTx = tx.toString();
+
+          const send = await relayone
+            .send(serializedTx)
+            .catch((e) => {
+              console.log(e.message);
+              toast.error("An error occurred: " + e.message);
+              setLoading(false);
+            });
 
           if (send) {
             try {
@@ -172,8 +202,9 @@ export default function replyInteraction({ transaction }: deployProps) {
                 parseFloat(amountToLock) * 100000000,
                 transaction.txid,
                 send.paymail.substring(0, send.paymail.lastIndexOf("@")),
-                fullMessage,
-                nLockTime
+                note,
+                nLockTime,
+                uploadedImage ? true : false
               )
               console.log(newReply)
               toast.success("Transaction posted to hodlocker.com: " + newReply.txid.slice(0, 6) + "..." + newReply.txid.slice(-6))
@@ -248,7 +279,6 @@ export default function replyInteraction({ transaction }: deployProps) {
     }
   }
 
-
   const spinner = () => {
     return (
       <ThreeDots
@@ -271,10 +301,10 @@ export default function replyInteraction({ transaction }: deployProps) {
     }
   };
 
-
+  
   return (
     <>
-      <div className="flex flex-col">
+      <div className="flex flex-col pt-4">
         <div className="rounded-lg w-full flex justify-start items-center bg-white dark:bg-black">
           <div className="flex w-full justify-center items-center pl-4">
             <MentionsInput
@@ -304,12 +334,7 @@ export default function replyInteraction({ transaction }: deployProps) {
                 className="pl-4 text-lg transition ease-in-out delay-150 hover:scale-150 inline-flex justify-center p-2 text-orange-500 rounded-lg cursor-pointer hover:text-orange-500 hover:bg-transparent dark:text-orange-500 dark:hover:text-white dark:bg-transparent dark:hover:bg-transparent"
               >
                 {(paying || loading) ? spinner() : (
-                  <>
-                    <svg className="w-5 h-5 rotate-90" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
-                      <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
-                    </svg>
-                    <span className="sr-only">Upload image</span>
-                  </>
+                  <RiSendPlane2Line />
                 )}
 
               </button>
@@ -317,8 +342,8 @@ export default function replyInteraction({ transaction }: deployProps) {
           </div>
         </div>
 
-        <div className="flex justify-between items-center mb-0 pt-2 pl-4">
-          <div className="flex items-center">
+        <div className="flex z-20 justify-between mb-0 pt-2 pl-4">
+          <div className="flex mb-0 pl-2 mt-1 justify-start">
             <input
               id="default-checkbox"
               type="checkbox"
@@ -328,13 +353,13 @@ export default function replyInteraction({ transaction }: deployProps) {
             />
             <label
               htmlFor="default-checkbox"
-              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              className="ml-2 text-sm font-mono text-gray-900 dark:text-gray-300"
             >
               anon mode
             </label>
           </div>
 
-          <div>
+          <div className="flex justify-end w-2/3 items-center mt-0 mb-0 pb-0">
             {isLinked ?
               <ImageUploader
                 isDrawerVisible={false}

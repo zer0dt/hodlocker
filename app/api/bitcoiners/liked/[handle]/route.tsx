@@ -1,8 +1,6 @@
 
-import { getBitcoinerLikedData } from "@/app/utils/get-bitcoiner-total-liked";
+import { getBitcoinerLikedData } from "@/app/utils/get-bitcoiner-avatar-rank";
 import { NextRequest } from "next/server";
-
-export const revalidate = 600
 
 export async function GET(request: NextRequest, {params}: {params: {handle: string}}) {
     const bitcoiner = await getBitcoinerLikedData(params.handle);
@@ -11,4 +9,3 @@ export async function GET(request: NextRequest, {params}: {params: {handle: stri
         headers: { 'Content-Type': 'application/json' }
     });
 }
-

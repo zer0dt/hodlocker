@@ -1,44 +1,30 @@
-'use client'
-
 import Link from "next/link"
 
 import { format } from 'date-fns';
-import { useEffect, useState } from "react";
 
 import Image from 'next/image'
 import FollowingDrawer from "./FollowingDrawer";
 import FollowerDrawer from "./FollowerDrawer";
 import { SiBitcoinsv } from "react-icons/si";
 
+import { getFollowersTotal, getFollowingTotal } from '../utils/get-bitcoiner-profile';
+import { Suspense } from "react";
+import PostProfileImage from "./ProfileImage";
+
 
 interface ProfileInfoProps {
     handle: string;
-    followingItems: {
-        totalLocklikesToOthers: number;
-        locklikesToBitcoiners: Record<string, number>;
-    }
-    followerItems: {
-        totalLocklikedFromAllBitcoiners: number;
-        locklikedFromIndividualBitcoiners: Record<string, number>;
-    }
     totalAmountandLockLiked: number;
     created_at: Date;
 }
 
 
-export default function ProfileInfo({ handle, followingItems, followerItems, totalAmountandLockLiked, created_at }: ProfileInfoProps) {
+export default async function ProfileInfo({ handle, totalAmountandLockLiked, created_at }: ProfileInfoProps) {
 
-    const [avatarRank, setAvatarRank] = useState<number>(0)
-    const [followingDrawerOpen, setFollowingDrawerOpen] = useState(false)
-    const [followerDrawerOpen, setFollowerDrawerOpen] = useState(false)
+    const followingItems = await getFollowingTotal(handle)
+    const followerItems = await getFollowersTotal(handle)
 
-    const followingDrawerToggle = () => {
-        setFollowingDrawerOpen(!followingDrawerOpen);
-    };
-
-    const followerDrawerToggle = () => {
-        setFollowerDrawerOpen(!followerDrawerOpen);
-    };
+    const avatar = ('https://a.relayx.com/u/' + handle + '@relayx.io')
 
     const getStatusEmoji = (bitcoin: number) => {
         if (bitcoin >= 1000) return '🧿';   // Evil eye
@@ -55,81 +41,34 @@ export default function ProfileInfo({ handle, followingItems, followerItems, tot
 
     function formatValue(value: number) {
         if (value < 1) {
-            return value.toFixed(2);
+          return value.toFixed(2);
         } else if (value < 10) {
-            return value.toFixed(2);
+          return value.toFixed(2);
         } else {
-            return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+          return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
         }
-    }
-
-    const avatarUrl = ('https://a.relayx.com/u/' + handle + '@relayx.io')
-
-    useEffect(() => {
-        const getAvatarRank = async (handle: string) => {
-            try {
-                const response = await fetch("/api/bitcoiners/liked");
-
-                // Check if the response status is okay
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                // Convert the response to JSON
-                const data = await response.json();
-
-                // Find the bitcoiner with the matching handle
-                const bitcoiner = data.rankedBitcoiners.find((user) => user.handle === handle);
-
-                if (bitcoiner) {
-                    // Log or return the totalLockLikedFromOthers property
-                    setAvatarRank(bitcoiner.totalLockLikedFromOthers)
-                } else {
-                    console.log(`No bitcoiner found with handle: ${handle}`);
-                    return null;
-                }
-
-            } catch (error) {
-                console.error("There was a problem fetching the bitcoiners:", error);
-                return null;
-            }
-        }
-
-        getAvatarRank(handle)
-    }, [])
-
-    const getRingColor = (totalLiked: number) => {
-        if (totalLiked <= 1) {
-            return "ring-orange-100"; // Cadet (0-1)
-        } else if (totalLiked <= 10) {
-            return "ring-orange-200"; // Guardian (1-10)
-        } else if (totalLiked <= 50) {
-            return "ring-orange-300"; // Sentinel (10-50)
-        } else if (totalLiked <= 100) {
-            return "ring-orange-400"; // Warden (50-100)
-        } else if (totalLiked <= 300) {
-            return "ring-orange-500"; // Protector (100-300)
-        } else if (totalLiked <= 500) {
-            return "ring-orange-600"; // Elder (300-500)
-        } else if (totalLiked <= 1000) {
-            return "ring-orange-700"; // Ascendant (500-1000)
-        } else {
-            return "ring-orange-800"; // Color for 1000+
-        }
-    }
+      }
+    
+    const loadingAvatar = () => {
+        return (
+          <Image
+            src={"/bitcoin.png"}
+            alt={`Profile Picture`}
+            width={100} // width and height based on the given h-10 and w-10 classes
+            height={100}
+            className="rounded-full aspect-square ring-4 ring-orange-100"
+          />
+        )
+      }
 
     return (
         <>
             <div className="flex items-start px-4 pt-4 pb-0">
                 <div className="flex items-center">
                     <Link href="https://avatar.relayx.com/">
-                        <Image
-                            width={100}
-                            height={100}
-                            className={`rounded-full aspect-square ring-4 ${getRingColor(avatarRank)}`}
-                            src={avatarUrl}
-                            alt="profile image"
-                        />
+                        <Suspense fallback={loadingAvatar()}>
+                            <PostProfileImage avatar={avatar} handle={handle} />
+                        </Suspense>
                     </Link>
                     <div className="px-4">
                         <div className="flex items-center">
@@ -146,32 +85,11 @@ export default function ProfileInfo({ handle, followingItems, followerItems, tot
                             </svg>
                             <span className="text-gray-700 dark:text-gray-400"> Joined {format(created_at, 'MMMM yyyy')}</span>
                         </div>
-                        <div onClick={followingDrawerToggle} className="flex justify-start cursor-pointer hover:underline">
-                            <span className="font-bold">{formatValue(followingItems.totalLocklikesToOthers / 100000000)}</span>
-                            <SiBitcoinsv className="text-orange-400 mx-1 mt-0.5" />
-                            <span className="text-gray-700 dark:text-gray-400"> following</span>
-                        </div>
-                        <div onClick={followerDrawerToggle} className="flex justify-start cursor-pointer hover:underline">
-                            <span className="font-bold">{formatValue(followerItems.totalLocklikedFromAllBitcoiners / 100000000)}</span>
-                            <SiBitcoinsv className="text-orange-400 mx-1" />
-                            <span className="text-gray-700 dark:text-gray-400"> followers</span>
-                        </div>
+                        <FollowingDrawer followingItems={followingItems} />
+                        <FollowerDrawer followerItems={followerItems} />
                     </div>
                 </div>
             </div>
-
-            <FollowingDrawer
-                locklikesToBitcoiners={followingItems.locklikesToBitcoiners}
-                followingDrawerOpen={followingDrawerOpen}
-                followingDrawerToggle={followingDrawerToggle}
-            />
-
-            <FollowerDrawer
-                locklikedFromIndividualBitcoiners={followerItems.locklikedFromIndividualBitcoiners}
-                followerDrawerOpen={followerDrawerOpen}
-                followerDrawerToggle={followerDrawerToggle}
-            />
-
         </>
     );
 }    

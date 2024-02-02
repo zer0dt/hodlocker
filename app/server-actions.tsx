@@ -7,6 +7,8 @@ import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 
 import sha256 from "crypto-js/sha256";
 import hexEnc from "crypto-js/enc-hex";
+import { revalidateTag } from 'next/cache';
+import { BitcoinerSettings } from './utils/get-bitcoiner-settings';
 
 const apiKey = process.env.TAAL_MAINNET_API_KEY as string; // Replace with your API key
 
@@ -300,6 +302,7 @@ export async function postLockLike(
       type: "locklike"
     })
 
+    revalidateTag('posts');
     return newLockLike;  
 };
 
@@ -315,6 +318,33 @@ export async function postNewBitcoiner(handle: string, pubkey: string) {
       pubkey: pubkey
     }
   })
+}
+
+export async function saveBitcoinerSettings(settings: BitcoinerSettings) {
+  try {
+      const { handle_id, amountToLock, blocksToLock } = settings;
+
+      // Use upsert to either create or update the Bitcoiner settings
+      const newBitcoinerSettings = await prisma.settings.upsert({
+          where: {
+              handle_id: handle_id
+          },
+          update: {
+              amountToLock: amountToLock,
+              blocksToLock: blocksToLock
+          },
+          create: {
+              handle_id: handle_id,
+              amountToLock: amountToLock,
+              blocksToLock: blocksToLock
+          }
+      });
+
+      return newBitcoinerSettings;
+  } catch (error) {
+      console.error('Error saving Bitcoiner settings:', error);
+      throw error; // You can handle the error further up the call stack
+  }
 }
 
 export async function createNewTag(name: string, ticker: string) {
@@ -334,7 +364,7 @@ export async function createNewTag(name: string, ticker: string) {
 }
 
 
-export async function postNewTransaction(txid: string, amount: number, handle: string, note: string, nLockTime: number, sub: string) {
+export async function postNewTransaction(txid: string, amount: number, handle: string, note: string, nLockTime: number, sub: string, hasImage: boolean) {
 
   // Calculate the size of the note string in bytes
   const noteSizeInBytes = Buffer.from(note).length; 
@@ -369,8 +399,9 @@ export async function postNewTransaction(txid: string, amount: number, handle: s
           id: tag?.id,
         },
       },
+      hasImage: hasImage
     },
-  });
+  })
 
   // Trigger Pusher if the message size is within the limit
   if (noteSizeInBytes <= maxPusherMessageSize) {
@@ -391,6 +422,7 @@ export async function postNewTransaction(txid: string, amount: number, handle: s
     });
   }
 
+  revalidateTag('latest');
   return newTransaction;
 }
 
@@ -444,7 +476,7 @@ export async function postNewNFTPost(txid: string, amount: number, handle: strin
 }
 
 
-export async function postNewReply(txid: string, amount: number, postTxid: string, handle: string, note: string, nLockTime: number) {
+export async function postNewReply(txid: string, amount: number, postTxid: string, handle: string, note: string, nLockTime: number, hasImage: boolean) {
   
   // Calculate the size of the note string in bytes
   const noteSizeInBytes = Buffer.from(note).length;
@@ -464,7 +496,8 @@ export async function postNewReply(txid: string, amount: number, postTxid: strin
       post_id: postTxid,
       note: note,
       amount: amount,
-      locked_until: nLockTime
+      locked_until: nLockTime,
+      hasImage: hasImage
       },
   })  
 
@@ -487,6 +520,7 @@ export async function postNewReply(txid: string, amount: number, postTxid: strin
     })
   }   
 
+  revalidateTag("posts")
   return newReply  
 }
 

@@ -1,6 +1,4 @@
 import { cache } from 'react'
- 
-export const revalidate = 30
 
 export const fetchCurrentBlockHeight = cache(async (): Promise<number> => {
 
@@ -14,8 +12,11 @@ export const fetchCurrentBlockHeight = cache(async (): Promise<number> => {
         headers: {
           'Content-Type': 'application/json'
         },
-        mode: "cors"
-      }, );
+        mode: "cors",
+        next: {
+          revalidate: 30
+        }
+      },  );
   
       if (!res.ok) {
         console.log("fetching current blockheight failed with status code " + res.status)

@@ -1,5 +1,19 @@
 import React, { Suspense } from "react"
 import FeedBar from "./feedBar"
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+  manifest: "/manifest.json",
+  title: "Enter the center of Bitcoin.",
+  description: "Rank content by locking bitcoin on the on-chain social platform.",
+  openGraph: {
+    title: "Enter the center of Bitcoin.",
+    description: "Rank content by locking bitcoin on the on-chain social platform.",
+    images: ["/townsquare.png"],
+    url: "https://hodlocker.com",
+  },
+};
 
 export default async function Layout(props: {
   children: React.ReactNode
@@ -18,7 +32,7 @@ export default async function Layout(props: {
         </Suspense>
       </div>
 
-      <div className="w-full">
+      <div className="w-full z-0">
         <div className="flex justify-center">
 
           {props.sublockers}

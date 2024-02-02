@@ -3,6 +3,13 @@ import { getBitcoinersforLocked } from "@/app/utils/get-bitcoiners-leaderboard";
 
 export const dynamic = 'force-dynamic'
 
+export type RankedBitcoiners =  {
+    index: number;
+    handle: string;
+    created_at: Date;
+    totalAmountLocked: any;
+}[]
+
 export async function GET(request: Request) {
     const bitcoiners = await getBitcoinersforLocked();
 
