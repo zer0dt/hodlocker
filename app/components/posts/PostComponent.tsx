@@ -84,7 +84,7 @@ export default async function Post({ transaction, postLockLike }: PostProps) {
                 </Suspense>
               </Link>
               <div className="ml-3 flex items-center -mt-4">
-                <div className="text-md text-black dark:text-white font-semibold block leading-tight">
+                <div className="text-md text-black dark:text-white font-semibold block leading-tight hover:text-orange-400">
                   <Link href={"/" + transaction.handle_id}>
                     {transaction.handle_id}
                   </Link>

@@ -6,6 +6,7 @@ import { SiBitcoinsv } from "react-icons/si";
 import { HODLTransactions } from "@/app/server-actions";
 
 import { WalletContext } from "../../context/WalletContextProvider";
+import { formatBitcoinValue } from "./posts-format";
 
 interface LockLikes {
   txid: string;
@@ -39,22 +40,6 @@ function timeSinceLike(locklike: LockLikes) {
   }
 }
 
-function formatBitcoinValue(initialPlusLikesTotal: number) {
-  if (initialPlusLikesTotal < 0.001) {
-    return "";
-  } else if (initialPlusLikesTotal < 1) {
-    return initialPlusLikesTotal.toFixed(3);
-  } else if (initialPlusLikesTotal < 10) {
-    return initialPlusLikesTotal.toFixed(3);
-  } else {
-    return (
-      initialPlusLikesTotal.toLocaleString(undefined, {
-        maximumFractionDigits: 3,
-      })
-    );
-  }
-}
-
 const LockLikeDrawer = ({
   transaction
 }: LockLikeDrawerProps) => {
@@ -68,17 +53,16 @@ const LockLikeDrawer = ({
 
   return (
     <>
-      <button
-        data-drawer-body-scrolling="false"
-        onClick={handleLikeDrawerToggle} // Toggle the drawer when this button is clicked
-        className="flex items-center text-black dark:text-white text-sm ml-1 cursor-pointer"
-      >
-        <span className="font-medium font-mono">{formatBitcoinValue(transaction.totalAmountandLockLiked / 100000000)}</span>
-        {(transaction.totalAmountandLockLiked / 100000000) > 0.001 ? (
+      {transaction.totalAmountandLockLiked > 1 ? (
+        <button
+          data-drawer-body-scrolling="false"
+          onClick={handleLikeDrawerToggle} // Toggle the drawer when this button is clicked
+          className="flex items-center text-black dark:text-white text-sm ml-1 cursor-pointer hover:text-orange-400"
+        >
+          <span className="font-medium font-mono">{formatBitcoinValue(transaction.totalAmountandLockLiked / 100000000)}</span>
           <SiBitcoinsv className="text-orange-400 ml-1" />
-        ) : null}
-
-      </button>
+        </button>
+      ) : null}
 
       <div
         id={`drawer-example-${transaction.txid}`} // Unique ID based on transaction.txid

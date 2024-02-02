@@ -10,6 +10,7 @@ import { SiBitcoinsv } from "react-icons/si";
 import { HODLTransactions } from "@/app/server-actions";
 
 import { usePathname } from 'next/navigation'
+import { formatBitcoinValue } from "../posts-format";
 
 interface RepliesDrawerProps {
   transaction: any,
@@ -79,11 +80,11 @@ const RepliesDrawer = ({
           }`}>
       </div>
 
-      <div onClick={toggleReplyDrawer} className="flex gap-1 mb-1 cursor-pointer">
-        <FaRegComment className="reply-button mt-1 h-4 w-4 hover:text-orange-400" />
+      <div onClick={toggleReplyDrawer} className="flex items-center gap-1 mb-1 cursor-pointer hover:text-orange-400">
+        <FaRegComment className="reply-button h-4 w-4" />
         <span className="text-sm font-medium font-mono">
           {transaction.totalAmountandLockLikedForReplies
-            ? (transaction.totalAmountandLockLikedForReplies / 100000000).toFixed(2)
+            ? formatBitcoinValue(transaction.totalAmountandLockLikedForReplies / 100000000)
             : null}
         </span>
         {transaction.totalAmountandLockLikedForReplies ? (
