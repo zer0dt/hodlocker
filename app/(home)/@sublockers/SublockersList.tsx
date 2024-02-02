@@ -44,15 +44,15 @@ export default function Sublockers({ searchParams, coinTags, topicTags }: Subloc
   };
 
   let notActiveClassName =
-    "inline-block px-3 py-1 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 border-b-2 border-transparent";
+    "inline-block px-3 py-1 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 border-b-2 border-transparent cursor-pointer";
   let activeClassName =
-    "inline-block px-3 py-1 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:text-white text-orange-400 border-b-2 border-orange-400";
+    "inline-block px-3 py-1 rounded-t-lg dark:text-white text-orange-400 border-b-2 border-orange-400 cursor-pointer";
 
   // Add responsive classes for mobile, tablet, and desktop to both class names
   notActiveClassName +=
     " sm:inline-block sm:px-3 sm:py-1 sm:text-sm sm:border-b-2 sm:hover:border-gray-300";
   activeClassName +=
-    " sm:inline-block sm:px-3 sm:py-1 sm:text-sm sm:border-b-2 sm:hover:border-gray-300";
+    " sm:inline-block sm:px-3 sm:py-1 sm:text-sm sm:border-b-2";
 
   const displayTags = type === "coins" ? sortedCoinTags : sortedTopicTags;
 
