@@ -50,7 +50,7 @@ export default function Sublockers({ searchParams, coinTags, topicTags }: Subloc
 
   // Add responsive classes for mobile, tablet, and desktop to both class names
   notActiveClassName +=
-    " sm:inline-block sm:px-3 sm:py-1 sm:text-sm sm:border-b-2 sm:hover:border-gray-300";
+    " sm:inline-block sm:px-3 sm:py-1 sm:text-sm sm:border-b-2";
   activeClassName +=
     " sm:inline-block sm:px-3 sm:py-1 sm:text-sm sm:border-b-2";
 
