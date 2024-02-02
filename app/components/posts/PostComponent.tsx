@@ -89,10 +89,13 @@ export default async function Post({ transaction, postLockLike }: PostProps) {
                     {transaction.handle_id}
                   </Link>
                 </div>
-                <div className="pl-2 text-gray-600 dark:text-gray-300 text-sm block">
-                  <Link href={"/" + transaction.handle_id + "/post/" + transaction.txid}>
-                    · {timeSincePost(transaction)}
-                  </Link>
+                <div className="pl-2 text-gray-600 dark:text-gray-300 text-sm flex gap-1">
+                  {'·'}
+                  <div className="hover:underline">
+                    <Link href={"/" + transaction.handle_id + "/post/" + transaction.txid}>
+                      {timeSincePost(transaction)}
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
@@ -100,7 +103,7 @@ export default async function Post({ transaction, postLockLike }: PostProps) {
               {
                 transaction.tags.map(tag => (
                   <Link key={tag.id} href={"/h/" + tag.name}>
-                    <div className="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
+                    <div className="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300 hover:text-orange-400">
                       {tag.name}
                     </div>
                   </Link>
@@ -112,7 +115,7 @@ export default async function Post({ transaction, postLockLike }: PostProps) {
               rel="noopener noreferrer"
               href={"https://whatsonchain.com/tx/" + transaction.txid}
             >
-              <AiOutlineBlock className="text-black dark:text-white mt-0 mr-0 w-4 h-4" />
+              <AiOutlineBlock className="text-black dark:text-white mt-0 mr-0 w-4 h-4 hover:text-orange-400" />
             </a>
           </div>
           <div className="text-md text-black-600 dark:text-white px-3 pb-0 ml-12 -mt-3 overflow-auto">

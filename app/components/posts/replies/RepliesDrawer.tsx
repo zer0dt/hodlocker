@@ -79,8 +79,8 @@ const RepliesDrawer = ({
           }`}>
       </div>
 
-      <div onClick={toggleReplyDrawer} className="flex gap-1 mb-1">
-        <FaRegComment className="reply-button mt-1 h-4 w-4" />
+      <div onClick={toggleReplyDrawer} className="flex gap-1 mb-1 cursor-pointer">
+        <FaRegComment className="reply-button mt-1 h-4 w-4 hover:text-orange-400" />
         <span className="text-sm font-medium font-mono">
           {transaction.totalAmountandLockLikedForReplies
             ? (transaction.totalAmountandLockLikedForReplies / 100000000).toFixed(2)
