@@ -70,119 +70,91 @@ export default function SortingDropdown({ sub, tab, sort, filter, filter2 }: Dro
       <Dropdown label="Dropdown" renderTrigger={() => filterIcon()}>
         <div className="absolute top-full left-0 mt-2 z-10 bg-white dark:bg-gray-700 rounded shadow">
           <Dropdown label="Duration" placement="right" renderTrigger={() => dropdownButton("duration")}>
-            <DropdownItem>
-              <Link
-                href={`${basePath}?tab=${tab}&sort=day&filter=${filter}&filter2=${filter2}`}
-              >
-                {dropdownItemTitle("sort", "day")}
-              </Link>
-            </DropdownItem>
-            <DropdownItem>
-              <Link
-                href={`${basePath}?tab=${tab}&sort=week&filter=${filter}&filter2=${filter2}`}
-              >
+            <Link href={`${basePath}?tab=${tab}&sort=day&filter=${filter}&filter2=${filter2}`}>
+              <DropdownItem>
+                  {dropdownItemTitle("sort", "day")}
+              </DropdownItem>
+            </Link>
+            <Link href={`${basePath}?tab=${tab}&sort=week&filter=${filter}&filter2=${filter2}`}>
+              <DropdownItem>
                 {dropdownItemTitle("sort", "week")}
-              </Link>
-            </DropdownItem>
-            <DropdownItem>
-              <Link
-                href={`${basePath}?tab=${tab}&sort=month&filter=${filter}&filter2=${filter2}`}
-              >
+              </DropdownItem>
+            </Link>
+            <Link href={`${basePath}?tab=${tab}&sort=month&filter=${filter}&filter2=${filter2}`}>
+              <DropdownItem>
                 {dropdownItemTitle("sort", "month")}
-              </Link>
-            </DropdownItem>
-            <DropdownItem>
-              <Link
-                href={`${basePath}?tab=${tab}&sort=year&filter=${filter}&filter2=${filter2}`}
-              >
+              </DropdownItem>
+            </Link>
+            <Link href={`${basePath}?tab=${tab}&sort=year&filter=${filter}&filter2=${filter2}`}>
+              <DropdownItem>
                 {dropdownItemTitle("sort", "year")}
-              </Link>
-            </DropdownItem>
+              </DropdownItem>
+            </Link>
           </Dropdown>
 
           <Dropdown dismissOnClick={true} label="Minimum Locked to Post" placement="right" renderTrigger={() => dropdownButton("post lock")}>
-            <DropdownItem>
-              <Link className="flex justify-center"
-                href={`${basePath}?tab=${tab}&sort=${sort}&filter=0&filter2=${filter2}`}
-              >
+            <Link href={`${basePath}?tab=${tab}&sort=${sort}&filter=0&filter2=${filter2}`}>
+              <DropdownItem className="flex">
                 {dropdownItemTitle("filter", "0")}
                 <SiBitcoinsv className="text-orange-400 ml-1 mr-1" />
-              </Link>
-            </DropdownItem>
-            <DropdownItem>
-              <Link className="flex justify-center"
-                href={`${basePath}?tab=${tab}&sort=${sort}&filter=0.01&filter2=${filter2}`}
-              >
+              </DropdownItem>
+            </Link>
+            <Link href={`${basePath}?tab=${tab}&sort=${sort}&filter=0.01&filter2=${filter2}`}>
+              <DropdownItem className="flex">
                 {dropdownItemTitle("filter", "0.01")}
                 <SiBitcoinsv className="text-orange-400 ml-1 mr-1" />
-              </Link>
-            </DropdownItem>
-            <DropdownItem>
-              <Link className="flex justify-center"
-                href={`${basePath}?tab=${tab}&sort=${sort}&filter=0.1&filter2=${filter2}`}
-              >
+              </DropdownItem>
+            </Link>
+            <Link href={`${basePath}?tab=${tab}&sort=${sort}&filter=0.1&filter2=${filter2}`}>
+              <DropdownItem className="flex">
                 {dropdownItemTitle("filter", "0.1")}
                 <SiBitcoinsv className="text-orange-400 ml-1 mr-1" />
-              </Link>
-            </DropdownItem>
-            <DropdownItem>
-              <Link className="flex justify-center"
-                href={`${basePath}?tab=${tab}&sort=${sort}&filter=1&filter2=${filter2}`}
-              >
-                {dropdownItemTitle("filter", "1")}
-                <SiBitcoinsv className="text-orange-400 ml-1 mr-1" />
-              </Link>
-            </DropdownItem>
-            <DropdownItem>
-              <Link className="flex justify-center"
-                href={`${basePath}?tab=${tab}&sort=${sort}&filter=10&filter2=${filter2}`}
-              >
+              </DropdownItem>
+            </Link>
+            <Link href={`${basePath}?tab=${tab}&sort=${sort}&filter=1&filter2=${filter2}`}>
+              <DropdownItem className="flex">
+                  {dropdownItemTitle("filter", "1")}
+                  <SiBitcoinsv className="text-orange-400 ml-1 mr-1" />
+              </DropdownItem>
+            </Link>
+            <Link href={`${basePath}?tab=${tab}&sort=${sort}&filter=10&filter2=${filter2}`}>
+              <DropdownItem className="flex">
                 {dropdownItemTitle("filter", "10")}
                 <SiBitcoinsv className="text-orange-400 ml-1 mr-1" />
-              </Link>
-            </DropdownItem>
+              </DropdownItem>
+            </Link>
           </Dropdown>
           <Dropdown dismissOnClick={true} label="Minimum Total Locked by User" placement="right" renderTrigger={() => dropdownButton("bitcoiner")}>
-            <DropdownItem>
-              <Link className="flex justify-center"
-                href={`${basePath}?tab=${tab}&sort=${sort}&filter=${filter}&filter2=0`}
-              >
+            <Link href={`${basePath}?tab=${tab}&sort=${sort}&filter=${filter}&filter2=0`}>
+              <DropdownItem className="flex">
                 {dropdownItemTitle("filter2", "0")}
                 <SiBitcoinsv className="text-orange-400 ml-1 mr-1" />
-              </Link>
-            </DropdownItem>
-            <DropdownItem>
-              <Link className="flex justify-center"
-                href={`${basePath}?tab=${tab}&sort=${sort}&filter=${filter}&filter2=0.01`}
-              >
+              </DropdownItem>
+            </Link>
+            <Link href={`${basePath}?tab=${tab}&sort=${sort}&filter=${filter}&filter2=0.01`}>
+              <DropdownItem className="flex">
                 {dropdownItemTitle("filter2", "0.01")}
                 <SiBitcoinsv className="text-orange-400 ml-1 mr-1" />
-              </Link>
-            </DropdownItem>
-            <DropdownItem>
-              <Link className="flex justify-center"
-                href={`${basePath}?tab=${tab}&sort=${sort}&filter=${filter}&filter2=0.1`}
-              >
+              </DropdownItem>
+            </Link>
+            <Link href={`${basePath}?tab=${tab}&sort=${sort}&filter=${filter}&filter2=0.1`}>
+              <DropdownItem className="flex">
                 {dropdownItemTitle("filter2", "0.1")}
                 <SiBitcoinsv className="text-orange-400 ml-1 mr-1" />
-              </Link>
-            </DropdownItem>
-            <DropdownItem>
-              <Link className="flex justify-center"
-                href={`${basePath}?tab=${tab}&sort=${sort}&filter=${filter}&filter2=1`}
-              >
+              </DropdownItem>
+            </Link>
+            <Link href={`${basePath}?tab=${tab}&sort=${sort}&filter=${filter}&filter2=1`}>
+              <DropdownItem className="flex">
                 {dropdownItemTitle("filter2", "1")}
                 <SiBitcoinsv className="text-orange-400 ml-1 mr-1" />
-              </Link>
-            </DropdownItem>
-            <DropdownItem>
-              <Link className="flex justify-center"
-                href={`${basePath}?tab=${tab}&sort=${sort}&filter=${filter}&filter2=10`}
-              >
+              </DropdownItem>
+            </Link>
+            <Link href={`${basePath}?tab=${tab}&sort=${sort}&filter=${filter}&filter2=10`}>
+              <DropdownItem className="flex">
                 {dropdownItemTitle("filter2", "10")}
                 <SiBitcoinsv className="text-orange-400 ml-1 mr-1" />
-              </Link>
-            </DropdownItem>
+              </DropdownItem>
+            </Link>
           </Dropdown>
         </div>
       </Dropdown>
