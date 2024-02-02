@@ -58,6 +58,25 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
     };
 }
 
+const Tab = ({tab, activeTab, handle }: { tab: string, activeTab: string, handle: string }) => {
+    const classes = (
+        `relative flex w-full cursor-pointer items-center justify-center p-4 pb-1 transition duration-150 ease-in-out 
+        ${activeTab == tab
+            ? " border-b-2 border-orange-400 text-orange-400 font-bold"
+            : " hover:border-gray-300 border-b border-transparent text-gray-600 dark:text-white font-bold"
+        }`
+    )
+    return (
+        <Link
+            href={`/${handle}?tab=${tab}`}
+            className={classes}
+        >
+            <li>
+                {tab}
+            </li>
+        </Link>
+    )
+}
 
 export default async function ProfilePage({ params, searchParams }: ProfilePageProps) {
 
@@ -78,46 +97,10 @@ export default async function ProfilePage({ params, searchParams }: ProfilePageP
                         
 
                         <ul className="mt-1 flex justify-evenly">
-                            <li
-                                className={`relative flex w-full cursor-pointer items-center justify-center p-4 pb-1 transition duration-150 ease-in-out  ${activeTab == "posts"
-                                        ? " border-b-2 border-orange-400 text-orange-400 font-bold"
-                                        : "border-b border-transparent text-gray-600 dark:text-white font-bold"
-                                    }`}
-                            >
-                                <Link href={"/" + params.handle + "?tab=posts"}>
-                                    posts
-                                </Link>
-                            </li>
-                            <li
-                                className={`relative flex w-full cursor-pointer items-center justify-center p-4 pb-1 transition duration-150 ease-in-out  ${activeTab == "replies"
-                                        ? "border-b-2 border-orange-400 text-orange-400 font-bold"
-                                        : "border-b border-transparent text-gray-600 dark:text-white font-bold"
-                                    }`}
-                            >
-                                <Link href={"/" + params.handle + "?tab=replies"}>
-                                    replies
-                                </Link>
-                            </li>
-                            <li
-                                className={`relative flex w-full cursor-pointer items-center justify-center p-4 pb-1 transition duration-150 ease-in-out  ${activeTab == "locks"
-                                        ? "border-b-2 border-orange-400 text-orange-400 font-bold"
-                                        : "border-b border-transparent text-gray-600 dark:text-white font-bold"
-                                    }`}
-                            >
-                                <Link href={"/" + params.handle + "?tab=locks"}>
-                                    locks
-                                </Link>
-                            </li>
-                            <li
-                                className={`relative flex w-full cursor-pointer items-center justify-center p-4 pb-1 transition duration-150 ease-in-out  ${activeTab == "mentions"
-                                        ? "border-b-2 border-orange-400 text-orange-400 font-bold"
-                                        : "border-b border-transparent text-gray-600 dark:text-white font-bold"
-                                    }`}
-                            >
-                                <Link href={"/" + params.handle + "?tab=mentions"}>
-                                    mentions
-                                </Link>
-                            </li>
+                            <Tab tab="posts" activeTab={activeTab} handle={params.handle} />
+                            <Tab tab="replies" activeTab={activeTab} handle={params.handle} />
+                            <Tab tab="locks" activeTab={activeTab} handle={params.handle} />
+                            <Tab tab="mentions" activeTab={activeTab} handle={params.handle} />
                         </ul>
 
                         {activeTab === 'posts' && (

@@ -66,17 +66,17 @@ export default function FeedBar() {
 
     const getClassName = (tabName: string) => {
         let className =
-            "inline-block px-3 py-1 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 border-b-2 border-transparent";
+            "inline-block px-3 py-1 rounded-t-lg dark:text-gray-400 border-b-2 cursor-pointer";
         if (activeTab === tabName) {
             className +=
-                " inline-block px-3 py-1 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:text-white text-orange-400 border-b-2 border-orange-400";
+                " inline-block px-3 py-1 rounded-t-lg dark:text-white text-orange-400 border-b-2 border-orange-400";
         } else {
             className +=
                 " inline-block px-3 py-1 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 border-b-2 border-transparent";
         }
         // Add responsive classes for mobile, tablet, and desktop to both class names
         className +=
-            " sm:inline-block sm:px-3 sm:py-1 sm:text-sm sm:border-b-2 sm:hover:border-gray-300";
+            " sm:inline-block sm:px-3 sm:py-1 sm:text-sm sm:border-b-2";
         return className;
     };
 
