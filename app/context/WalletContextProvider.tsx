@@ -46,6 +46,8 @@ interface WalletContextType {
   bitcoinerSettings: BitcoinerSettings | undefined,
   setBitcoinerSettings: React.Dispatch<React.SetStateAction<BitcoinerSettings | undefined>>,
   currentBlockHeight: number | undefined,
+  signInModalVisible: boolean,
+  setSignInModalVisible: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 
@@ -71,6 +73,7 @@ export const WalletContextProvider = ({
   const [bitcoinerSettings, setBitcoinerSettings] = useState<BitcoinerSettings | undefined>(undefined)
   const [isLinked, setIsLinked] = useState<boolean | undefined>(undefined)
   const [currentBlockHeight, setCurrentBlockHeight] = useState<number | undefined>(undefined)
+  const [signInModalVisible, setSignInModalVisible] = useState(false);
 
 
 
@@ -139,7 +142,7 @@ export const WalletContextProvider = ({
   return (
     <>
       <Script src="https://one.relayx.io/relayone.js" onLoad={() => checkIfLinked()} />
-      <WalletContext.Provider value={{ fetchRelayOneData, pubkey, handle, userBalance, paymail, isLinked, bitcoinerSettings, setBitcoinerSettings, currentBlockHeight }}>
+      <WalletContext.Provider value={{ fetchRelayOneData, pubkey, handle, userBalance, paymail, isLinked, bitcoinerSettings, setBitcoinerSettings, currentBlockHeight, signInModalVisible, setSignInModalVisible }}>
         {children}
       </WalletContext.Provider>
     </>

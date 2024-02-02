@@ -26,7 +26,7 @@ interface deployProps {
 export default function replyInteraction({ transaction }: deployProps) {
   const router = useRouter();
 
-  const { handle, paymail, pubkey, isLinked, fetchRelayOneData, currentBlockHeight } = useContext(WalletContext)!;
+  const { handle, paymail, pubkey, isLinked, fetchRelayOneData, currentBlockHeight, setSignInModalVisible } = useContext(WalletContext)!;
 
   const [loading, setLoading] = useState(false)
   const [paying, setPaying] = useState(false)
@@ -222,6 +222,7 @@ export default function replyInteraction({ transaction }: deployProps) {
     } else {
       setPaying(false)
       setLoading(false)
+      setSignInModalVisible(true)
     }
   }
 
