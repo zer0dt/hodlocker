@@ -35,21 +35,21 @@ export interface HODLBitcoiners extends Bitcoiner {
 export async function getAllBitcoinerHandles(): Promise<string[]> {
 
   try {
-      // Query the database for all bitcoiners to get their handles
-      const allBitcoiners = await prisma.bitcoiner.findMany({
-          select: {
-              handle: true // Only select the handle field
-          }
-      });
+    // Query the database for all bitcoiners to get their handles
+    const allBitcoiners = await prisma.bitcoiner.findMany({
+      select: {
+        handle: true // Only select the handle field
+      }
+    });
 
-      // Extract the handles from the fetched data
-      const handles = allBitcoiners.map(bitcoiner => bitcoiner.handle);
+    // Extract the handles from the fetched data
+    const handles = allBitcoiners.map(bitcoiner => bitcoiner.handle);
 
-      return handles;
+    return handles;
 
   } catch (error) {
-      console.error('Error fetching bitcoiner handles:', error);
-      throw error;
+    console.error('Error fetching bitcoiner handles:', error);
+    throw error;
   }
 }
 
@@ -141,16 +141,16 @@ export async function fetchTransaction(txid: string) {
               }
             },
             transaction: {
-              include: {
+              select: {
                 tags: true,
                 link: true // Include the associated Bitcoiner for the original transaction
               }
-            }
+            },
           }
         },
       },
     });
-    
+
 
     if (!transaction) {
       return null;
@@ -163,19 +163,32 @@ export async function fetchTransaction(txid: string) {
     );
 
     // Calculate the total amount including locklikes for each reply
-    const repliesWithTotalAmount = transaction.replies.map((reply) => ({
-      ...reply,
-      totalAmountandLockLiked: reply.locklikes.reduce(
-        (total, locklike) => total + locklike.amount,
-        reply.amount
-      ),
-    }));
+    const repliesWithTotalAmount = transaction.replies.map((reply) => {
+      // Remove 'data:image' and everything after it using regex
+      const filteredNote = reply.note.split('data:image')[0];
+
+      reply.note = filteredNote
+
+      // Return a new object with the filtered note and other properties
+      return {
+        ...reply,
+        totalAmountandLockLiked: reply.locklikes.reduce(
+          (total, locklike) => total + locklike.amount,
+          reply.amount
+        )
+      };
+    });
 
     // Calculate the total amount including locklikes for replies of the transaction
     const totalAmountandLockLikedForReplies = repliesWithTotalAmount.reduce(
       (total, reply) => total + reply.totalAmountandLockLiked,
       0
     );
+
+    // Remove 'data:image' and everything after it using regex
+    const filteredNote = transaction.note.split('data:image')[0];
+
+    transaction.note = filteredNote;
 
     // Add the calculated total amount to the transaction
     const transactionWithTotalAmount = {
@@ -210,7 +223,7 @@ export async function fetchLatestTransactionsByBitcoiner(handle: string, offset:
           },
         ]
       },
-      skip: offset, 
+      skip: offset,
       take: limit,
       orderBy: { created_at: 'desc' },
       include: {
@@ -264,46 +277,46 @@ export async function fetchLatestTransactionsByBitcoiner(handle: string, offset:
     throw error;
   }
 }
- 
+
 export async function postLockLike(
   txid: string,
   amount: number,
   nLockTime: number,
-  handle: string, 
+  handle: string,
   postTxid?: string,
-  replyTxid?: string  
-  ): Promise<LockLikes> {
-    'use server'
+  replyTxid?: string
+): Promise<LockLikes> {
+  'use server'
 
-    const Pusher = require("pusher")
-     
-    const newLockLike = await prisma.lockLikes.create({
-        data: {
-            txid: txid,
-            amount: amount,    
-            locked_until: nLockTime,            
-            handle_id: handle,          
-            post_id: postTxid,
-            reply_txid: replyTxid
-        },
-    });
+  const Pusher = require("pusher")
 
-    const pusher = new Pusher({
-      appId: process.env.PUSHER_APP_ID,
-      key: process.env.NEXT_PUBLIC_PUSHER_KEY,
-      secret: process.env.PUSHER_SECRET,
-      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
-      useTLS: 'true'
-    })
+  const newLockLike = await prisma.lockLikes.create({
+    data: {
+      txid: txid,
+      amount: amount,
+      locked_until: nLockTime,
+      handle_id: handle,
+      post_id: postTxid,
+      reply_txid: replyTxid
+    },
+  });
+
+  const pusher = new Pusher({
+    appId: process.env.PUSHER_APP_ID,
+    key: process.env.NEXT_PUBLIC_PUSHER_KEY,
+    secret: process.env.PUSHER_SECRET,
+    cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+    useTLS: 'true'
+  })
 
 
-    pusher.trigger('hodlocker', 'new-locklike', {
-      message: newLockLike,
-      type: "locklike"
-    })
+  pusher.trigger('hodlocker', 'new-locklike', {
+    message: newLockLike,
+    type: "locklike"
+  })
 
-    revalidateTag('posts');
-    return newLockLike;  
+  revalidateTag('posts');
+  return newLockLike;
 };
 
 
@@ -322,28 +335,28 @@ export async function postNewBitcoiner(handle: string, pubkey: string) {
 
 export async function saveBitcoinerSettings(settings: BitcoinerSettings) {
   try {
-      const { handle_id, amountToLock, blocksToLock } = settings;
+    const { handle_id, amountToLock, blocksToLock } = settings;
 
-      // Use upsert to either create or update the Bitcoiner settings
-      const newBitcoinerSettings = await prisma.settings.upsert({
-          where: {
-              handle_id: handle_id
-          },
-          update: {
-              amountToLock: amountToLock,
-              blocksToLock: blocksToLock
-          },
-          create: {
-              handle_id: handle_id,
-              amountToLock: amountToLock,
-              blocksToLock: blocksToLock
-          }
-      });
+    // Use upsert to either create or update the Bitcoiner settings
+    const newBitcoinerSettings = await prisma.settings.upsert({
+      where: {
+        handle_id: handle_id
+      },
+      update: {
+        amountToLock: amountToLock,
+        blocksToLock: blocksToLock
+      },
+      create: {
+        handle_id: handle_id,
+        amountToLock: amountToLock,
+        blocksToLock: blocksToLock
+      }
+    });
 
-      return newBitcoinerSettings;
+    return newBitcoinerSettings;
   } catch (error) {
-      console.error('Error saving Bitcoiner settings:', error);
-      throw error; // You can handle the error further up the call stack
+    console.error('Error saving Bitcoiner settings:', error);
+    throw error; // You can handle the error further up the call stack
   }
 }
 
@@ -367,7 +380,7 @@ export async function createNewTag(name: string, ticker: string) {
 export async function postNewTransaction(txid: string, amount: number, handle: string, note: string, nLockTime: number, sub: string, hasImage: boolean) {
 
   // Calculate the size of the note string in bytes
-  const noteSizeInBytes = Buffer.from(note).length; 
+  const noteSizeInBytes = Buffer.from(note).length;
 
   console.log("noteSize", noteSizeInBytes)
 
@@ -379,8 +392,8 @@ export async function postNewTransaction(txid: string, amount: number, handle: s
     console.warn('Warning: Message size exceeds Pusher limit. Message will not be sent to Pusher.');
   }
 
-   // Find or create the tag
-   let tag = await prisma.tag.findUnique({
+  // Find or create the tag
+  let tag = await prisma.tag.findUnique({
     where: {
       name: sub,
     },
@@ -426,10 +439,10 @@ export async function postNewTransaction(txid: string, amount: number, handle: s
   return newTransaction;
 }
 
-export async function postNewNFTPost(txid: string, amount: number, handle: string, note: string, nLockTime: number, nft_txid: string ) {
+export async function postNewNFTPost(txid: string, amount: number, handle: string, note: string, nLockTime: number, nft_txid: string) {
 
   // Calculate the size of the note string in bytes
-  const noteSizeInBytes = Buffer.from(note).length; 
+  const noteSizeInBytes = Buffer.from(note).length;
 
   console.log("noteSize", noteSizeInBytes)
 
@@ -477,7 +490,7 @@ export async function postNewNFTPost(txid: string, amount: number, handle: strin
 
 
 export async function postNewReply(txid: string, amount: number, postTxid: string, handle: string, note: string, nLockTime: number, hasImage: boolean) {
-  
+
   // Calculate the size of the note string in bytes
   const noteSizeInBytes = Buffer.from(note).length;
 
@@ -488,24 +501,24 @@ export async function postNewReply(txid: string, amount: number, postTxid: strin
     // Handle the case where the message size exceeds Pusher's limit, e.g., log a warning
     console.warn('Warning: Message size exceeds Pusher limit. Message will not be sent to Pusher.');
   }
-  
+
   const newReply = await prisma.replies.create({
-      data: {
+    data: {
       txid: txid,
-      handle_id: handle,      
+      handle_id: handle,
       post_id: postTxid,
       note: note,
       amount: amount,
       locked_until: nLockTime,
       hasImage: hasImage
-      },
-  })  
+    },
+  })
 
   // Trigger Pusher if the message size is within the limit
   if (noteSizeInBytes <= maxPusherMessageSize) {
 
     const Pusher = require('pusher')
-  
+
     const pusher = new Pusher({
       appId: process.env.PUSHER_APP_ID,
       key: process.env.NEXT_PUBLIC_PUSHER_KEY,
@@ -518,15 +531,15 @@ export async function postNewReply(txid: string, amount: number, postTxid: strin
       message: newReply,
       type: "reply"
     })
-  }   
+  }
 
   revalidateTag("posts")
-  return newReply  
+  return newReply
 }
 
 export async function getScriptHash(txid: string) {
   const url = "https://api.whatsonchain.com/v1/bsv/main/tx/hash/" + txid;
-  
+
   const maxRequestsPerSecond = 3;
   const delayMs = 1000 / maxRequestsPerSecond; // Calculate delay in milliseconds
 
@@ -549,7 +562,7 @@ export async function getScriptUTXOs(scripthash: string) {
   const maxRequestsPerSecond = 3;
   const delayMs = 1000 / maxRequestsPerSecond; // Calculate delay in milliseconds
 
-  
+
   try {
     const data = await fetchWithRateLimit(url, delayMs); // Using fetchWithRateLimit here
     return data; // Return the UTXOs array
@@ -576,9 +589,9 @@ export async function checkIfSpent(handle: string, txidToCheck: string, retries 
   // Check if txidToCheck exists in the UTXOs array
   const txidExists = await scriptUtxos.some((utxo: { tx_hash: string; }) => utxo.tx_hash === txidToCheck);
 
-  if (txidExists) {      
-      return false;
-  } else {    
+  if (txidExists) {
+    return false;
+  } else {
     // Transaction is spent, add it to the database
     await prisma.spentTx.create({
       data: {
@@ -587,7 +600,7 @@ export async function checkIfSpent(handle: string, txidToCheck: string, retries 
         permalocked: false
       },
     });
-    return true;  
+    return true;
   }
 }
 
@@ -597,10 +610,10 @@ export async function getAddressUtxos(address: string) {
   const res = await fetch('https://api.whatsonchain.com/v1/bsv/main/address/' + address + '/unspent', { next: { revalidate: 0 } })
 
   if (!res.ok) {
-      // This will activate the closest `error.js` Error Boundary
-      throw new Error('Failed to fetch data')
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to fetch data')
   }
-   
+
   const data = await res.json();
   return data; // Return the UTXOs array
 }
@@ -614,7 +627,7 @@ export async function broadcastTx(txhex: string) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ txhex }),
-    
+
   };
 
   try {
@@ -679,7 +692,7 @@ export async function getOpReturnData(txid: string) {
     const res = await fetch(url, {
       method: "GET",
       mode: "cors",
-      
+
       next: { revalidate: 0 }
     });
 
@@ -693,12 +706,12 @@ export async function getOpReturnData(txid: string) {
     function hexToAscii(hex: string) {
       const hexString = hex.replace(/\s/g, ''); // Remove any spaces in the hex string
       let asciiString = '';
-    
+
       for (let i = 0; i < hexString.length; i += 2) {
         const hexCharCode = parseInt(hexString.substr(i, 2), 16);
         asciiString += String.fromCharCode(hexCharCode);
       }
-    
+
       return asciiString;
     }
 

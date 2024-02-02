@@ -9,7 +9,6 @@ import prisma from '@/app/db';
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from 'next/navigation';
 import ReplyComponent from '@/app/components/posts/replies/ReplyComponent';
-import DeployInteraction from '@/app/components/actions/deployPost';
 import ReplyInteraction from '@/app/components/actions/ReplyInteraction';
 
 type Props = {
