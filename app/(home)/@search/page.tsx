@@ -74,7 +74,15 @@ export const getSearchPosts = (
                         (filter2 > 0 ? { handle_id: { in: handles } } : {}),
                         {
                             OR: [
-                                { note: { contains: search } },
+                                {
+                                    note: {
+                                        contains: {
+                                            search: {
+                                                mode: 'insensitive'
+                                            }
+                                        }
+                                    },
+                                },
                                 filter === 0 ? { locklikes: { none: {} } } : {}
                             ],
 
@@ -225,29 +233,29 @@ export default async function SearchFeed({ searchParams }: SearchFeedProps) {
 
         posts = parse<HODLTransactions[]>(searchPosts);
     }
-  
+
     return (
         <>
-        <div
-            key={"search" + activeSort + activeFilter + activeFilter2 + currentPage}
-            className="grid grid-cols-1 gap-0 w-full lg:w-96 pb-24"
-        >
-            <Search searchParams={searchParams}/>
-            {
-                Object.values(posts).map((transaction: HODLTransactions) => (
-                    <Suspense key={transaction.txid} fallback={<PostComponentPlaceholder />}>
-                        <PostComponent
-                            key={transaction.txid} // Assuming transaction has an 'id' field
-                            transaction={transaction}
-                            postLockLike={postLockLike}
-                        />
-                    </Suspense>
+            <div
+                key={"search" + activeSort + activeFilter + activeFilter2 + currentPage}
+                className="grid grid-cols-1 gap-0 w-full lg:w-96 pb-24"
+            >
+                <Search searchParams={searchParams} />
+                {
+                    Object.values(posts).map((transaction: HODLTransactions) => (
+                        <Suspense key={transaction.txid} fallback={<PostComponentPlaceholder />}>
+                            <PostComponent
+                                key={transaction.txid} // Assuming transaction has an 'id' field
+                                transaction={transaction}
+                                postLockLike={postLockLike}
+                            />
+                        </Suspense>
 
-                ))
-            }
-            {activeQuery && posts.length > 0 && 
-            <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} filter2={activeFilter2} />}
-        </div>
+                    ))
+                }
+                {activeQuery && posts.length > 0 &&
+                    <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} filter2={activeFilter2} />}
+            </div>
         </>
     );
 
