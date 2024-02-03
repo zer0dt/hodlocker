@@ -76,12 +76,10 @@ export const getSearchPosts = (
                             OR: [
                                 {
                                     note: {
-                                        contains: {
-                                            search: {
-                                                mode: 'insensitive'
-                                            }
-                                        }
-                                    },
+                                        contains: search,
+                                        mode: 'insensitive'
+                                    }
+
                                 },
                                 filter === 0 ? { locklikes: { none: {} } } : {}
                             ],
