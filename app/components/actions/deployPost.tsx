@@ -319,8 +319,7 @@ export default function DeployInteraction({
                 "..." +
                 newPost.txid.slice(-6)
               );
-              if (newPost.txid && addLockLike) {  
-                const postTxid = send.txid
+              if (newPost.txid && addLockLike) {
                 const nLockTimeLockLike = currentBlockHeight + blocksToLockLike;
                 console.log("lockliking", amountToLockLike, "for", blocksToLockLike + "blocks until", nLockTimeLockLike)
                 const lockupScript = await getLockupScript(nLockTimeLockLike, pubkey);
@@ -336,7 +335,7 @@ export default function DeployInteraction({
                       "type",
                       "like",
                       "tx",
-                      postTxid
+                      newPost.txid
                   ]
                 }).catch(e => {
                     console.error(e.message);
@@ -351,7 +350,7 @@ export default function DeployInteraction({
                         parseFloat(amountToLockLike) * 100000000,
                         nLockTimeLockLike,
                         sendLockLike.paymail.substring(0, sendLockLike.paymail.lastIndexOf("@")),
-                        postTxid
+                        newPost.txid
                     );
                     console.log(returnedLockLike)  
                     toast.success("Transaction posted to hodlocker.com: " + returnedLockLike.txid.slice(0, 6) + "..." + returnedLockLike.txid.slice(-6))
@@ -590,7 +589,7 @@ export default function DeployInteraction({
         </div>
 
         {!anonMode && addLockLike && (
-          <div className="pb-5">
+          <div className="flex w-3/4 mx-auto pb-5">
             <LockInput
               bitcoinAmount={amountToLockLike}
               setBitcoinAmount={setAmountToLockLike}
