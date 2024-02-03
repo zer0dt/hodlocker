@@ -467,6 +467,9 @@ export default function DeployInteraction({
 
   return (
     <>
+      <h5 className="text-lg font-semibold text-black dark:text-white absolute top-3 left-1/2 transform -translate-x-1/2">
+        New Post
+      </h5>
       <div className="z-10 flex flex-col -mt-6 justify-between">
         <button
           onClick={() => {
