@@ -231,7 +231,6 @@ export default function replyInteraction({ transaction }: deployProps) {
               console.log(newReply)
               toast.success("Reply posted to hodlocker.com: " + newReply.txid.slice(0, 6) + "..." + newReply.txid.slice(-6))
               if (newReply.txid && addLockLike) {  
-                const postTxid = send.txid
                 const nLockTimeLockLike = currentBlockHeight + blocksToLockLike;
                 console.log("lockliking", amountToLockLike, "for", blocksToLockLike + "blocks until", nLockTimeLockLike)
                 const lockupScript = await getLockupScript(nLockTimeLockLike, pubkey);
@@ -247,7 +246,7 @@ export default function replyInteraction({ transaction }: deployProps) {
                       "type",
                       "like",
                       "tx",
-                      postTxid
+                      newReply.txid
                   ]
                 }).catch(e => {
                     console.error(e.message);
@@ -263,7 +262,7 @@ export default function replyInteraction({ transaction }: deployProps) {
                         nLockTimeLockLike,
                         sendLockLike.paymail.substring(0, sendLockLike.paymail.lastIndexOf("@")),
                         undefined,
-                        postTxid,
+                        newReply.txid,
                     );
                     console.log(returnedLockLike)  
                     toast.success("Lock posted to hodlocker.com: " + returnedLockLike.txid.slice(0, 6) + "..." + returnedLockLike.txid.slice(-6))
