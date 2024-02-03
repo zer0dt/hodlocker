@@ -11,6 +11,7 @@ import { WalletContext } from '../../context/WalletContextProvider';
 import { LockLikes } from '@prisma/client';
 
 import { toast } from 'sonner';
+import { DEFAULT_LOCKLIKE_AMOUNT, DEFAULT_LOCKLIKE_BLOCKS, LockInput } from '../LockInput';
 
 
 interface LockLikeInteractionProps {
@@ -30,8 +31,8 @@ export default function LockLikeInteraction({ postTxid, replyTxid, postLockLike 
 
     const router = useRouter()
 
-    const [blocksToLock, setBlocksToLock] = useState('1000')
-    const [amountToLock, setAmountToLock] = useState('0.01')  
+    const [blocksToLock, setBlocksToLock] = useState(DEFAULT_LOCKLIKE_BLOCKS.toString())
+    const [amountToLock, setAmountToLock] = useState(DEFAULT_LOCKLIKE_AMOUNT.toFixed(8))
 
     const [loading, setLoading] = useState(false)
 
@@ -86,7 +87,7 @@ export default function LockLikeInteraction({ postTxid, replyTxid, postLockLike 
           console.log("current Block Height", currentBlockHeight)
           if ((currentBlockHeight + Number(blocksToLock)) <= currentBlockHeight) {
             alert('nLockTime should be greater than the current block height.')        
-            setBlocksToLock('1000')
+            setBlocksToLock(DEFAULT_LOCKLIKE_BLOCKS.toString())
             setLoading(false)
             return;  // Do not proceed with the locking process.
           } 
@@ -188,21 +189,16 @@ export default function LockLikeInteraction({ postTxid, replyTxid, postLockLike 
                       onClick={(e) => { e.stopPropagation(); setPopoverVisible(true); }}
                     />
                   }                    
-                    <div ref={popoverRef} className={`absolute bottom-5 left-5 z-50 shadow-2xl inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 ${popoverVisible ? 'opacity-100 visible' : 'opacity-0 invisible'} bg-white border border-gray-200 rounded-lg shadow-2xl dark:text-gray-400 dark:border-gray-600 dark:bg-black flex flex-col items-center`}>
+                    <div ref={popoverRef} className={`absolute bottom-5 left-5 z-50 shadow-2xl flex flex-col gap-5 w-64 text-sm text-gray-500 transition-opacity duration-300 ${popoverVisible ? 'opacity-100 visible' : 'opacity-0 invisible'} bg-white border border-gray-200 rounded-lg shadow-2xl dark:text-gray-400 dark:border-gray-600 dark:bg-black flex flex-col items-center`}>
                       <div className="px-3 w-full py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-black">
                           <h3 className="font-semibold text-center text-gray-900 dark:text-white">lock it up</h3>
                       </div>
-
-                      <div className="flex justify-between w-full px-3 mt-4 mb-4">
-                          <div className="text-center text-l w-1/2 pr-1">
-                              <label htmlFor="bitcoin-input" className="w-full block mb-1 text-sm font-medium text-gray-900 dark:text-white">bitcoin<br/></label>
-                              <input onClick={(e) => e.stopPropagation()} type="number" autoComplete="off" id="bitcoin-input" placeholder="0.00000001" min={0.00000001} max={21} required value={amountToLock} onChange={e => setAmountToLock(e.target.value)} className="text-l bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-slate-900 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                          </div>
-                          <div className="text-center text-l w-1/2 pl-1">
-                              <label htmlFor="block-input" className="w-full block mb-1 text-sm font-medium text-gray-900 dark:text-white">blocks</label>
-                              <input onClick={(e) => e.stopPropagation()} type="number" autoComplete="off" id="block-input" placeholder="1000" min={1} required value={blocksToLock} onChange={e => setBlocksToLock(e.target.value)} className="text-l bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-slate-900 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                          </div>
-                      </div>
+                      <LockInput
+                        setBitcoinAmount={setAmountToLock}
+                        bitcoinAmount={amountToLock}
+                        blocksAmount={blocksToLock}
+                        setBlocksAmount={setBlocksToLock}
+                      />
                       <button
                         onClick={(e) => { e.stopPropagation(); handleLockLike(); setPopoverVisible(false); }}
                         className={"transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:bg-gradient-to-br hover:from-orange-300 hover:to-orange-600 shadow-lg shadow-orange-500/50 duration-300 inline-block rounded-md border border-transparent bg-gradient-to-br from-orange-300 to-orange-600 py-2 px-4 mb-4 text-sm font-medium text-white hover:bg-opacity-100"}

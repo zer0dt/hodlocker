@@ -5,6 +5,7 @@ import { saveBitcoinerSettings } from '@/app/server-actions';
 import { WalletContext } from '../../context/WalletContextProvider';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { LockInput } from '../LockInput';
 
 interface SettingsModalProps {
     handle: string | null | undefined,
@@ -100,16 +101,12 @@ const SettingsModal = ({ handle, setSettingsModalVisible }: SettingsModalProps) 
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-4 md:p-5">
-                    <div className="flex gap-2">
-                        <div className="w-1/2">
-                            <label htmlFor="bitcoin" className="block mb-2 text-md font-medium text-gray-900 dark:text-white">bitcoin</label>
-                            <input onClick={(e) => e.stopPropagation()} type="number" name="bitcoin" id="bitcoin" autoComplete="off" value={bitcoinAmount} step="any" onChange={e => setBitcoinAmount(e.target.value)} min={0.00000001} max={21} className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="0.01" required />
-                        </div>
-                        <div className="w-1/2">
-                            <label htmlFor="blocks" className="block mb-2 text-md font-medium text-gray-900 dark:text-white">blocks</label>
-                            <input onClick={(e) => e.stopPropagation()} type="number" name="blocks" id="blocks" autoComplete="off" value={blocksAmount} onChange={e => setBlocksAmount(e.target.value)} min={1} className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="1000" required />
-                        </div>
-                    </div>
+                    <LockInput
+                        bitcoinAmount={bitcoinAmount}
+                        setBitcoinAmount={setBitcoinAmount}
+                        blocksAmount={blocksAmount}
+                        setBlocksAmount={setBlocksAmount}
+                    />
                     <div className="flex justify-end mt-4">
                         <button type="submit" className="text-white inline-flex items-center bg-orange-400 hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-400 dark:hover:bg-orange-600 dark:focus:ring-orange-300">
                             {isLoading && (
