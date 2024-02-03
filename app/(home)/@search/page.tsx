@@ -6,6 +6,7 @@ import { parse, stringify } from "superjson";
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import { HODLTransactions, postLockLike } from "@/app/server-actions";
 import prisma from "@/app/db";
+import { Prisma } from '@prisma/client'
 import PostComponent from "@/app/components/posts/PostComponent";
 import Pagination from "@/app/components/feeds/sorting-utils/Pagination";
 
@@ -77,7 +78,7 @@ export const getSearchPosts = (
                                 {
                                     note: {
                                         contains: search,
-                                        mode: 'insensitive'
+                                        mode: Prisma.QueryMode.insensitive
                                     }
 
                                 },
