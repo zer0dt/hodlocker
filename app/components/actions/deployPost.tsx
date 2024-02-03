@@ -68,7 +68,7 @@ export default function DeployInteraction({
   const amountToLock = DEFAULT_DEPLOY_POST_AMOUNT.toString()
   const blocksToLock = DEFAULT_DEPLOY_POST_BLOCKS
   const [addLockLike, setAddLockLike] = useState(false)
-  const [amountToLockLike, setAmountToLockLike] = useState<string>(DEFAULT_LOCKLIKE_AMOUNT.toFixed(8));
+  const [amountToLockLike, setAmountToLockLike] = useState<string>(DEFAULT_LOCKLIKE_AMOUNT.toString());
   const [blocksToLockLike, setBlocksToLockLike] = useState<number>(DEFAULT_LOCKLIKE_BLOCKS);
 
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
@@ -115,8 +115,8 @@ export default function DeployInteraction({
       setAmountToLockLike(bitcoinerSettings.amountToLock.toString());
       setBlocksToLockLike(bitcoinerSettings.blocksToLock);
     } else {
-      setAmountToLockLike(DEFAULT_DEPLOY_POST_AMOUNT.toFixed(8));
-      setBlocksToLockLike(DEFAULT_DEPLOY_POST_BLOCKS);
+      setAmountToLockLike(DEFAULT_LOCKLIKE_AMOUNT.toString());
+      setBlocksToLockLike(DEFAULT_LOCKLIKE_BLOCKS);
     }
   }, [bitcoinerSettings]);
 
