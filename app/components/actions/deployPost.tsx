@@ -590,7 +590,7 @@ export default function DeployInteraction({
         </div>
 
         {!anonMode && addLockLike && (
-          <div className="pb-5">
+          <div className="flex w-3/4 mx-auto pb-5">
             <LockInput
               bitcoinAmount={amountToLockLike}
               setBitcoinAmount={setAmountToLockLike}
