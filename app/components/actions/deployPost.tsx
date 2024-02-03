@@ -606,10 +606,6 @@ export default function DeployInteraction({
           </div>
         </div>
 
-        <div className="flex items-center justify-start">
-          <AudioRecorderComponent audioUrl={audioUrl} setAudioUrl={setAudioUrl} />
-        </div>
-
         {!anonMode && addLockLike && (
           <div className="flex w-3/4 mx-auto pb-5">
             <LockInput
