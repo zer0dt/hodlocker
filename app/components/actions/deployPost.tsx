@@ -75,6 +75,8 @@ export default function DeployInteraction({
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [gifUrl, setGifUrl] = useState<string | undefined>();
 
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+
   const [anonMode, setAnonMode] = useState(false);
   const anonBlocksToLock = 36;
 
@@ -272,7 +274,6 @@ export default function DeployInteraction({
           )
 
           if (uploadedImage) {
-
             const imageOpReturn = [
               uploadedImage
             ]
@@ -280,6 +281,19 @@ export default function DeployInteraction({
             tx.addOutput(
               new bsv.Transaction.Output({
                 script: bsv.Script.buildSafeDataOut(imageOpReturn),
+                satoshis: 0,
+              })
+            )
+          }
+
+          if (audioUrl) {
+            const audioOpReturn = [
+              audioUrl
+            ]
+
+            tx.addOutput(
+              new bsv.Transaction.Output({
+                script: bsv.Script.buildSafeDataOut(audioOpReturn),
                 satoshis: 0,
               })
             )
@@ -321,7 +335,6 @@ export default function DeployInteraction({
                 newPost.txid.slice(-6)
               );
               if (newPost.txid && addLockLike) {
-                const postTxid = send.txid
                 const nLockTimeLockLike = currentBlockHeight + blocksToLockLike;
                 console.log("lockliking", amountToLockLike, "for", blocksToLockLike + "blocks until", nLockTimeLockLike)
                 const lockupScript = await getLockupScript(nLockTimeLockLike, pubkey);
@@ -330,14 +343,14 @@ export default function DeployInteraction({
                   amount: amountToLockLike,
                   currency: "BSV",
                   opReturn: [
-                    "1PuQa7K62MiKCtssSLKy1kh56WWU7MtUR5",
-                    "SET",
-                    "app",
-                    "hodlocker.com",
-                    "type",
-                    "like",
-                    "tx",
-                    postTxid
+                      "1PuQa7K62MiKCtssSLKy1kh56WWU7MtUR5",
+                      "SET",
+                      "app",
+                      "hodlocker.com",
+                      "type",
+                      "like",
+                      "tx",
+                      newPost.txid
                   ]
                 }).catch(e => {
                   console.error(e.message);
@@ -348,11 +361,11 @@ export default function DeployInteraction({
                   try {
                     toast("Transaction posted on-chain: " + sendLockLike.txid.slice(0, 6) + "..." + sendLockLike.txid.slice(-6))
                     const returnedLockLike = await postLockLike(
-                      sendLockLike.txid,
-                      parseFloat(amountToLockLike) * 100000000,
-                      nLockTimeLockLike,
-                      sendLockLike.paymail.substring(0, sendLockLike.paymail.lastIndexOf("@")),
-                      postTxid
+                        sendLockLike.txid,
+                        parseFloat(amountToLockLike) * 100000000,
+                        nLockTimeLockLike,
+                        sendLockLike.paymail.substring(0, sendLockLike.paymail.lastIndexOf("@")),
+                        newPost.txid
                     );
                     console.log(returnedLockLike)
                     toast.success("Transaction posted to hodlocker.com: " + returnedLockLike.txid.slice(0, 6) + "..." + returnedLockLike.txid.slice(-6))
@@ -594,11 +607,11 @@ export default function DeployInteraction({
         </div>
 
         <div className="flex items-center justify-start">
-          <AudioRecorderComponent />
+          <AudioRecorderComponent audioUrl={audioUrl} setAudioUrl={setAudioUrl} />
         </div>
 
         {!anonMode && addLockLike && (
-          <div className="pb-5">
+          <div className="flex w-3/4 mx-auto pb-5">
             <LockInput
               bitcoinAmount={amountToLockLike}
               setBitcoinAmount={setAmountToLockLike}

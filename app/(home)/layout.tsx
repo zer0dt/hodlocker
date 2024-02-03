@@ -22,6 +22,7 @@ export default async function FeedLayout(props: {
   latest: React.ReactNode
   trending: React.ReactNode
   leaderboard: React.ReactNode
+  search: React.ReactNode
 }) {
 
   return (
@@ -40,6 +41,7 @@ export default async function FeedLayout(props: {
           {props.latest}
           {props.trending}
           {props.leaderboard}
+          {props.search}
 
         </div>
       </div>

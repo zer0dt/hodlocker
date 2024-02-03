@@ -17,6 +17,8 @@ import { HODLTransactions } from "../../server-actions";
 import PostPlaceHolder from './placeholders/PostPlaceholder'
 import ImagePlaceholder from './placeholders/ImagePlaceholder';
 
+import { useSearchParams } from 'next/navigation'
+
 interface PostContentProps {
     transaction: HODLTransactions
 }
@@ -38,7 +40,7 @@ function extractDataUrl(note: string) {
     }
 }
 
-function formatNote(note: string) {
+function formatNote(note: string, searchQuery: string | null) {
     // Convert URLs to anchor tags and embed YouTube iframes
     let formattedNote = note.replace(/https?:\/\/[^\s]+|www\.[^\s]+/g, (url) => {
         // Check if the URL is a YouTube video link
@@ -63,8 +65,15 @@ function formatNote(note: string) {
         return `<a href="/${handle}"><span class="text-orange-400">@${handle}</span></a>`;
     });
 
+    // Highlight search query
+    if (searchQuery) {
+        const searchRegex = new RegExp(searchQuery, 'gi');
+        formattedNote = formattedNote.replace(searchRegex, (match) => `<strong>${match}</strong>`);
+    }
+
     return DOMPurify.sanitize(formattedNote, { ADD_TAGS: ["iframe"], ADD_ATTR: ['allow', 'frameborder', 'allowfullscreen', 'href', 'target'] });
 }
+
 
 function containsTwitterLink(note: string | null | undefined) {
     // Check if note is null or undefined before applying regular expression
@@ -91,6 +100,9 @@ function extractDataImageString(inputString: string) {
 
 
 function PostContent({ transaction }: PostContentProps) {
+    const searchParams = useSearchParams()
+
+    const search = searchParams.get('search') || null
 
     const [postImage, setPostImage] = useState<string | null>();
     const [note, setNote] = useState("");
@@ -153,15 +165,15 @@ function PostContent({ transaction }: PostContentProps) {
             ) : (
                 <>
                     {note.length > 280 && !isExpanded ? (
-                        <div dangerouslySetInnerHTML={{ __html: formatNote(note.slice(0, 280)) + "..." }}></div>
+                        <div dangerouslySetInnerHTML={{ __html: formatNote(note.slice(0, 280), search) + "..." }}></div>
                     ) : (
                         containsTwitterLink(note) ? (
                             <>
-                                <div dangerouslySetInnerHTML={{ __html: formatNote(note) }} />
+                                <div dangerouslySetInnerHTML={{ __html: formatNote(note, search) }} />
                                 <Tweet id={note.match(/\/status\/([0-9]+)/)[1]} />
                             </>
                         ) : (
-                            <div dangerouslySetInnerHTML={{ __html: formatNote(note) }} />
+                            <div dangerouslySetInnerHTML={{ __html: formatNote(note, search) }} />
                         )
                     )}
                     {note.length > 280 && (

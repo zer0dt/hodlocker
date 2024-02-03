@@ -90,6 +90,11 @@ body {
   opacity: 0;
 }
 
+audio {
+  padding-left: 4px;
+  width: 290px;
+}
+
 .comments-textarea__control{
   margin-top: 10px;
   margin-bottom: 20px;

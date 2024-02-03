@@ -11,6 +11,7 @@ import querystring from "querystring";
 interface HrefObject {
     path: string;
     query: {
+        search?: string;
         tab?: string;
         sort?: string;
         filter?: string;
@@ -53,6 +54,7 @@ export default function FeedBar() {
             latest: false,
             trending: false,
             leaderboard: false,
+            search: false
         };
         // Set transition state of the clicked tab to true
         newTransitionState[tabName] = true;
@@ -186,6 +188,24 @@ export default function FeedBar() {
                 {(transitionState.leaderboard && isPending) ? loading() : (
                     <div>
                         <p className="text-md dark:text-white">🏆</p>
+                    </div>
+                )}
+            </li>
+
+            <li onClick={() => handleLinkClick({
+                path: '/',
+                query: {
+                    tab: 'search',
+                    sort: activeSort,
+                    filter: activeFilter,
+                    filter2: activeFilter2
+                }
+            }, 'search')}
+                className={getClassName("search")}
+            >
+                {(transitionState.search && isPending) ? loading() : (
+                    <div>
+                        <p className="text-md dark:text-white">🔍</p>
                     </div>
                 )}
             </li>

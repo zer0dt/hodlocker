@@ -118,7 +118,7 @@ export default async function TransactionDetail({ params }: { params: { txid: st
         <main className="flex flex-col items-center justify-center pt-4 lg:p-12 lg:pt-6">
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96 p-0">
                 <PostComponent transaction={transaction} postLockLike={postLockLike} />
-                <div className="rounded-lg w-full bg-white dark:bg-black px-2 pb-2">
+                <div className="rounded-lg w-full bg-white dark:bg-black px-2 pb-4">
                     <ReplyInteraction transaction={transaction} />
                 </div>
                 <div className="pt-4 pb-24">
