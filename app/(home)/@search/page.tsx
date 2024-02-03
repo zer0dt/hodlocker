@@ -208,7 +208,7 @@ export default async function SearchFeed({ searchParams }: SearchFeedProps) {
 
     const activeTab = searchParams.tab || "trending"
 
-    const activeSort = searchParams.sort || "week";
+    const activeSort = searchParams.sort || "year";
 
     const activeFilter = searchParams.filter !== undefined ? parseFloat(searchParams.filter) : 0;
 

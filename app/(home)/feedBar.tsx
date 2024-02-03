@@ -196,7 +196,7 @@ export default function FeedBar() {
                 path: '/',
                 query: {
                     tab: 'search',
-                    sort: activeSort,
+                    sort: 'year',
                     filter: activeFilter,
                     filter2: activeFilter2
                 }
