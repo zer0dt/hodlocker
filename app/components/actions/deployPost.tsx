@@ -15,14 +15,20 @@ import {
   postNewBitcoiner,
   postNewTransaction,
   getAllBitcoinerHandles,
+  postLockLike,
 } from "../../server-actions";
 
 import { postAnon } from './anon-post-server-action'
 import { getLockupScript } from "../../utils/scrypt";
 import { bsv } from 'scrypt-ts'
 import { WalletContext } from "../../context/WalletContextProvider";
-import { DEFAULT_LOCK_AMOUNT, DEFAULT_LOCK_BLOCKS, LockInput } from "../LockInput";
-
+import {
+  DEFAULT_DEPLOY_POST_AMOUNT,
+  DEFAULT_DEPLOY_POST_BLOCKS,
+  DEFAULT_LOCKLIKE_AMOUNT,
+  DEFAULT_LOCKLIKE_BLOCKS,
+  LockInput,
+} from "../LockInput";
 
 interface deployProps {
   subs: {
@@ -57,8 +63,12 @@ export default function DeployInteraction({
   const [paying, setPaying] = useState(false);
 
   const [note, setNote] = useState("");
-  const [amountToLock, setAmountToLock] = useState<string>("0.00000001");
-  const [blocksToLock, setBlocksToLock] = useState<number>(144);
+
+  const amountToLock = DEFAULT_DEPLOY_POST_AMOUNT.toString()
+  const blocksToLock = DEFAULT_DEPLOY_POST_BLOCKS
+  const [addLockLike, setAddLockLike] = useState(false)
+  const [amountToLockLike, setAmountToLockLike] = useState<string>(DEFAULT_LOCKLIKE_AMOUNT.toFixed(8));
+  const [blocksToLockLike, setBlocksToLockLike] = useState<number>(DEFAULT_LOCKLIKE_BLOCKS);
 
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [gifUrl, setGifUrl] = useState<string | undefined>();
@@ -77,7 +87,7 @@ export default function DeployInteraction({
     setSubDropdownVisible(false);
   };
 
-  const handleCheckboxChange = (e) => {
+  const toggleAnonMode = (e) => {
     // When the checkbox changes, update anonMode based on its checked status
     if (e.target.checked) {
       // Check if the note contains a base64 string
@@ -85,26 +95,29 @@ export default function DeployInteraction({
       if (base64Regex.test(note)) {
         setNote("");
       }
-      setAmountToLock(DEFAULT_LOCK_AMOUNT)
-      setBlocksToLock(DEFAULT_LOCK_BLOCKS)
-    } else {
-      if (bitcoinerSettings) {
-        setAmountToLock(bitcoinerSettings.amountToLock.toString())
-        setBlocksToLock(bitcoinerSettings.blocksToLock)
-      }
     }
     setAnonMode(e.target.checked);
   };
 
+  const toggleAddLockLike = () => {
+    setAddLockLike(prev => !prev)
+  }
+
+  useEffect(() => {
+    if (anonMode) {
+      setAddLockLike(false)
+    }
+  }, [anonMode])
+
   useEffect(() => {
     if (bitcoinerSettings) {
-      setAmountToLock(bitcoinerSettings.amountToLock.toString())
-      setBlocksToLock(bitcoinerSettings.blocksToLock)
+      setAmountToLockLike(bitcoinerSettings.amountToLock.toString());
+      setBlocksToLockLike(bitcoinerSettings.blocksToLock);
     } else {
-      setAmountToLock(DEFAULT_LOCK_AMOUNT)
-      setBlocksToLock(DEFAULT_LOCK_BLOCKS)
+      setAmountToLockLike(DEFAULT_DEPLOY_POST_AMOUNT.toFixed(8));
+      setBlocksToLockLike(DEFAULT_DEPLOY_POST_BLOCKS);
     }
-  }, [bitcoinerSettings])
+  }, [bitcoinerSettings]);
 
   useEffect(() => {
     function isDarkMode() {
@@ -153,7 +166,6 @@ export default function DeployInteraction({
     }
   }, [params]);
 
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -196,9 +208,8 @@ export default function DeployInteraction({
 
       if (currentBlockHeight) {
         console.log("current Block Height", currentBlockHeight);
-        if (currentBlockHeight + blocksToLock <= currentBlockHeight) {
+        if (currentBlockHeight + blocksToLock <= currentBlockHeight || currentBlockHeight + blocksToLockLike <= currentBlockHeight) {
           alert("nLockTime should be greater than the current block height.");
-          setBlocksToLock(1000);
           return; // Do not proceed with the locking process.
         }
 
@@ -206,7 +217,7 @@ export default function DeployInteraction({
 
         console.log(parseFloat(amountToLock));
 
-        if (parseFloat(amountToLock) * 100000000 > 2100000000) {
+        if (parseFloat(amountToLock) * 100000000 > 2100000000 || parseFloat(amountToLockLike) * 100000000 > 2100000000) {
           alert("You cannot lock more than 21 bitcoin at this moment.");
           return;
         }
@@ -224,7 +235,7 @@ export default function DeployInteraction({
         if (nLockTime && pubkey && paymail) {
           const lockupScript = await getLockupScript(nLockTime, pubkey);
 
-          const fullMessage = gifUrl ? (note + " " + gifUrl) : note;
+          const fullMessage = gifUrl ? note + " " + gifUrl : note;
 
           const noteOpReturn = [
             "19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut",
@@ -258,7 +269,6 @@ export default function DeployInteraction({
             })
           )
 
-          let imageOpReturn;
           if (uploadedImage) {
 
             const imageOpReturn = [
@@ -308,7 +318,50 @@ export default function DeployInteraction({
                 "..." +
                 newPost.txid.slice(-6)
               );
-
+              if (newPost.txid && addLockLike) {  
+                const postTxid = send.txid
+                const nLockTimeLockLike = currentBlockHeight + blocksToLockLike;
+                console.log("lockliking", amountToLockLike, "for", blocksToLockLike + "blocks until", nLockTimeLockLike)
+                const lockupScript = await getLockupScript(nLockTimeLockLike, pubkey);
+                const sendLockLike = await relayone.send({
+                  to: lockupScript,
+                  amount: amountToLockLike,
+                  currency: "BSV",
+                  opReturn: [
+                      "1PuQa7K62MiKCtssSLKy1kh56WWU7MtUR5",
+                      "SET",
+                      "app",
+                      "hodlocker.com",
+                      "type",
+                      "like",
+                      "tx",
+                      postTxid
+                  ]
+                }).catch(e => {
+                    console.error(e.message);
+                    toast.error("Error broadcasting locklike: " + e.message)
+                    setLoading(false)
+                });
+                if (sendLockLike) {
+                  try {
+                    toast("Transaction posted on-chain: " + sendLockLike.txid.slice(0, 6) + "..." + sendLockLike.txid.slice(-6))
+                    const returnedLockLike = await postLockLike(
+                        sendLockLike.txid,
+                        parseFloat(amountToLockLike) * 100000000,
+                        nLockTimeLockLike,
+                        sendLockLike.paymail.substring(0, sendLockLike.paymail.lastIndexOf("@")),
+                        postTxid
+                    );
+                    console.log(returnedLockLike)  
+                    toast.success("Transaction posted to hodlocker.com: " + returnedLockLike.txid.slice(0, 6) + "..." + returnedLockLike.txid.slice(-6))
+                    console.log("done with lock like!")
+                  } catch (err) {
+                    console.error("Error posting lock like:", err);
+                    toast.error("Error posting lock like: " + err)
+                    alert(err);
+                  }
+                }
+              }
               setPaying(false);
               setLoading(false);
               setNote("");
@@ -337,7 +390,6 @@ export default function DeployInteraction({
       console.log("current Block Height", currentBlockHeight);
       if (currentBlockHeight + anonBlocksToLock <= currentBlockHeight) {
         alert("nLockTime should be greater than the current block height.");
-        setBlocksToLock(1000);
         return; // Do not proceed with the locking process.
       }
 
@@ -486,21 +538,41 @@ export default function DeployInteraction({
           />
         </MentionsInput>
 
-        <div className="flex z-20 justify-between my-2">
-          <div className="flex mb-0 pl-2 mt-1 justify-start">
+        <div className="flex justify-between my-3">
+          <div className="flex pl-2 items-center cursor-pointer">
             <input
-              id="default-checkbox"
+              id="deploy-post-anon-mode-input"
+              onChange={toggleAnonMode}
               type="checkbox"
-              onChange={handleCheckboxChange}
               checked={anonMode}
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              className="cursor-pointer w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
             />
             <label
-              htmlFor="default-checkbox"
-              className="flex ml-2 -mt-1 text-sm font-mono text-gray-900 dark:text-gray-300"
+              htmlFor="deploy-post-anon-mode-input"
+              className="cursor-pointer flex w-max pl-2 text-sm font-mono text-gray-900 dark:text-gray-300"
             >
               anon mode
             </label>
+          </div>
+          <div className={`flex pl-2 items-center w-max`}>
+              <input
+                id="deploy-post-add-lock-input"
+                disabled={anonMode}
+                type="checkbox"
+                onChange={toggleAddLockLike}
+                checked={addLockLike}
+                className="w-4 h-4 text-blue-600 bg-gray-100 disabled:bg-gray-50 border-gray-300 disabled:border-gray-200 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:disabled:bg-gray-800 dark:border-gray-600 dark:disabled:border-gray-700 cursor-pointer disabled:cursor-not-allowed"
+              />
+              <label
+                htmlFor="deploy-post-add-lock-input"
+                className={`flex w-max pl-2 text-sm font-mono 
+                  ${anonMode ? "dark:text-gray-400" : "dark:text-gray-300"} 
+                  ${anonMode ? "text-gray-400" : "text-gray-900"}
+                  ${anonMode ? "cursor-not-allowed" : "cursor-pointer"}
+                `}
+              >
+                add lock
+              </label>
           </div>
 
           <div className="flex justify-end w-2/3 items-center mt-0 mb-0 pb-0">
@@ -516,13 +588,17 @@ export default function DeployInteraction({
           </div>
         </div>
 
-        <LockInput
-          bitcoinAmount={amountToLock}
-          setBitcoinAmount={setAmountToLock}
-          blocksAmount={blocksToLock.toString()}
-          setBlocksAmount={(value) => setBlocksToLock(parseFloat(value))}
-          isDisabled={anonMode}
-        />
+        {!anonMode && addLockLike && (
+          <div className="pb-5">
+            <LockInput
+              bitcoinAmount={amountToLockLike}
+              setBitcoinAmount={setAmountToLockLike}
+              blocksAmount={blocksToLockLike.toString()}
+              setBlocksAmount={(value) => setBlocksToLockLike(parseFloat(value))}
+              isDisabled={anonMode}
+            />
+          </div>
+        )}
 
         <div className="flex justify-center items-center -mb-4">
           <button

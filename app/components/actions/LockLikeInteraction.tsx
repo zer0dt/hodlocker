@@ -11,7 +11,7 @@ import { WalletContext } from '../../context/WalletContextProvider';
 import { LockLikes } from '@prisma/client';
 
 import { toast } from 'sonner';
-import { LockInput } from '../LockInput';
+import { DEFAULT_LOCKLIKE_AMOUNT, DEFAULT_LOCKLIKE_BLOCKS, LockInput } from '../LockInput';
 
 
 interface LockLikeInteractionProps {
@@ -31,8 +31,8 @@ export default function LockLikeInteraction({ postTxid, replyTxid, postLockLike 
 
     const router = useRouter()
 
-    const [blocksToLock, setBlocksToLock] = useState('1000')
-    const [amountToLock, setAmountToLock] = useState('0.01')  
+    const [blocksToLock, setBlocksToLock] = useState(DEFAULT_LOCKLIKE_BLOCKS.toString())
+    const [amountToLock, setAmountToLock] = useState(DEFAULT_LOCKLIKE_AMOUNT.toFixed(8))
 
     const [loading, setLoading] = useState(false)
 
@@ -87,7 +87,7 @@ export default function LockLikeInteraction({ postTxid, replyTxid, postLockLike 
           console.log("current Block Height", currentBlockHeight)
           if ((currentBlockHeight + Number(blocksToLock)) <= currentBlockHeight) {
             alert('nLockTime should be greater than the current block height.')        
-            setBlocksToLock('1000')
+            setBlocksToLock(DEFAULT_LOCKLIKE_BLOCKS.toString())
             setLoading(false)
             return;  // Do not proceed with the locking process.
           } 
@@ -189,7 +189,7 @@ export default function LockLikeInteraction({ postTxid, replyTxid, postLockLike 
                       onClick={(e) => { e.stopPropagation(); setPopoverVisible(true); }}
                     />
                   }                    
-                    <div ref={popoverRef} className={`absolute bottom-5 left-5 z-50 shadow-2xl inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 ${popoverVisible ? 'opacity-100 visible' : 'opacity-0 invisible'} bg-white border border-gray-200 rounded-lg shadow-2xl dark:text-gray-400 dark:border-gray-600 dark:bg-black flex flex-col items-center`}>
+                    <div ref={popoverRef} className={`absolute bottom-5 left-5 z-50 shadow-2xl flex flex-col gap-5 w-64 text-sm text-gray-500 transition-opacity duration-300 ${popoverVisible ? 'opacity-100 visible' : 'opacity-0 invisible'} bg-white border border-gray-200 rounded-lg shadow-2xl dark:text-gray-400 dark:border-gray-600 dark:bg-black flex flex-col items-center`}>
                       <div className="px-3 w-full py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-black">
                           <h3 className="font-semibold text-center text-gray-900 dark:text-white">lock it up</h3>
                       </div>
