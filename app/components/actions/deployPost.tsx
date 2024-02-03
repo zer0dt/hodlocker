@@ -29,6 +29,7 @@ import {
   DEFAULT_LOCKLIKE_BLOCKS,
   LockInput,
 } from "../LockInput";
+import AudioRecorderComponent from "../uploads/AudioRecorder";
 
 interface deployProps {
   subs: {
@@ -319,7 +320,7 @@ export default function DeployInteraction({
                 "..." +
                 newPost.txid.slice(-6)
               );
-              if (newPost.txid && addLockLike) {  
+              if (newPost.txid && addLockLike) {
                 const postTxid = send.txid
                 const nLockTimeLockLike = currentBlockHeight + blocksToLockLike;
                 console.log("lockliking", amountToLockLike, "for", blocksToLockLike + "blocks until", nLockTimeLockLike)
@@ -329,31 +330,31 @@ export default function DeployInteraction({
                   amount: amountToLockLike,
                   currency: "BSV",
                   opReturn: [
-                      "1PuQa7K62MiKCtssSLKy1kh56WWU7MtUR5",
-                      "SET",
-                      "app",
-                      "hodlocker.com",
-                      "type",
-                      "like",
-                      "tx",
-                      postTxid
+                    "1PuQa7K62MiKCtssSLKy1kh56WWU7MtUR5",
+                    "SET",
+                    "app",
+                    "hodlocker.com",
+                    "type",
+                    "like",
+                    "tx",
+                    postTxid
                   ]
                 }).catch(e => {
-                    console.error(e.message);
-                    toast.error("Error broadcasting locklike: " + e.message)
-                    setLoading(false)
+                  console.error(e.message);
+                  toast.error("Error broadcasting locklike: " + e.message)
+                  setLoading(false)
                 });
                 if (sendLockLike) {
                   try {
                     toast("Transaction posted on-chain: " + sendLockLike.txid.slice(0, 6) + "..." + sendLockLike.txid.slice(-6))
                     const returnedLockLike = await postLockLike(
-                        sendLockLike.txid,
-                        parseFloat(amountToLockLike) * 100000000,
-                        nLockTimeLockLike,
-                        sendLockLike.paymail.substring(0, sendLockLike.paymail.lastIndexOf("@")),
-                        postTxid
+                      sendLockLike.txid,
+                      parseFloat(amountToLockLike) * 100000000,
+                      nLockTimeLockLike,
+                      sendLockLike.paymail.substring(0, sendLockLike.paymail.lastIndexOf("@")),
+                      postTxid
                     );
-                    console.log(returnedLockLike)  
+                    console.log(returnedLockLike)
                     toast.success("Transaction posted to hodlocker.com: " + returnedLockLike.txid.slice(0, 6) + "..." + returnedLockLike.txid.slice(-6))
                     console.log("done with lock like!")
                   } catch (err) {
@@ -577,6 +578,9 @@ export default function DeployInteraction({
               </label>
             </div>
           </div>
+          <div>
+
+          </div>
           <div className={`flex ${uploadedImage ? "justify-center" : "justify-end"} w-full items-center mt-0 mb-0 pb-0"`}>
             {isLinked ? (
               <ImageUploader
@@ -587,6 +591,10 @@ export default function DeployInteraction({
               />
             ) : null}
           </div>
+        </div>
+
+        <div className="flex items-center justify-start">
+          <AudioRecorderComponent />
         </div>
 
         {!anonMode && addLockLike && (
@@ -602,16 +610,16 @@ export default function DeployInteraction({
         )}
 
         <div className="flex justify-center items-center -mb-4">
-            <button
-              onClick={anonMode ? AnonPost : Post}
-              className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-orange-500 to-orange-400 group-hover:from-orange-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-orange-200 dark:focus:ring-orange-800"
-              disabled={paying || loading}
-            >
-              {paying || loading ? <Spinner /> : 
-                <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                  Post
-                </span>}
-            </button>
+          <button
+            onClick={anonMode ? AnonPost : Post}
+            className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-orange-500 to-orange-400 group-hover:from-orange-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-orange-200 dark:focus:ring-orange-800"
+            disabled={paying || loading}
+          >
+            {paying || loading ? <Spinner /> :
+              <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                Post
+              </span>}
+          </button>
         </div>
       </div>
     </>
