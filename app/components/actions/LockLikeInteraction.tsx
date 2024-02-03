@@ -32,7 +32,7 @@ export default function LockLikeInteraction({ postTxid, replyTxid, postLockLike 
     const router = useRouter()
 
     const [blocksToLock, setBlocksToLock] = useState(DEFAULT_LOCKLIKE_BLOCKS.toString())
-    const [amountToLock, setAmountToLock] = useState(DEFAULT_LOCKLIKE_AMOUNT.toFixed(8))
+    const [amountToLock, setAmountToLock] = useState(DEFAULT_LOCKLIKE_AMOUNT.toString())
 
     const [loading, setLoading] = useState(false)
 
