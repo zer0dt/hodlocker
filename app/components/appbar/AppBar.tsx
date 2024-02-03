@@ -37,7 +37,7 @@ interface NewNotifications {
 }
 
 const AppBar = () => {
-  const { fetchRelayOneData, handle, currentBlockHeight } = useContext(WalletContext)!;
+  const { fetchRelayOneData, handle, currentBlockHeight, signInModalVisible, setSignInModalVisible } = useContext(WalletContext)!;
 
   const router = useRouter();
   const pathname = usePathname();
@@ -49,7 +49,6 @@ const AppBar = () => {
 
   const dropdownRef = useRef(null);
 
-  const [signInModalVisible, setSignInModalVisible] = useState(false);
   const [profileDropdownVisible, setProfileDropdownVisible] = useState(false);
 
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);

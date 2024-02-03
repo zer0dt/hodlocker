@@ -47,6 +47,7 @@ export default function DeployNFTPost({
     isLinked,
     fetchRelayOneData,
     currentBlockHeight,
+    setSignInModalVisible,
   } = useContext(WalletContext)!;
   
   const [darkMode, setDarkMode] = useState(false)
@@ -238,7 +239,7 @@ export default function DeployNFTPost({
       }
     } else {
       setLoading(false);
-      await fetchRelayOneData();
+      setSignInModalVisible(true)
       return;
     }
   };

@@ -55,6 +55,7 @@ export default function DeployInteraction({
     fetchRelayOneData,
     currentBlockHeight,
     bitcoinerSettings,
+    setSignInModalVisible,
   } = useContext(WalletContext)!;
 
   const [darkMode, setDarkMode] = useState(false);
@@ -377,7 +378,7 @@ export default function DeployInteraction({
       }
     } else {
       setLoading(false);
-      await fetchRelayOneData();
+      setSignInModalVisible(true);
       return;
     }
   };
