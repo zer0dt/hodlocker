@@ -26,7 +26,7 @@ interface LockLikeInteractionProps {
 }
 
 export default function LockLikeInteraction({ postTxid, replyTxid, postLockLike }: LockLikeInteractionProps) {    
-    const { currentBlockHeight, pubkey, fetchRelayOneData, handle, isLinked, bitcoinerSettings } = useContext(WalletContext)!;
+    const { currentBlockHeight, pubkey, fetchRelayOneData, handle, isLinked, bitcoinerSettings, setSignInModalVisible } = useContext(WalletContext)!;
 
     const router = useRouter()
 
@@ -160,7 +160,7 @@ export default function LockLikeInteraction({ postTxid, replyTxid, postLockLike 
         }  
       } else {
         setLoading(false)
-        await fetchRelayOneData()
+        setSignInModalVisible(true)
         return
       }     
     }

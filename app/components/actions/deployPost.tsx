@@ -47,6 +47,7 @@ export default function DeployInteraction({
     isLinked,
     fetchRelayOneData,
     currentBlockHeight,
+    setSignInModalVisible,
   } = useContext(WalletContext)!;
 
   const [darkMode, setDarkMode] = useState(false);
@@ -305,7 +306,7 @@ export default function DeployInteraction({
       }
     } else {
       setLoading(false);
-      await fetchRelayOneData();
+      setSignInModalVisible(true);
       return;
     }
   };
