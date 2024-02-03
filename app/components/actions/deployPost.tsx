@@ -439,10 +439,10 @@ export default function DeployInteraction({
     }
   };
 
-  const spinner = () => {
+  const Spinner = () => {
     return (
       <>
-        <div className="justify-center items-center flex">
+        <div className="justify-center items-center flex p-2">
           <ThreeDots
             height="2em"
             width="2em"
@@ -539,23 +539,24 @@ export default function DeployInteraction({
           />
         </MentionsInput>
 
-        <div className="flex justify-between my-3">
-          <div className="flex pl-2 items-center cursor-pointer">
-            <input
-              id="deploy-post-anon-mode-input"
-              onChange={toggleAnonMode}
-              type="checkbox"
-              checked={anonMode}
-              className="cursor-pointer w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-            <label
-              htmlFor="deploy-post-anon-mode-input"
-              className="cursor-pointer flex w-max pl-2 text-sm font-mono text-gray-900 dark:text-gray-300"
-            >
-              anon mode
-            </label>
-          </div>
-          <div className={`flex pl-2 items-center w-max`}>
+        <div className={`flex justify-between my-3 ${uploadedImage ? "flex-col-reverse" : ""}`}>
+          <div className="flex">
+            <div className="flex pl-2 items-center cursor-pointer">
+              <input
+                id="deploy-post-anon-mode-input"
+                onChange={toggleAnonMode}
+                type="checkbox"
+                checked={anonMode}
+                className="cursor-pointer w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              />
+              <label
+                htmlFor="deploy-post-anon-mode-input"
+                className="cursor-pointer flex w-max pl-2 text-sm font-mono text-gray-900 dark:text-gray-300"
+              >
+                anon mode
+              </label>
+            </div>
+            <div className={`flex pl-2 items-center w-max`}>
               <input
                 id="deploy-post-add-lock-input"
                 disabled={anonMode}
@@ -574,10 +575,9 @@ export default function DeployInteraction({
               >
                 add lock
               </label>
+            </div>
           </div>
-
-          <div className="flex justify-end w-2/3 items-center mt-0 mb-0 pb-0">
-
+          <div className={`flex ${uploadedImage ? "justify-center" : "justify-end"} w-full items-center mt-0 mb-0 pb-0"`}>
             {isLinked ? (
               <ImageUploader
                 gifUrl={gifUrl}
@@ -602,19 +602,16 @@ export default function DeployInteraction({
         )}
 
         <div className="flex justify-center items-center -mb-4">
-          <button
-            onClick={() => {
-              {
-                anonMode ? AnonPost() : Post();
-              }
-            }}
-            className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-orange-500 to-orange-400 group-hover:from-orange-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-orange-200 dark:focus:ring-orange-800"
-          >
-            {paying || loading ? spinner() : 
-            <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-              Post
-            </span>}
-          </button>
+            <button
+              onClick={anonMode ? AnonPost : Post}
+              className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-orange-500 to-orange-400 group-hover:from-orange-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-orange-200 dark:focus:ring-orange-800"
+              disabled={paying || loading}
+            >
+              {paying || loading ? <Spinner /> : 
+                <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                  Post
+                </span>}
+            </button>
         </div>
       </div>
     </>
