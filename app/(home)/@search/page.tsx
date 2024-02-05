@@ -195,9 +195,9 @@ const getCachedPosts = unstable_cache(
 
         return stringify({ ...cachedPosts })
     },
-    ['latest-posts'],
+    ['search-posts'],
     {
-        tags: ['latest', 'posts'], // Cache tags for invalidation
+        tags: ['search', 'posts'], // Cache tags for invalidation
         revalidate: 60, // Revalidation time in seconds (e.g., 1 hour)
     }
 );
