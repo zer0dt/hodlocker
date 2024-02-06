@@ -277,8 +277,14 @@ export default function replyInteraction({ transaction }: deployProps) {
               setPaying(false)
               setLoading(false)
               setNote('')
-              setUploadedImage(null)
-              router.refresh()
+              
+              if (uploadedImage) {
+                setUploadedImage(null)
+                router.push("/" + transaction.handle_id + "/post/" + transaction.txid);
+              } else {
+                router.refresh()
+              }
+              
             } catch (err) {
               alert(err)
             }
