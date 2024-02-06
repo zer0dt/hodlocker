@@ -68,7 +68,7 @@ const RepliesDrawer = async ({
               <DrawerTitle >Comments</DrawerTitle>
             </DrawerHeader>
 
-            <ScrollArea className="max-h-[50vh] w-auto overflow-y-auto rounded-md border scrollbar-thin">
+            <ScrollArea className="max-h-[60vh] w-auto overflow-y-auto rounded-md border">
               {replies.map((reply: HODLTransactions, index: number) => (
                 <div key={index}>
                   <ReplyComponent reply={reply} postLockLike={postLockLike} />

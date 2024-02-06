@@ -8,6 +8,7 @@ import Image from 'next/image'
 
 import DOMPurify from "isomorphic-dompurify";
 import { Tweet } from '../tweets/tweet'
+import { Spotify } from 'react-spotify-embed';
 
 import { MdExpandMore } from "react-icons/md";
 import { MdExpandLess } from "react-icons/md";
@@ -50,6 +51,13 @@ function formatNote(note: string, searchQuery: string | null) {
             return `<iframe width="300" height="200" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
         }
 
+        // Check if the URL is a Spotify track or album link
+        const spotifyMatch = url.match(/(?:https?:\/\/)?(?:www\.)?(?:open\.spotify\.com\/(?:track|album)\/[\w-]+)(\?si=[\w-]+)?/);
+        if (spotifyMatch) {
+            // Return an empty string for Spotify links, excluding them from the formatted note
+            return '';
+        }
+
         // Otherwise, create an anchor tag for the URL
         const href = url.startsWith('www.') ? 'https://' + url : url;
         return `<a href="${href}" target="_blank" rel="noopener noreferrer"><span class="text-orange-400 whitespace-normal break-words">${url}</span></a>`;
@@ -83,6 +91,14 @@ function containsTwitterLink(note: string | null | undefined) {
         return twitterOrXRegex.test(note);
     }
     return false; // Handle the case when note is null or undefined
+}
+
+function containsSpotifyLink(note: string | null | undefined) {
+    if (note) {
+        const spotifyRegex = /https?:\/\/(?:open\.spotify\.com)\/(?:track|album)\/([\w-]+)/;
+        return spotifyRegex.test(note);
+    }
+    return false;
 }
 
 function extractDataImageString(inputString: string) {
@@ -164,6 +180,7 @@ function PostContent({ transaction }: PostContentProps) {
                 <PostPlaceHolder />
             ) : (
                 <>
+
                     {note.length > 280 && !isExpanded ? (
                         <div dangerouslySetInnerHTML={{ __html: formatNote(note.slice(0, 280), search) + "..." }}></div>
                     ) : (
@@ -202,6 +219,11 @@ function PostContent({ transaction }: PostContentProps) {
                             )}
                         </div>
                     )}
+
+                    {containsSpotifyLink(note) ? (
+                        <Spotify wide link={note.match(/(?:https?:\/\/)?(?:www\.)?(open\.spotify\.com\/(?:track|album)\/[\w-]+)/)[0]} />
+                    ) : null}
+
                 </>
             )}
             {/* Moved outside of isLoading check */}
