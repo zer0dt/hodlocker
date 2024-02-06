@@ -97,6 +97,25 @@ audio {
   width: 290px;
 }
 
+.no-styling {
+  padding: 0;
+  margin: 0;
+  border: none;
+  background-color: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.no-styling:hover {
+  background-color: transparent!important;
+}
+
+.no-styling:focus {
+  outline: none!important;
+}
+
 @media (prefers-color-scheme: dark) {
   [data-rmiz-modal-overlay='hidden'] {
     background-color: rgba(0, 0, 0, 0);

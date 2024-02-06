@@ -117,7 +117,7 @@ export default function FeedBar() {
             >
 
                 {(transitionState.subs && isPending) ? loading() : (
-                    <div className="flex">
+                    <div className="flex pt-1">
                         <p className="text-md dark:text-white">{activeSub === "all" ? (activeSub) : ("h/" + activeSub)}</p>
                         <IoMdArrowDropdown className="mt-1" />
                     </div>
@@ -136,7 +136,7 @@ export default function FeedBar() {
                 className={getClassName("top")}
             >
                 {(transitionState.top && isPending) ? loading() : (
-                    <div>
+                    <div className="pt-1">
                         <p className="text-md dark:text-white">🔝</p>
                     </div>
                 )}
@@ -154,7 +154,7 @@ export default function FeedBar() {
                 className={getClassName("latest")}
             >
                 {(transitionState.latest && isPending) ? loading() : (
-                    <div>
+                    <div className="pt-1">
                         <p className="text-md dark:text-white">🆕</p>
                     </div>
                 )}
@@ -172,7 +172,7 @@ export default function FeedBar() {
                 className={getClassName("images")}
             >
                 {(transitionState.images && isPending) ? loading() : (
-                    <div>
+                    <div className="pt-1">
                         <p className="text-md dark:text-white">🖼️</p>
                     </div>
                 )}
@@ -190,7 +190,7 @@ export default function FeedBar() {
                 className={getClassName("trending")}
             >
                 {(transitionState.trending && isPending) ? loading() : (
-                    <div>
+                    <div className="pt-1">
                         <p className="text-md dark:text-white">🚀</p>
                     </div>
                 )}
@@ -206,7 +206,7 @@ export default function FeedBar() {
                 className={getClassName("leaderboard")}
             >
                 {(transitionState.leaderboard && isPending) ? loading() : (
-                    <div>
+                    <div className="pt-1">
                         <p className="text-md dark:text-white">🏆</p>
                     </div>
                 )}
@@ -224,7 +224,7 @@ export default function FeedBar() {
                 className={getClassName("search")}
             >
                 {(transitionState.search && isPending) ? loading() : (
-                    <div>
+                    <div className="pt-1">
                         <p className="text-md dark:text-white">🔍</p>
                     </div>
                 )}
