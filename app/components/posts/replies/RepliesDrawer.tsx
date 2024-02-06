@@ -76,7 +76,7 @@ const RepliesDrawer = async ({
               ))}
             </ScrollArea>
               
-            <div className="mx-auto w-full max-w-sm pb-10">
+            <div className="mx-auto w-full max-w-sm pb-6">
                 <ReplyInteraction transaction={transaction} />
               </div>
             
