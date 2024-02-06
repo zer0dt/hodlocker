@@ -62,7 +62,7 @@ const RepliesDrawer = async ({
             ) : null}
           </div>
         </DrawerTrigger>
-        <DrawerContent className="max-h-[100vh] bg-white">
+        <DrawerContent className="max-h-[100vh] bg-white dark:bg-black">
           <div className="mx-auto w-full max-w-sm">
             <DrawerHeader>
               <DrawerTitle >Comments</DrawerTitle>
