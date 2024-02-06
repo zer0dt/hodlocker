@@ -82,7 +82,7 @@ const LockLikeDrawer = ({
           </DrawerHeader>
 
           <div className="flex justify-center">
-            <ScrollArea className="max-h-[90vh] overflow-y-auto w-full lg:w-2/3 rounded-md scrollbar-thin">
+            <ScrollArea className="max-h-[90vh] overflow-y-auto ml-8 w-full lg:w-2/3 rounded-md scrollbar-thin">
               {transaction.locklikes
                 .slice() // Create a copy of the array to avoid mutating the original
                 .sort((a: LockLikes, b: LockLikes) => b.amount - a.amount) // Sort by amount in descending order
