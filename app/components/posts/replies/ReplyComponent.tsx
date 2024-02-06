@@ -1,5 +1,3 @@
-'use client'
-
 import React, { Suspense } from "react";
 import Link from "next/link";
 import LockLikeInteraction from "../../actions/LockLikeInteraction";
@@ -92,7 +90,6 @@ function Replies({ reply, postLockLike }: RepliesProps) {
             </div>
             
             <a
-              onClick={(e) => e.stopPropagation()}
               target="_blank"
               rel="noopener noreferrer"
               href={"https://whatsonchain.com/tx/" + reply.txid}

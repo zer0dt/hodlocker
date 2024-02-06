@@ -128,6 +128,17 @@ audio {
   /* Hide scrollbar for Firefox */
   scrollbar-width: none;
 }
+
+.scrollbar-hidden {
+  /* Hide scrollbar for WebKit browsers */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+}
+
 .comments-textarea__highlighter{
   padding: 10px;
 }
@@ -197,5 +208,3 @@ audio {
 .dark-comments-textarea__suggestions__item — focused {
   background-color: #daf4fa;
 }
-
-
