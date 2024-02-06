@@ -17,6 +17,15 @@ import PostProfileImage from './PostProfileImage'
 import PostContent from "./PostContent";
 import WebShare from './WebShare'
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+
 
 interface PostProps {
   transaction: HODLTransactions;
@@ -73,9 +82,9 @@ export default async function Post({ transaction, postLockLike }: PostProps) {
   }
 
   return (
-    <React.Fragment key={transaction.txid}>
-      <div className="bg-white-100 p-0 flex flex-col">
-        <div className="bg-white dark:bg-black border dark:border-gray-800 rounded-lg flex flex-col relative">
+    <Card key={transaction.txid} className="border-slate-100 dark:border-slate-700">
+      <CardContent className="bg-white-100 p-0 flex flex-col">
+        <div className="bg-white dark:bg-black rounded-lg flex flex-col relative">
           <div className="flex justify-between px-2 pt-2 relative">
             <div className="flex items-center rounded-full">
               <Link href={"/" + transaction.handle_id}>
@@ -142,9 +151,9 @@ export default async function Post({ transaction, postLockLike }: PostProps) {
             </div>
           </div>
         </div>
-      </div>
+      </CardContent>
 
-    </React.Fragment>
+    </Card>
   );
 }
 

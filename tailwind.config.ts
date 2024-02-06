@@ -16,7 +16,7 @@ const config: Config = {
     extend: {
       colors: {
         muted: {
-          DEFAULT: "hsl(210 40% 96.1%)",
+          DEFAULT: "hsl(214.3,31.8%,91.4%)",
           foreground: "hsl(var(--muted-foreground))",
         },
       },

@@ -62,13 +62,13 @@ const RepliesDrawer = async ({
             ) : null}
           </div>
         </DrawerTrigger>
-        <DrawerContent className="max-h-[100vh] bg-white dark:bg-black">
+        <DrawerContent className="max-h-[100vh] bg-white dark:bg-black dark:border-slate-500">
           <div className="mx-auto w-full max-w-sm">
             <DrawerHeader>
               <DrawerTitle >Comments</DrawerTitle>
             </DrawerHeader>
 
-            <ScrollArea className="max-h-[50vh] w-auto overflow-y-auto rounded-md border">
+            <ScrollArea className="max-h-[60vh] w-auto overflow-y-auto rounded-md border dark:border-slate-500">
               {replies.map((reply: HODLTransactions, index: number) => (
                 <div key={index}>
                   <ReplyComponent reply={reply} postLockLike={postLockLike} />
@@ -76,7 +76,7 @@ const RepliesDrawer = async ({
               ))}
             </ScrollArea>
               
-            <div className="mx-auto w-full max-w-sm pb-6">
+            <div className="mx-auto w-full max-w-sm pb-10">
                 <ReplyInteraction transaction={transaction} />
               </div>
             
