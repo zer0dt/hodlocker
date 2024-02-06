@@ -18,6 +18,9 @@ import { HODLTransactions } from "../../server-actions";
 import PostPlaceHolder from './placeholders/PostPlaceholder'
 import ImagePlaceholder from './placeholders/ImagePlaceholder';
 
+import Zoom from 'react-medium-image-zoom'
+import 'react-medium-image-zoom/dist/styles.css'
+
 import { useSearchParams } from 'next/navigation'
 
 interface PostContentProps {
@@ -229,9 +232,9 @@ function PostContent({ transaction }: PostContentProps) {
             {/* Moved outside of isLoading check */}
             {imageLoading ? <ImagePlaceholder /> : (
                 postImage &&
-                <Link href={`/${transaction.handle_id}/post/${transaction.txid}`}>
+                <Zoom>
                     <Image src={postImage} width={0} height={0} style={{ width: '100%', height: 'auto' }} sizes="100vw" alt="post image" className="mb-1 rounded-lg" />
-                </Link>
+                </Zoom>
             )}
         </>
     );
