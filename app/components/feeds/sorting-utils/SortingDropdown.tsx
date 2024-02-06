@@ -1,6 +1,10 @@
+
+'use client'
+
 import Link from 'next/link';
 import { SiBitcoinsv } from 'react-icons/si';
 import FilterIcon from './filter-icon'
+import DarkFilterIcon from './dark-filter-icon'
 
 import {
   DropdownMenu,
@@ -16,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from 'flowbite-react';
+import { useEffect, useState } from 'react';
 
 interface DropdownProps {
   sub: string,
@@ -26,6 +31,20 @@ interface DropdownProps {
 }
 
 export default function SortingDropdown({ sub, tab, sort, filter, filter2 }: DropdownProps) {
+  const [theme, setTheme] = useState("light");
+
+  const filterIcon = () => {
+    if (theme === 'dark') {
+      return <DarkFilterIcon />;
+    } else {
+      return <FilterIcon />;
+    }
+  }
+
+  useEffect(() => {
+      setTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  }, []);
+  
 
   // Check if 'sub' is "BSV"
   const basePath = sub === 'all' ? '/' : `/h/${sub}/`;
@@ -33,7 +52,7 @@ export default function SortingDropdown({ sub, tab, sort, filter, filter2 }: Dro
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="no-styling focus:outline-none"><FilterIcon /></Button>
+        <Button className="no-styling focus:outline-none dark:bg-black">{filterIcon()}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-28 bg-white dark:bg-black">
         <DropdownMenuLabel>Lock Filters</DropdownMenuLabel>

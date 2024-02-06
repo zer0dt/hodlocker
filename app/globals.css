@@ -117,6 +117,26 @@ audio {
 }
 
 @media (prefers-color-scheme: dark) {
+  .no-styling {
+    padding: 0;
+    margin: 0;
+    border: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .no-styling:hover {
+    background-color: transparent!important;
+  }
+  
+  .no-styling:focus {
+    outline: none!important;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
   [data-rmiz-modal-overlay='hidden'] {
     background-color: rgba(0, 0, 0, 0);
   }
