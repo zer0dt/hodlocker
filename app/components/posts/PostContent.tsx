@@ -19,7 +19,6 @@ import PostPlaceHolder from './placeholders/PostPlaceholder'
 import ImagePlaceholder from './placeholders/ImagePlaceholder';
 
 import Zoom from 'react-medium-image-zoom'
-import 'react-medium-image-zoom/dist/styles.css'
 
 import { useSearchParams } from 'next/navigation'
 
