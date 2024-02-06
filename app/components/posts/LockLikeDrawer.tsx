@@ -8,6 +8,18 @@ import { HODLTransactions } from "@/app/server-actions";
 import { WalletContext } from "../../context/WalletContextProvider";
 import { formatBitcoinValue } from "./posts-format";
 
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+
 interface LockLikes {
   txid: string;
   handle_id: string;
@@ -45,77 +57,71 @@ const LockLikeDrawer = ({
 }: LockLikeDrawerProps) => {
   const { currentBlockHeight } = useContext(WalletContext)!;
 
-  const [likeDrawerOpen, setLikeDrawerOpen] = useState(false)
-
-  const handleLikeDrawerToggle = () => {
-    setLikeDrawerOpen(!likeDrawerOpen);
-  };
-
   return (
     <>
-      {transaction.totalAmountandLockLiked > 1 ? (
-        <button
-          data-drawer-body-scrolling="false"
-          onClick={handleLikeDrawerToggle} // Toggle the drawer when this button is clicked
-          className="flex items-center text-black dark:text-white text-sm ml-1 cursor-pointer hover:text-orange-400"
-        >
-          <span className="font-medium font-mono">{formatBitcoinValue(transaction.totalAmountandLockLiked / 100000000)}</span>
-          <SiBitcoinsv className="text-orange-400 ml-1" />
-        </button>
-      ) : null}
 
-      <div
-        id={`drawer-example-${transaction.txid}`} // Unique ID based on transaction.txid
-        className={`fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto bg-white w-full lg:w-1/4 dark:bg-black ease-in-out duration-300 ${likeDrawerOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-        tabIndex={-1}
-      >
-        <h5 id="drawer-label" className="pl-24 inline-flex items-center mb-2 text-lg font-semibold text-black dark:text-white">
-          locks on this post
-        </h5>
-        <button type="button" onClick={handleLikeDrawerToggle} className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 right-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white">
-          <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-          </svg>
-          <span className="sr-only">Close menu</span>
-        </button>
-        <div className="mt-0 mb-24 pl-2">
-          {transaction.locklikes
-            .slice() // Create a copy of the array to avoid mutating the original
-            .sort((a: LockLikes, b: LockLikes) => b.amount - a.amount) // Sort by amount in descending order
-            .map((locklike: LockLikes, index: number) => (
-              <React.Fragment key={locklike.txid}>
-                <div className="pt-6 flex items-center font-mono">
-                  {/* Link with user image */}
-                  <Link href={"/" + locklike.handle_id} className="flex items-center">
-                    <img className="h-6 w-6 cursor-pointer rounded-full" src={'https://a.relayx.com/u/' + locklike.handle_id + '@relayx.io'} />
-                  </Link>
 
-                  {/* Paragraph containing text and other links */}
-                  <p className="flex items-center text-md text-gray-700 dark:text-gray-300 ml-2">
-                    {/* User handle link */}
-                    <Link href={"/" + locklike.handle_id}>
-                      <b>{locklike.handle_id}</b>
-                    </Link>
+      <Drawer direction="right">
+        <DrawerTrigger asChild>
+          <div className="flex items-center justify-center">
+            {transaction.totalAmountandLockLiked > 1 ? (
+              <button
+                data-drawer-body-scrolling="false"
+                className="flex items-center text-black dark:text-white text-sm ml-1 cursor-pointer hover:text-orange-400"
+              >
+                <span className="font-medium font-mono">{formatBitcoinValue(transaction.totalAmountandLockLiked / 100000000)}</span>
+                <SiBitcoinsv className="text-orange-400 ml-1" />
+              </button>
+            ) : null}
+          </div>
+        </DrawerTrigger>
+        <DrawerContent className="top-0 right-0 left-auto mt-0 w-full lg:w-1/3 rounded-none bg-white dark:bg-black">
 
-                    {/* Locked status */}
-                    <span className="px-1">locked</span>
+          <DrawerHeader className="flex justify-center">
+            <DrawerTitle >Locks on this Post</DrawerTitle>
+          </DrawerHeader>
 
-                    {/* Transaction link with amount and icon */}
-                    <Link href={"https://whatsonchain.com/tx/" + locklike.txid} className="flex items-center">
-                      {(locklike.amount / 100000000)} <SiBitcoinsv className="text-orange-400 ml-1 mr-1" /> ⛏️
-                      {currentBlockHeight ? (locklike.locked_until - currentBlockHeight).toLocaleString() : "loading..."}
-                    </Link>
-                  </p>
-                </div>
+          <div className="flex justify-center">
+            <ScrollArea className="max-h-[90vh] overflow-y-auto w-full lg:w-2/3 rounded-md border scrollbar-thin">
+              {transaction.locklikes
+                .slice() // Create a copy of the array to avoid mutating the original
+                .sort((a: LockLikes, b: LockLikes) => b.amount - a.amount) // Sort by amount in descending order
+                .map((locklike: LockLikes, index: number) => (
+                  <React.Fragment key={locklike.txid}>
+                    <div className="ml-2 pt-6 flex items-center font-mono">
+                      {/* Link with user image */}
+                      <Link href={"/" + locklike.handle_id} className="flex items-center">
+                        <img className="h-6 w-6 cursor-pointer rounded-full" src={'https://a.relayx.com/u/' + locklike.handle_id + '@relayx.io'} />
+                      </Link>
 
-                <div className="ml-10 flex items-center text-xs text-gray-700 dark:text-gray-300">
-                  <p>{timeSinceLike(locklike)}</p>
-                </div>
-              </React.Fragment>
-            ))}
-        </div>
-      </div>
+                      {/* Paragraph containing text and other links */}
+                      <p className="flex items-center text-md text-gray-700 dark:text-gray-300 ml-2">
+                        {/* User handle link */}
+                        <Link href={"/" + locklike.handle_id}>
+                          <b>{locklike.handle_id}</b>
+                        </Link>
+
+                        {/* Locked status */}
+                        <span className="px-1">locked</span>
+
+                        {/* Transaction link with amount and icon */}
+                        <Link href={"https://whatsonchain.com/tx/" + locklike.txid} className="flex items-center">
+                          {(locklike.amount / 100000000)} <SiBitcoinsv className="text-orange-400 ml-1 mr-1" /> ⛏️
+                          {currentBlockHeight ? (locklike.locked_until - currentBlockHeight).toLocaleString() : "loading..."}
+                        </Link>
+                      </p>
+                    </div>
+
+                    <div className="ml-10 flex items-center text-xs text-gray-700 dark:text-gray-300">
+                      <p>{timeSinceLike(locklike)}</p>
+                    </div>
+                  </React.Fragment>
+                ))}
+            </ScrollArea>
+
+          </div>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 };
