@@ -464,7 +464,7 @@ export default function replyInteraction({ transaction }: deployProps) {
           </div>
         )}
 
-        <div className="flex justify-center items-center mb-4">
+        <div className="flex justify-center items-center">
             <button
               onClick={anonMode ? AnonReply : Reply}
               className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-orange-500 to-orange-400 group-hover:from-orange-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-orange-200 dark:focus:ring-orange-800"

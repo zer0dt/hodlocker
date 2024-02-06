@@ -69,5 +69,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("flowbite/plugin")],
+  plugins: [require("tailwindcss-animate"), require("flowbite/plugin"), require('tailwind-scrollbar'),],
 }

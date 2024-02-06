@@ -38,7 +38,7 @@ interface RepliesDrawerProps {
   ) => Promise<LockLikes>;
 }
 
-const RepliesDrawer = ({
+const RepliesDrawer = async ({
   transaction,
   replies,
   postLockLike
@@ -62,23 +62,24 @@ const RepliesDrawer = ({
             ) : null}
           </div>
         </DrawerTrigger>
-        <DrawerContent className="max-h-[80vh] bg-white">
+        <DrawerContent className="max-h-[100vh] bg-white">
           <div className="mx-auto w-full max-w-sm">
             <DrawerHeader>
-              <DrawerTitle>Comments</DrawerTitle>
+              <DrawerTitle >Comments</DrawerTitle>
             </DrawerHeader>
 
-            <ScrollArea className="max-h-[80vh] w-auto pb-10 overflow-y-auto rounded-md border scrollbar-hidden">
+            <ScrollArea className="max-h-[50vh] w-auto overflow-y-auto rounded-md border scrollbar-thin">
               {replies.map((reply: HODLTransactions, index: number) => (
                 <div key={index}>
                   <ReplyComponent reply={reply} postLockLike={postLockLike} />
                 </div>
               ))}
-              <div className="lg:pb-6">
+            </ScrollArea>
+              
+            <div className="mx-auto w-full max-w-sm pb-10">
                 <ReplyInteraction transaction={transaction} />
               </div>
-            </ScrollArea>
-
+            
           </div>
         </DrawerContent>
       </Drawer>

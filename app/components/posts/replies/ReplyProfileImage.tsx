@@ -1,8 +1,7 @@
 
-'use client'
-
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
+import { getBitcoinerLikedData } from '@/app/utils/get-bitcoiner-avatar-rank';
 
 interface PostProfileImageProps {
   avatar: string,
@@ -11,40 +10,12 @@ interface PostProfileImageProps {
 
 export default async function ReplyProfileImage({ avatar, handle }: PostProfileImageProps) {
 
-    const [avatarRank, setAvatarRank] = useState(0.01)
+  let bitcoiner = null;
 
-    useEffect(() => {
-        const getAvatarRank = async (handle: string) => {
-          // Skip fetching if the handle is "anon"
-          if (handle.toLowerCase() === "anon") {
-            console.log("Skipping data fetch for 'anon' handle.");
-            return;
-          }
-      
-          try {
-            const response = await fetch(`/api/bitcoiners/liked/${handle}`, { next: { revalidate: 600 }});
-      
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-      
-            const data = await response.json();
-      
-            if (data && data.totalLikedFromOthers !== undefined) {
-              setAvatarRank(data.totalLikedFromOthers);
-            } else {
-              console.log(`No data found for bitcoiner with handle: ${handle}`);
-              return null;
-            }
-      
-          } catch (error) {
-            console.error("There was a problem fetching the bitcoiner's data:", error);
-            return null;
-          }
-        };
-      
-        getAvatarRank(handle);
-      }, []);
+  if (handle !== "anon") {
+    bitcoiner = await getBitcoinerLikedData(handle);
+  }
+
 
   const getRingColor = (totalLiked: number) => {
     if (totalLiked <= 1) {
@@ -72,7 +43,7 @@ export default async function ReplyProfileImage({ avatar, handle }: PostProfileI
       alt={`Profile Picture`}
       width={40} // width and height based on the given h-10 and w-10 classes
       height={40}
-      className={`rounded-full aspect-square ring-4 ${getRingColor(avatarRank)}`}
+      className={`rounded-full aspect-square ring-4 ${getRingColor(bitcoiner ? bitcoiner.totalLockLikedFromOthers : 0.01)}`}
     />
   )
 }
