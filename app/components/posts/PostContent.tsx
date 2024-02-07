@@ -20,6 +20,8 @@ import ImagePlaceholder from './placeholders/ImagePlaceholder';
 
 import Zoom from 'react-medium-image-zoom'
 
+import markdownit from 'markdown-it';
+
 import { useSearchParams } from 'next/navigation'
 
 interface PostContentProps {
