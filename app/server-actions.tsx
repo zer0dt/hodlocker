@@ -656,17 +656,25 @@ export async function postPermalocked(handle: string, txid: string) {
   });
 }
 
-export async function getRawTx(txid: string, retries = 20) {
-  const url = "https://api.whatsonchain.com/v1/bsv/main/tx/" + txid + "/hex";
+export interface ScriptData {
+  index: number;
+  type: string;
+  reqSigs: number;
+  satoshis: number;
+  scriptHash: string;
+  spent: boolean;
+  scriptSize: number;
+  partialScript: boolean;
+  script: string;
+}
+
+export async function getUtxoData(txid: string, retries = 20): Promise<ScriptData> {
+  const url = "https://api.bitails.io/tx/" + txid + "/output/0";
 
   while (retries > 0) {
     try {
       const res = await fetch(url, {
         method: "GET",
-        mode: "cors",
-        headers: {
-          'Authorization': apiKey
-        },
         next: { revalidate: 0 }
       });
 
@@ -674,15 +682,17 @@ export async function getRawTx(txid: string, retries = 20) {
         throw new Error('Failed to fetch data');
       }
 
-      const rawTx = await res.text();
-      return rawTx;
+      const utxo: ScriptData = await res.json();
+      console.log(utxo);
+      return utxo;
 
     } catch (error) {
       if (retries === 1) throw error; // If it's the last retry, throw the error
       retries--; // Decrement retries and continue looping
     }
   }
-};
+  throw new Error('Maximum retries exceeded'); // Throw error if maximum retries exceeded
+}
 
 
 export async function getOpReturnData(txid: string) {

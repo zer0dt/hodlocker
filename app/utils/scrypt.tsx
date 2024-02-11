@@ -7,7 +7,7 @@ import { hash160, bsv, ByteString } from "scrypt-ts";
 
 import { Lockup } from "../../src/contracts/hodlocker";
 import artifact from "../../artifacts/hodlocker.json";
-import { getRawTx, broadcastTx, postPermalocked } from "../server-actions";
+import { ScriptData, getUtxoData, broadcastTx, postPermalocked } from "../server-actions";
 
 import { toast } from 'sonner';
 
@@ -80,13 +80,13 @@ const callRedeem = async (
     const receiveAddress = relayAddress.toString();
     console.log("receiving address: ", receiveAddress);
 
-    const loolockVoutIndex = 0; // since the loolock vout will be 0 IINM
-    const utxos = await getUTXOsToUnlock(txids, loolockVoutIndex);
+
+    const utxos = await getUTXOsToUnlock(txids);
 
     const filteredUtxos = [];
 
     for (const utxo of utxos) {
-      const lockedScript = bsv.Script(utxo.script);
+      const lockedScript = bsv.Script.fromHex(utxo.script);
       const pubKeyHex = lockedScript.chunks[5].buf.toString("hex"); // Replace with the actual property name
 
       console.log(pubKeyHex)
@@ -108,7 +108,10 @@ const callRedeem = async (
     for (let i = 0; i < filteredUtxos.length; i++) {
       const utxo = filteredUtxos[i];
 
-      const lockedScript = bsv.Script(utxo.script);
+      console.log(utxo.script)
+
+      const scriptBuffer = Buffer.from(utxo.script, 'hex');
+      const lockedScript = bsv.Script.fromHex(scriptBuffer);
 
       bsvtx.addInput(
         new bsv.Transaction.Input({
@@ -169,16 +172,16 @@ const callRedeem = async (
   }
 };
 
-const getUTXOsToUnlock = async (txids: string[], index: number) => {
+const getUTXOsToUnlock = async (txids: string[]) => {
   try {
     const utxos = [];
 
     for (const txid of txids) {
-      console.log("Getting rawtx for txid: ", txid);
-      toast('Getting rawtx for txid: ' + txid.slice(0, 6) + "..." + txid.slice(-6));
+      console.log("Getting utxo for txid: ", txid);
+      toast('Getting utxo for txid: ' + txid.slice(0, 6) + "..." + txid.slice(-6));
 
-      const rawtx = await getRawTx(txid);
-      const utxo = getUTXO(rawtx, index, txid);
+      const utxoRes = await getUtxoData(txid);
+      const utxo = getUTXO(utxoRes, txid);
       utxos.push(utxo);
     }
 
@@ -189,15 +192,14 @@ const getUTXOsToUnlock = async (txids: string[], index: number) => {
   }
 };
 
+const getUTXO = (utxoRes: ScriptData, txid: string) => {
 
-const getUTXO = (rawtx: string, idx: number, txid: string) => {
-  const bsvtx = new bsv.Transaction(rawtx);
-
+  console.log(utxoRes)
   return {
-    satoshis: bsvtx.outputs[idx].satoshis,
-    vout: idx,
-    txid: bsvtx.hash,
-    script: bsvtx.outputs[idx].script.toHex(),
+    satoshis: utxoRes.satoshis,
+    vout: 0,
+    txid: txid,
+    script: utxoRes.script,
   };
 };
 
