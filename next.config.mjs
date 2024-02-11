@@ -7,6 +7,9 @@ const nextConfig = {
   swcMinify: true,
   experimental: {
     ppr: true,
+    serverActions: {
+      bodySizeLimit: '3mb'
+    },
   },
   logging: {
     fetches: {
