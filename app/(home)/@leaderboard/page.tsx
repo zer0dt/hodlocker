@@ -3,9 +3,8 @@ import Link from "next/link";
 
 import { getBitcoinersforLocked, getBitcoinersforLiked } from "@/app/utils/get-bitcoiners-leaderboard"
 
-import { PiUserSwitchBold } from "react-icons/pi";
-
 import LoggedInLeaderboard from "./LoggedInLeaderboard";
+import SwitchLeaderboard from './SwitchLeaderboard'
 
 import Image from 'next/image'
 import { SiBitcoinsv } from "react-icons/si";
@@ -86,24 +85,7 @@ export default async function Leaderboard({ searchParams }: LeaderboardProps) {
                             <span className="text-md"> Total Bitcoiners</span>
                         </th>
                         <th scope="col" className="pr-6 py-3 w-1/2">
-                            <div className="flex justify-end items-center">
-                                {" "}
-                                {/* Use items-center for vertical centering */}
-                                <Link
-                                    href={
-                                        "/?tab=leaderboard&ranked=" +
-                                        (ranked == "liked" ? "locked" : "liked")
-                                    }
-                                    className="flex justify-end items-center"
-                                >
-                                    {" "}
-                                    {/* Use items-center here too */}
-                                    <PiUserSwitchBold className="w-6 h-6" />
-                                    <span className="pl-2 flex justify-end">
-                                        {ranked == "liked" ? "Liked" : "Locked"}
-                                    </span>
-                                </Link>
-                            </div>
+                           <SwitchLeaderboard ranked={ranked} /> 
                         </th>
                     </tr>
                 </thead>
