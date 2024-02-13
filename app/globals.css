@@ -25,6 +25,10 @@ body {
   background-attachment: fixed;
 }
 
+[data-radix-scroll-area-viewport] > :first-child {
+  display:block !important;
+}
+
 .lock-icon:hover {
   color: #ff7033;
   /* Corrected the color value */

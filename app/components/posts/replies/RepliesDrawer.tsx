@@ -43,7 +43,7 @@ const RepliesDrawer = async ({
   replies,
   postLockLike
 }: RepliesDrawerProps) => {
-
+  
 
   return (
     <>
@@ -62,7 +62,7 @@ const RepliesDrawer = async ({
             ) : null}
           </div>
         </DrawerTrigger>
-        <DrawerContent className="max-h-[100vh] bg-white dark:bg-black dark:border-slate-500">
+        <DrawerContent className="max-h-[100vh] bg-white dark:bg-black dark:border-slate-500 [&>div]:!block">
           <div className="mx-auto w-full max-w-sm">
             <DrawerHeader>
               <DrawerTitle >Comments</DrawerTitle>
