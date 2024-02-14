@@ -1,15 +1,15 @@
-import React, { Suspense } from "react";
+import React from "react";
 
 import { unstable_cache } from 'next/cache';
 import { parse, stringify } from "superjson";
 
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
-import { HODLTransactions, postLockLike } from "@/app/server-actions";
+import { HODLTransactions } from "@/app/server-actions";
 import prisma from "@/app/db";
-import PostComponent from "@/app/components/posts/PostComponent";
-import Pagination from "@/app/components/feeds/sorting-utils/Pagination";
+import LatestFeedPosts from './LatestFeedPosts'
+import LoadMore from "@/app/components/feeds/sorting-utils/LoadMore";
 
-import PostComponentPlaceholder from '@/app/components/posts/placeholders/PostComponentPlaceholder'
+
 import type { RankedBitcoiners } from "@/app/api/bitcoiners/route";
 
 export const getLatestPosts = (
@@ -188,11 +188,11 @@ interface LatestFeedProps {
     }
 }
 
-const getCachedPosts = unstable_cache(
+export const getLatestCachedPosts = unstable_cache(
     async (sort: string, filter: number, filter2: number, currentPage: number, limit: number) => {
         const cachedPosts = await getLatestPosts(sort, filter, filter2, currentPage, limit)
 
-        return stringify({...cachedPosts})
+        return stringify({ ...cachedPosts })
     },
     ['latest-posts'],
     {
@@ -203,44 +203,57 @@ const getCachedPosts = unstable_cache(
 
 export default async function LatestFeed({ searchParams }: LatestFeedProps) {
 
+    const POSTS_BATCH_SIZE = 30
+
     const activeTab = searchParams.tab || "trending"
 
     const activeSort = searchParams.sort || "week";
 
     const activeFilter = searchParams.filter !== undefined ? parseFloat(searchParams.filter) : 0;
-    
+
     const activeFilter2 = searchParams.filter2 !== undefined ? parseFloat(searchParams.filter2) : 0;
 
     const currentPage = searchParams.page || 1;
 
     if (activeTab == "latest") {
-        const latestPosts = await getCachedPosts(activeSort, activeFilter, activeFilter2, currentPage, 30)
+        const latestPosts = await getLatestCachedPosts(activeSort, activeFilter, activeFilter2, currentPage, POSTS_BATCH_SIZE)
 
         const jsonPosts = JSON.stringify(latestPosts, null, 2);
         const sizeInBytes = new Blob([jsonPosts]).size;
         const sizeInMB = sizeInBytes / (1024 * 1024); // Convert bytes to MB
         console.log("Size of latestPosts:", sizeInMB.toFixed(2), "MB");
 
-        const posts = parse<HODLTransactions[]>(latestPosts)
-        
+        const initialPosts = parse<HODLTransactions[]>(latestPosts)
+
+        async function loadMoreLatestPosts(page: number = 2) {
+            "use server";
+            console.log(page, POSTS_BATCH_SIZE)
+            const posts = await getLatestCachedPosts(activeSort, activeFilter, activeFilter2, page, POSTS_BATCH_SIZE)
+
+            const jsonPosts = JSON.stringify(posts, null, 2);
+            const sizeInBytes = new Blob([jsonPosts]).size;
+            const sizeInMB = sizeInBytes / (1024 * 1024); // Convert bytes to MB
+            console.log("Size of more latestPosts:", sizeInMB.toFixed(2), "MB");
+
+            const morePosts = parse<HODLTransactions[]>(posts)
+
+            const nextOffset =
+                posts.length >= POSTS_BATCH_SIZE ? page + 1 : null;
+
+            return [
+                <LatestFeedPosts posts={morePosts} />,
+                nextOffset,
+            ] as const;
+        }
+
         return (
-            <div 
-                key={"latest" + activeSort + activeFilter + activeFilter2 + currentPage} 
+            <div
+                key={"latest" + activeSort + activeFilter + activeFilter2 + currentPage}
                 className="grid grid-cols-1 gap-0 w-full lg:w-96"
             >
-                {
-                    Object.values(posts).map((transaction: HODLTransactions) => (
-                        <Suspense key={transaction.txid} fallback={<PostComponentPlaceholder />}>
-                            <PostComponent
-                                key={transaction.txid} // Assuming transaction has an 'id' field
-                                transaction={transaction}
-                                postLockLike={postLockLike}
-                            />
-                        </Suspense>
-
-                    ))
-                }
-                <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} filter2={activeFilter2} />
+                <LoadMore loadMoreAction={loadMoreLatestPosts} initialOffset={2}>
+                    <LatestFeedPosts posts={initialPosts} />
+                </LoadMore>
             </div>
         )
     } else {
