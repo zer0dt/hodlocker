@@ -129,6 +129,11 @@ const getTrendingPosts = async function (
                 post: {
                     include: {
                         tags: true,
+                        link: {
+                            select: {
+                                twitterId: true
+                            }
+                        },
                         locklikes: {
                             orderBy: { created_at: "desc" },
                             where: {

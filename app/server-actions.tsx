@@ -23,7 +23,8 @@ export interface HODLTransactions extends Transactions {
   totalAmountandLockLiked: number; // Add this property
   totalAmountandLockLikedForReplies: number
   locklikes: LockLikes[],
-  replies?: Replies[]
+  replies?: Replies[],
+  link?: any
 }
 
 export interface HODLBitcoiners extends Bitcoiner {

@@ -40,8 +40,6 @@ interface PostProps {
 
 export default async function Post({ transaction, postLockLike, postTxid }: PostProps) {
 
-  console.log(transaction)
-
   let avatar = "https://a.relayx.com/u/undefined@relayx.io"
 
   if (transaction.link.twitterId != null) {
