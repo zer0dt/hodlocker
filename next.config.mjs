@@ -43,6 +43,18 @@ const nextConfig = {
         port: '',
         pathname: '**', // Update this if you have a specific pattern
       },
+      {
+        protocol: 'https',
+        hostname: 'pbs.twimg.com',
+        port: '',
+        pathname: '**', // Update this if you have a specific pattern
+      },
+      {
+        protocol: 'https',
+        hostname: 'unavatar.io',
+        port: '',
+        pathname: '**', // Update this if you have a specific pattern
+      },
     ],
   },
   typescript: {

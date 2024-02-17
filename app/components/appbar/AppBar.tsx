@@ -2,6 +2,8 @@
 
 import React, { useState, useContext, useEffect, useRef } from "react";
 
+import TwitterSignInButton from './TwitterSignInButton';
+
 import DeployInteraction from "../actions/deployPost";
 
 import { AiFillNotification } from "react-icons/ai";
@@ -9,7 +11,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa";
 
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { WalletContext } from "../../context/WalletContextProvider";
 
@@ -37,10 +39,11 @@ interface NewNotifications {
 }
 
 const AppBar = () => {
-  const { fetchRelayOneData, handle, currentBlockHeight, signInModalVisible, setSignInModalVisible } = useContext(WalletContext)!;
+  const { fetchRelayOneData, handle, avatar, currentBlockHeight, signInModalVisible, setSignInModalVisible } = useContext(WalletContext)!;
 
   const router = useRouter();
-  const pathname = usePathname();
+
+  const pandaImplemented = false;
 
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
 
@@ -55,7 +58,6 @@ const AppBar = () => {
 
   const [sublockers, setSublockers] = useState([{ id: 1, name: "BSV" }])
 
-  const [avatar, setAvatar] = useState("https://a.relayx.com/u/" + handle + "@relayx.io")
 
   const handleSignInorOut = () => {
     setProfileDropdownVisible(!profileDropdownVisible);
@@ -84,9 +86,6 @@ const AppBar = () => {
       })
   }, [])
 
-  useEffect(() => {
-    setAvatar("https://a.relayx.com/u/" + handle + "@relayx.io")
-  }, [handle])
 
   useEffect(() => {
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY as string, {
@@ -255,7 +254,7 @@ const AppBar = () => {
               width={40} // width and height based on the given h-10 and w-10 classes
               height={40}
               className="rounded-full"
-              src={avatar}
+              src={avatar ? avatar : "/bitcoin.png"}
               alt="user"
             />
             <span className="sr-only">Profile</span>
@@ -450,20 +449,28 @@ const AppBar = () => {
                       </div>
                     </button>
                   </li>
-                  <li>
-                    <button
-                      type="button"
-                      onClick={() => alert("not implemented yet")}
-                      className="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-                    >
-                      <div className="flex items-center justify-center">
-                        <img src="/panda.png" className="w-6 h-6 mr-2" />
-                        <span>
-                          PandaWallet
-                        </span>
-                      </div>
-                    </button>
-                  </li>                  
+                  <li className="items-center flex flex-col justify-center">
+                    <TwitterSignInButton />
+                  </li> 
+                 
+                 {pandaImplemented && (
+                  <li className="items-center flex flex-col justify-center">
+                  <button
+                    type="button"
+                    onClick={() => alert("not implemented yet")}
+                    className="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                  >
+                    <div className="flex items-center justify-center">
+                      <img src="/panda.png" className="w-6 h-6 mr-2" />
+                      <span>
+                        PandaWallet
+                      </span>
+                    </div>
+                  </button>
+                </li> 
+                 )}
+                  
+                                
                 </ul>
 
                 <div className="flex items-center p-4 my-4 text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">

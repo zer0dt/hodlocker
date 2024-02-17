@@ -69,7 +69,7 @@ export default function LockLikeInteraction({ postTxid, replyTxid, postLockLike 
 
       if (isLinked) {
         if (handle && pubkey) {
-          postNewBitcoiner(handle, pubkey) 
+          postNewBitcoiner(handle, "", pubkey) 
           console.log("using this pubkey to locklike: ", pubkey)         
         } else {          
           setLoading(false)

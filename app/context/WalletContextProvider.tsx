@@ -2,10 +2,13 @@
 'use client'
 
 import Script from 'next/script';
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 import { fetchCurrentBlockHeight } from '@/app/utils/fetch-current-block-height'
 import { BitcoinerSettings } from '../utils/get-bitcoiner-settings';
+
+import { useSession } from "next-auth/react";
+import { getBitcoinerByTwitterId, postNewBitcoiner } from '../server-actions';
 
 const WalletTypes = {
   None: 'NONE',
@@ -40,6 +43,8 @@ interface WalletContextType {
   fetchRelayOneData: () => Promise<void>
   pubkey: string | undefined,
   handle: string | null | undefined,
+  avatar: string | null | undefined,
+  twitterId: string | null | undefined,
   userBalance: string | undefined,
   paymail: string | undefined,
   isLinked: boolean | undefined,
@@ -66,7 +71,11 @@ export const WalletContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { data: session } = useSession();
+
   const [handle, setHandle] = useState<string | null | undefined>(undefined)
+  const [avatar, setAvatar] = useState<string | null | undefined>(undefined)
+  const [twitterId, setTwitterId] = useState<string | null | undefined>(undefined)
   const [userBalance, setUserBalance] = useState<string | undefined>(undefined)
   const [paymail, setPaymail] = useState<string | undefined>(undefined)
   const [pubkey, setPubkey] = useState<string | undefined>(undefined)
@@ -75,7 +84,33 @@ export const WalletContextProvider = ({
   const [currentBlockHeight, setCurrentBlockHeight] = useState<number | undefined>(undefined)
   const [signInModalVisible, setSignInModalVisible] = useState(false);
 
+  useEffect(() => {
+    console.log(session)
 
+    if (session && session.user && session.user.name && session.user.id) {
+      const getTwitterBitcoiner = async () => {
+        const bitcoiner = await getBitcoinerByTwitterId(session.user.id)
+        if (bitcoiner) {
+          setHandle(bitcoiner.handle)
+          setPaymail(bitcoiner.handle + "@hodlocker.com")
+          setAvatar(session.user.image)
+          setTwitterId(session.user.id)
+        } else {
+          const bitcoiner = await postNewBitcoiner(session.user.name, session.user.id, "")
+          if (bitcoiner.twitterId) {
+            setHandle(bitcoiner.handle)
+            setPaymail(bitcoiner.handle + "@hodlocker.com")
+            setAvatar(session.user.image)
+            setTwitterId(session.user.id)
+          } else {
+            alert("Error: couldn't create new bitcoiner using X.com login")
+          }
+        }
+      }
+
+      getTwitterBitcoiner()
+    }
+  }, [session])
 
   const checkIfLinked = async () => {
     const isLinked = await relayone.isLinked()
@@ -106,6 +141,7 @@ export const WalletContextProvider = ({
       setPaymail(data.paymail);
       const handle = data.paymail.substring(0, data.paymail.lastIndexOf("@"))
       setHandle(handle);
+      setAvatar("https://a.relayx.com/u/" + data.paymail)
       setPubkey(data.pubkey);
 
       const balance = await relayone.getBalance2();
@@ -119,7 +155,7 @@ export const WalletContextProvider = ({
       if (responseJson) {
         setBitcoinerSettings(responseJson.settings);
       }
-      
+
       const loggedInBitcoiner = {
         handle: data.paymail.substring(0, data.paymail.lastIndexOf("@")),
         balance: (balance.satoshis / 100000000).toFixed(2).toString(),
@@ -142,7 +178,7 @@ export const WalletContextProvider = ({
   return (
     <>
       <Script src="https://one.relayx.io/relayone.js" onLoad={() => checkIfLinked()} />
-      <WalletContext.Provider value={{ fetchRelayOneData, pubkey, handle, userBalance, paymail, isLinked, bitcoinerSettings, setBitcoinerSettings, currentBlockHeight, signInModalVisible, setSignInModalVisible }}>
+      <WalletContext.Provider value={{ fetchRelayOneData, pubkey, handle, avatar, twitterId, userBalance, paymail, isLinked, bitcoinerSettings, setBitcoinerSettings, currentBlockHeight, signInModalVisible, setSignInModalVisible }}>
         {children}
       </WalletContext.Provider>
     </>

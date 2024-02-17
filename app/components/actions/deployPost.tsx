@@ -19,6 +19,7 @@ import {
 } from "../../server-actions";
 
 import { postAnon } from './anon-post-server-action'
+import { postWithTwitter } from './post-with-twitter-server-action'
 import { getLockupScript } from "../../utils/scrypt";
 import { bsv } from 'scrypt-ts'
 import { WalletContext } from "../../context/WalletContextProvider";
@@ -29,7 +30,7 @@ import {
   DEFAULT_LOCKLIKE_BLOCKS,
   LockInput,
 } from "../LockInput";
-import AudioRecorderComponent from "../uploads/AudioRecorder";
+
 
 interface deployProps {
   subs: {
@@ -50,6 +51,7 @@ export default function DeployInteraction({
 
   const {
     handle,
+    twitterId,
     paymail,
     pubkey,
     isLinked,
@@ -58,6 +60,8 @@ export default function DeployInteraction({
     bitcoinerSettings,
     setSignInModalVisible,
   } = useContext(WalletContext)!;
+
+  console.log("twitterId", twitterId)
 
   const [darkMode, setDarkMode] = useState(false);
 
@@ -191,12 +195,69 @@ export default function DeployInteraction({
     };
   }, [subDropdownVisible]);
 
+
+
+  const PostWithTwitter = async () => {
+    if (currentBlockHeight) {
+      console.log("current Block Height", currentBlockHeight);
+      if (currentBlockHeight + anonBlocksToLock <= currentBlockHeight) {
+        alert("nLockTime should be greater than the current block height.");
+        return; // Do not proceed with the locking process.
+      }
+
+      const nLockTime = currentBlockHeight + anonBlocksToLock;
+
+      console.log(parseFloat(amountToLock));
+
+      if (parseFloat(amountToLock) * 100000000 > 2100000000) {
+        alert("You cannot lock more than 21 bitcoin at this moment.");
+        return;
+      }
+
+      const fullMessage = note;
+
+      console.log("content: ", fullMessage);
+
+      setPaying(true);
+
+      console.log("amount to lock: ", amountToLock);
+      console.log(
+        "locking for ",
+        blocksToLock + " blocks, locked until " + nLockTime
+      );
+
+      if (handle) {
+        const deployedWithTwitterPost = await postWithTwitter(handle, fullMessage, sub, amountToLock, nLockTime)
+
+        if (deployedWithTwitterPost) {
+
+          toast.success(
+            "Transaction posted to hodlocker.com: " +
+            deployedWithTwitterPost.txid.slice(0, 6) +
+            "..." +
+            deployedWithTwitterPost.txid.slice(-6)
+          );
+  
+          setPaying(false);
+          setLoading(false);
+          setNote("");
+          setUploadedImage(null);
+          router.refresh();
+          closeDrawer();
+        } else {
+          setLoading(false);
+          return;
+        }
+      }      
+    }
+  }
+
   const Post = async () => {
     setLoading(true);
 
     if (isLinked) {
       if (handle && pubkey) {
-        postNewBitcoiner(handle, pubkey);
+        postNewBitcoiner(handle, "", pubkey);
         console.log("using this pubkey to lock: ", pubkey);
       } else {
         setLoading(false);
@@ -623,7 +684,7 @@ export default function DeployInteraction({
 
         <div className="flex justify-center items-center -mb-4">
           <button
-            onClick={anonMode ? AnonPost : Post}
+            onClick={anonMode ? AnonPost : twitterId ? PostWithTwitter : Post}
             className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-orange-500 to-orange-400 group-hover:from-orange-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-orange-200 dark:focus:ring-orange-800"
             disabled={paying || loading}
           >

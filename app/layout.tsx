@@ -2,6 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Roboto_Flex } from 'next/font/google'
 
+import NextAuthProvider from './context/NextAuthProvider'
 import { WalletContextProvider } from './context/WalletContextProvider'
 import ProgressBarProvider from './context/ProgressBarProvider'
 
@@ -12,6 +13,9 @@ import { Toaster } from 'sonner';
 
 import { Analytics } from '@vercel/analytics/react';
 import { Suspense } from 'react'
+
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 
 
 const inter = Roboto_Flex({ subsets: ['latin'] })
@@ -34,6 +38,8 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
 
+  const session = await getServerSession(authOptions)
+
   const fallback = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -54,6 +60,7 @@ export default async function RootLayout({
 
       <body className={inter.className}>
         
+        <NextAuthProvider session={session}>
           <WalletContextProvider>
           <Suspense fallback={fallback()}>
             <ProgressBarProvider>
@@ -65,7 +72,7 @@ export default async function RootLayout({
             </ProgressBarProvider>
              </Suspense>
           </WalletContextProvider>
-       
+        </NextAuthProvider>
 
 
 

@@ -23,6 +23,8 @@ export default async function ProfileInfo({ handle }: ProfileInfoProps) {
 
     try {
         bitcoiner = await getBitcoinerProfile(handle);
+
+        console.log(bitcoiner)
         
     } catch (error) {
         console.error("Error fetching Bitcoiner profile:", error);
@@ -35,11 +37,16 @@ export default async function ProfileInfo({ handle }: ProfileInfoProps) {
         );
     }
 
-
     const followingItems = await getFollowingTotal(handle)
     const followerItems = await getFollowersTotal(handle)
 
-    const avatar = ('https://a.relayx.com/u/' + handle + '@relayx.io')
+    let avatar = "/bitcoin.png"
+
+    if (bitcoiner.twitterId) {
+        avatar = "https://unavatar.io/twitter/" + bitcoiner.handle
+    } else {
+         avatar = ('https://a.relayx.com/u/' + handle + '@relayx.io')
+    }
 
     const getStatusEmoji = (bitcoin: number) => {
         if (bitcoin >= 1000) return '🧿';   // Evil eye

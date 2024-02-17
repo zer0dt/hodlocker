@@ -53,6 +53,21 @@ export async function getAllBitcoinerHandles(): Promise<string[]> {
   }
 }
 
+export async function getBitcoinerByTwitterId(twitterId: string) {
+  try {
+    const bitcoiner = await prisma.bitcoiner.findUnique({
+      where: {
+        twitterId: twitterId
+      }
+    });
+    return bitcoiner;
+  } catch (error) {
+    // Handle any errors
+    console.error('Error fetching Bitcoiner:', error);
+    throw error; // Throw the error for handling at a higher level
+  }
+}
+
 export async function fetchBitcoinerWalletHistory(handle: string): Promise<HODLBitcoiners> {
   const bitcoiner = await prisma.bitcoiner.findUnique({
     where: {
@@ -320,7 +335,7 @@ export async function postLockLike(
 };
 
 
-export async function postNewBitcoiner(handle: string, pubkey: string) {
+export async function postNewBitcoiner(handle: string, twitterId: string, pubkey: string) {
   const newBitcoiner = await prisma.bitcoiner.upsert({
     where: {
       handle: handle
@@ -328,9 +343,12 @@ export async function postNewBitcoiner(handle: string, pubkey: string) {
     update: {}, // no update in this case, since we're just ensuring it exists
     create: {
       handle: handle,
+      twitterId: twitterId,
       pubkey: pubkey
     }
   })
+
+  return newBitcoiner
 }
 
 export async function saveBitcoinerSettings(settings: BitcoinerSettings) {

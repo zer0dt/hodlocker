@@ -12,6 +12,7 @@ model Bitcoiner {
   handle       String         @id
   created_at   DateTime       @default(now())
   pubkey       String         @default("02eb0b9d11e2d4989ba95e6c787fc25b3e7ce14b79dc5902036000429671ef5362")
+  twitterId    String?        @unique
   spent_tx     SpentTx[]
   locklikes    LockLikes[]
   replies      Replies[]
