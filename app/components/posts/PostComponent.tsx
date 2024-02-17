@@ -40,11 +40,19 @@ interface PostProps {
 
 export default async function Post({ transaction, postLockLike, postTxid }: PostProps) {
 
-  const avatar = transaction.handle_id == "anon" ? (
-    "https://api.dicebear.com/7.x/shapes/svg?seed=" +
-    transaction.txid +
-    "&backgroundColor=f88c49&shape1Color=0a5b83&shape2Color=f88c49&shape3Color=f1f4dc"
-  ) : "https://a.relayx.com/u/" + transaction.handle_id + "@relayx.io"
+  console.log(transaction)
+
+  let avatar = "https://a.relayx.com/u/undefined@relayx.io"
+
+  if (transaction.link.twitterId != null) {
+      avatar = "https://unavatar.io/twitter/" + transaction.handle_id
+  } else {
+    avatar = transaction.handle_id == "anon" ? (
+      "https://api.dicebear.com/7.x/shapes/svg?seed=" +
+      transaction.txid +
+      "&backgroundColor=f88c49&shape1Color=0a5b83&shape2Color=f88c49&shape3Color=f1f4dc"
+    ) : "https://a.relayx.com/u/" + transaction.handle_id + "@relayx.io"
+  }
 
 
   function timeSincePost(transaction: HODLTransactions) {

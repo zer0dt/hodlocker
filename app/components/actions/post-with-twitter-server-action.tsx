@@ -41,7 +41,7 @@ export const postWithTwitter = async (handle: string, note: string, sub: string,
         tx.from({
             txId: utxo[0].tx_hash,
             outputIndex: utxo[0].tx_pos,
-            script: "76a9140663f6cd4ed402c3555e08dfd1b4ef5856e1d99588ac",
+            script: "76a91405dad60a12960a6ee086b8f77c2ed411593819a788ac",
             satoshis: utxo[0].value,
         });
 

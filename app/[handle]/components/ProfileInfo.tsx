@@ -40,7 +40,7 @@ export default async function ProfileInfo({ handle }: ProfileInfoProps) {
     const followingItems = await getFollowingTotal(handle)
     const followerItems = await getFollowersTotal(handle)
 
-    let avatar = "/bitcoin.png"
+    let avatar = "https://a.relayx.com/u/undefined@relayx.io"
 
     if (bitcoiner.twitterId) {
         avatar = "https://unavatar.io/twitter/" + bitcoiner.handle

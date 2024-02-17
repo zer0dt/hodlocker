@@ -93,6 +93,11 @@ export const getLatestPosts = (
                 orderBy: { created_at: 'desc' },
                 include: {
                     tags: true,
+                    link: {
+                        select: {
+                            twitterId: true
+                        }
+                    },
                     locklikes: {
                         where: {
                             locked_until: {

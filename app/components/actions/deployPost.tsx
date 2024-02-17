@@ -61,7 +61,6 @@ export default function DeployInteraction({
     setSignInModalVisible,
   } = useContext(WalletContext)!;
 
-  console.log("twitterId", twitterId)
 
   const [darkMode, setDarkMode] = useState(false);
 

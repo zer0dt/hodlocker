@@ -1,6 +1,6 @@
 
 
-import { getFollowersTotal } from './utils/get-bitcoiner-profile';
+import { doesHandleHaveTwitterId, getFollowersTotal } from './utils/get-bitcoiner-profile';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { getBitcoinerTopPosts } from './utils/get-bitcoiner-top-posts';
@@ -32,6 +32,8 @@ type Props = {
 };
 
 
+
+
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
     const totalFollowingAmount = await getFollowersTotal(params.handle);
 
@@ -39,7 +41,17 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 
     const title = params.handle + " (" + (totalFollowingAmount.totalLocklikedFromAllBitcoiners / 100000000).toFixed(2) + " bitcoin following)";
     let description = "hodlocker.com - Enter the center of Bitcoin.";
-    let image = 'https://a.relayx.com/u/' + params.handle + '@relayx.io';
+
+    let image = ""
+
+    const isTwitterProfile = await doesHandleHaveTwitterId(params.handle)
+
+    if (isTwitterProfile) {
+        image = "https://unavatar.io/twitter/" + params.handle
+    } else {
+        image = 'https://a.relayx.com/u/' + params.handle + '@relayx.io';
+    }
+    
 
     return {
         title: title,

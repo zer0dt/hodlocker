@@ -180,6 +180,29 @@ export const getFollowingTotal = cache(
   }
 );
 
+export async function doesHandleHaveTwitterId(handle: string) {
+  try {
+    const bitcoiner = await prisma.bitcoiner.findUnique({
+      where: {
+        handle: handle
+      },
+      select: {
+        twitterId: true
+      }
+    });
+
+    if (bitcoiner && bitcoiner.twitterId) {
+      return true; // Handle has a Twitter ID
+    } else {
+      return false; // Handle does not have a Twitter ID or handle not found
+    }
+  } catch (error) {
+    // Handle any errors
+    console.error('Error checking handle:', error);
+    throw error; // Throw the error for handling at a higher level
+  }
+}
+
 
 
 

@@ -3,6 +3,7 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 
 import TwitterSignInButton from './TwitterSignInButton';
+import { signOut } from 'next-auth/react';
 
 import DeployInteraction from "../actions/deployPost";
 
@@ -39,7 +40,7 @@ interface NewNotifications {
 }
 
 const AppBar = () => {
-  const { fetchRelayOneData, handle, avatar, currentBlockHeight, signInModalVisible, setSignInModalVisible } = useContext(WalletContext)!;
+  const { fetchRelayOneData, handle, avatar, twitterId, currentBlockHeight, signInModalVisible, setSignInModalVisible } = useContext(WalletContext)!;
 
   const router = useRouter();
 
@@ -59,8 +60,13 @@ const AppBar = () => {
   const [sublockers, setSublockers] = useState([{ id: 1, name: "BSV" }])
 
 
-  const handleSignInorOut = () => {
+  const handleSignInorOut = async () => {
     setProfileDropdownVisible(!profileDropdownVisible);
+
+    if (twitterId) {
+      await signOut();
+      return
+    }
 
     if (handle) {
       console.log("sign out relayx");
@@ -76,7 +82,6 @@ const AppBar = () => {
     console.log("profile click");
     setProfileDropdownVisible(!profileDropdownVisible);
   };
-
 
   useEffect(() => {
     fetch('/api/sublockers')
@@ -254,7 +259,7 @@ const AppBar = () => {
               width={40} // width and height based on the given h-10 and w-10 classes
               height={40}
               className="rounded-full"
-              src={avatar ? avatar : "/bitcoin.png"}
+              src={avatar ? avatar : "https://a.relayx.com/u/undefined@relayx.io"}
               alt="user"
             />
             <span className="sr-only">Profile</span>
