@@ -48,6 +48,11 @@ export const getBitcoinerMentions = cache(
         },
         include: {
           tags: true,
+          link: {
+            select: {
+              twitterId: true
+            }
+          },
           locklikes: {
             where: {
               locked_until: {

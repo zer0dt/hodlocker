@@ -94,6 +94,11 @@ export async function fetchTransactions(
         post: {
           include: {
             tags: true,
+            link: {
+              select: {
+                twitterId: true
+              }
+            },
             locklikes: {
               orderBy: { created_at: "desc" },
               where: {

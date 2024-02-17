@@ -63,6 +63,11 @@ export const getBitcoinerTopPosts = (
                 orderBy: { created_at: "desc" },
                 include: {
                     tags: true,
+                    link: {
+                        select: {
+                            twitterId: true
+                        }
+                    },
                     locklikes: {
                         where: {
                             AND: [
