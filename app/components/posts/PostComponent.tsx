@@ -17,13 +17,10 @@ import PostProfileImage from './PostProfileImage'
 import PostContent from "./PostContent";
 import WebShare from './WebShare'
 
+
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+  CardContent
 } from "@/components/ui/card"
 
 
@@ -37,10 +34,11 @@ interface PostProps {
     postTxid?: string,
     replyTxid?: string
   ) => Promise<LockLikes>;
+  postTxid?: string;
 }
 
 
-export default async function Post({ transaction, postLockLike }: PostProps) {
+export default async function Post({ transaction, postLockLike, postTxid }: PostProps) {
 
   const avatar = transaction.handle_id == "anon" ? (
     "https://api.dicebear.com/7.x/shapes/svg?seed=" +
@@ -143,7 +141,7 @@ export default async function Post({ transaction, postLockLike }: PostProps) {
 
 
             <div className="absolute left-56 top-0.5">  {/* Adjust right and top values as needed */}
-              <RepliesDrawer transaction={transaction} replies={transaction.replies} postLockLike={postLockLike} />
+              <RepliesDrawer transaction={transaction} replies={transaction.replies} postLockLike={postLockLike} postTxid={postTxid} />
             </div>
 
             <div className="flex gap-2">

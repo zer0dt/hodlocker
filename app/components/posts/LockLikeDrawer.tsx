@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import Link from "next/link";
 import { SiBitcoinsv } from "react-icons/si";
 import { HODLTransactions } from "@/app/server-actions";
@@ -10,10 +10,7 @@ import { formatBitcoinValue } from "./posts-format";
 
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -59,8 +56,6 @@ const LockLikeDrawer = ({
 
   return (
     <>
-
-
       <Drawer direction="right">
         <DrawerTrigger asChild>
           <div className="flex items-center justify-center">

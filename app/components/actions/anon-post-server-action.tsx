@@ -83,6 +83,8 @@ export const postAnon = async (note: string, sub: string, amountToLock: string, 
 
             const broadcastedTx = await broadcastTx(serializedTx);
 
+            const hasImage = false
+
             if (broadcastedTx) {
                 const newPost = await postNewTransaction(
                     broadcastedTx,
@@ -90,7 +92,8 @@ export const postAnon = async (note: string, sub: string, amountToLock: string, 
                     "anon",
                     note,
                     nLockTime,
-                    sub
+                    sub,
+                    hasImage
                 );
                 return newPost;
             }

@@ -1,5 +1,3 @@
-
-
 import React from "react";
 import ReplyComponent from "./ReplyComponent";
 import { LockLikes } from "@prisma/client";
@@ -8,7 +6,6 @@ import ReplyInteraction from "@/app/components/actions/ReplyInteraction";
 import { FaRegComment } from "react-icons/fa";
 import { SiBitcoinsv } from "react-icons/si";
 import { HODLTransactions } from "@/app/server-actions";
-
 
 import { formatBitcoinValue } from "../posts-format";
 
@@ -36,18 +33,34 @@ interface RepliesDrawerProps {
     postTxid?: string,
     replyTxid?: string
   ) => Promise<LockLikes>;
+  postTxid?: string;
 }
 
 const RepliesDrawer = async ({
   transaction,
   replies,
-  postLockLike
+  postLockLike,
+  postTxid
 }: RepliesDrawerProps) => {
-  
 
-  return (
-    <>
+  if (postTxid) {
+    // Render trigger content separately if the pathname contains "post"
+    return (
+      <div className="flex items-center justify-center">
+        <FaRegComment className="reply-button h-4 w-4 mr-1" />
+        <span className="text-sm font-medium font-mono">
+          {transaction.totalAmountandLockLikedForReplies
+            ? formatBitcoinValue(transaction.totalAmountandLockLikedForReplies / 100000000)
+            : null}
+        </span>
+        {transaction.totalAmountandLockLikedForReplies ? (
+          <SiBitcoinsv className="text-orange-400 h-4 w-4 mt-0.5 ml-1" />
+        ) : null}
+      </div>
+    );
+  } else {
 
+    return (
       <Drawer>
         <DrawerTrigger asChild>
           <div className="flex items-center justify-center">
@@ -75,17 +88,16 @@ const RepliesDrawer = async ({
                 </div>
               ))}
             </ScrollArea>
-              
+
             <div className="mx-auto w-full max-w-sm pb-10">
-                <ReplyInteraction transaction={transaction} />
-              </div>
-            
+              <ReplyInteraction transaction={transaction} />
+            </div>
+
           </div>
         </DrawerContent>
       </Drawer>
-
-    </>
-  );
+    );
+  }
 };
 
 export default RepliesDrawer;
