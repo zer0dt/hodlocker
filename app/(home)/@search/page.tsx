@@ -91,6 +91,11 @@ export const getSearchPosts = (
                 orderBy: { created_at: "desc" },
                 include: {
                     tags: true,
+                    link: {
+                        select: {
+                            twitterId: true
+                        }
+                    },
                     locklikes: {
                         where: { locked_until: { gt: currentBlockHeight } },
                         select: {

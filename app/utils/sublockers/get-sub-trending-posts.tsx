@@ -67,10 +67,10 @@ export async function fetchTransactions(
 
   const currentDate = new Date();
   const currentTimestamp = currentDate.getTime(); // Get the current timestamp in milliseconds
-  
+
   let yourEndTime = new Date(currentTimestamp); // Convert the current timestamp to a Date object
   let yourStartTime;
-  
+
   // Determine the start time based on the 'sort' parameter
   if (sort === "day") {
     yourStartTime = new Date(currentTimestamp - 24 * 60 * 60 * 1000); // Subtract 24 hours in milliseconds
@@ -85,16 +85,16 @@ export async function fetchTransactions(
   const baseUrl = process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3000'
   let handles: string[] = [];
   if (filter2 > 0) {
-      const response = await fetch(`${baseUrl}/api/bitcoiners/`)
-      if (response.ok) {
-          const bitcoiners = (await response.json()).rankedBitcoiners as RankedBitcoiners
-          console.log('bitcoiners', bitcoiners)
-          handles = bitcoiners.filter(b => b.totalAmountLocked >= filter2).map(b => b.handle)
-      } else {
-          console.error("Error fetching bitcoiners", response.status, response.statusText)
-      }
+    const response = await fetch(`${baseUrl}/api/bitcoiners/`)
+    if (response.ok) {
+      const bitcoiners = (await response.json()).rankedBitcoiners as RankedBitcoiners
+      console.log('bitcoiners', bitcoiners)
+      handles = bitcoiners.filter(b => b.totalAmountLocked >= filter2).map(b => b.handle)
+    } else {
+      console.error("Error fetching bitcoiners", response.status, response.statusText)
+    }
   }
-  
+
   try {
     const recentLocklikes = await prisma.lockLikes.findMany({
       skip: skip,
@@ -112,18 +112,23 @@ export async function fetchTransactions(
           gte: filter * 100000000, // Filter locklikes where the 'amount' is greater than or equal to the 'filter' amount
         },
         post: {
-            tags: {
-              some: {
-                name: sub, // Filter locklikes with the specified tag name
-              },
+          tags: {
+            some: {
+              name: sub, // Filter locklikes with the specified tag name
             },
           },
+        },
         ...(filter2 > 0 ? { handle_id: { in: handles } } : {}),
       },
       include: {
         post: {
           include: {
             tags: true,
+            link: {
+              select: {
+                twitterId: true
+              }
+            },
             locklikes: {
               orderBy: { created_at: "desc" },
               where: {
@@ -177,7 +182,7 @@ export async function fetchTransactions(
       enrichedItems.push(enrichItem(item));
     }
 
-    
+
     console.log("finished getting the " + sub + "'s sublockers trending " + enrichedItems.length + " posts and replies (remove replies from trending?)")
     return enrichedItems;
   } catch (error) {
@@ -199,7 +204,7 @@ export const getSubTrendingPosts = cache(
 
           if (item) {
             if ("post_id" in item) {
-             
+
               return (
                 <ReplyComponent
                   key={item.txid}
@@ -208,7 +213,7 @@ export const getSubTrendingPosts = cache(
                 />
               );
             } else {
-              
+
               return (
                 <PostComponent
                   key={item.txid}

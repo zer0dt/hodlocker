@@ -40,88 +40,93 @@ export const getSubLatestPosts = cache(
     const baseUrl = process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3000'
     let handles: string[] = [];
     if (filter2 > 0) {
-        const response = await fetch(`${baseUrl}/api/bitcoiners/`)
-        if (response.ok) {
-            const bitcoiners = (await response.json()).rankedBitcoiners as RankedBitcoiners
-            handles = bitcoiners.filter(b => b.totalAmountLocked >= filter2).map(b => b.handle)
-        }
+      const response = await fetch(`${baseUrl}/api/bitcoiners/`)
+      if (response.ok) {
+        const bitcoiners = (await response.json()).rankedBitcoiners as RankedBitcoiners
+        handles = bitcoiners.filter(b => b.totalAmountLocked >= filter2).map(b => b.handle)
+      }
     }
 
     try {
-        const transactions = await prisma.transactions.findMany({
-            where: {
-              ...(filter2 > 0 ? { handle_id: { in: handles } } : {}),
-              AND: [
+      const transactions = await prisma.transactions.findMany({
+        where: {
+          ...(filter2 > 0 ? { handle_id: { in: handles } } : {}),
+          AND: [
+            {
+              created_at: {
+                gte: yourStartTime,
+                lte: yourEndTime,
+              },
+            },
+            {
+              OR: [
                 {
-                  created_at: {
-                    gte: yourStartTime,
-                    lte: yourEndTime,
-                  },
-                },
-                {
-                  OR: [
-                    {
-                      locklikes: {
-                        some: {
-                          AND: [
-                            {
-                              locked_until: {
-                                gt: currentBlockHeight,
-                              },
-                            },
-                            {
-                              amount: {
-                                gte: filter * 100000000,
-                              },
-                            },
-                          ],
+                  locklikes: {
+                    some: {
+                      AND: [
+                        {
+                          locked_until: {
+                            gt: currentBlockHeight,
+                          },
                         },
-                      },
+                        {
+                          amount: {
+                            gte: filter * 100000000,
+                          },
+                        },
+                      ],
                     },
-                    filter === 0 ? { locklikes: { none: {} } } : {},
-                  ],
-                },
-              ],
-              tags: {
-                some: {
-                  name: sub, // Filter transactions with the specified tag name
-                },
-              },
-            },
-            skip: skip,
-            take: limit,
-            orderBy: { created_at: 'desc' },
-            include: {
-              tags: true,
-              locklikes: {
-                where: {
-                  locked_until: {
-                    gt: currentBlockHeight,
-                  }
-                },
-                select: {
-                  amount: true,
-                  locked_until: true,
-                  handle_id: true,
-                  created_at: true,
-                  txid: true,
-                  post_id: true,
-                  reply_txid: true,
-                },
-              },
-              replies: {
-                include: {
-                  locklikes: true,
-                  transaction: {
-                    include: {
-                      tags: true,
-                      link: true // Include the associated Bitcoiner for the original transaction
-                    }
                   },
                 },
+                filter === 0 ? { locklikes: { none: {} } } : {},
+              ],
+            },
+          ],
+          tags: {
+            some: {
+              name: sub, // Filter transactions with the specified tag name
+            },
+          },
+        },
+        skip: skip,
+        take: limit,
+        orderBy: { created_at: 'desc' },
+        include: {
+          tags: true,
+          link: {
+            select: {
+              twitterId: true
+            }
+          },
+          locklikes: {
+            where: {
+              locked_until: {
+                gt: currentBlockHeight,
+              }
+            },
+            select: {
+              amount: true,
+              locked_until: true,
+              handle_id: true,
+              created_at: true,
+              txid: true,
+              post_id: true,
+              reply_txid: true,
+            },
+          },
+          replies: {
+            include: {
+              locklikes: true,
+              transaction: {
+                include: {
+                  tags: true,
+                  link: true // Include the associated Bitcoiner for the original transaction
+                }
               },
             },
-          });
+          },
+        },
+      });
 
       const enrichedTransactions = transactions.map((transaction) => {
         const totalLockLiked = transaction.locklikes.reduce(
