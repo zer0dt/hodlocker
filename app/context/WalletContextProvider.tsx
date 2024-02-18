@@ -96,7 +96,8 @@ export const WalletContextProvider = ({
           setAvatar(session.user.image)
           setTwitterId(session.user.id)
         } else {
-          const bitcoiner = await postNewBitcoiner(session.user.name, session.user.id, "")
+          const bitcoiner = await postNewBitcoiner(session.user.name, session.user.id, session.user.id)
+          console.log(bitcoiner)
           if (bitcoiner.twitterId) {
             setHandle(bitcoiner.handle)
             setPaymail(bitcoiner.handle + "@hodlocker.com")
