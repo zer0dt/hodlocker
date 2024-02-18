@@ -56,6 +56,12 @@ const getImagePosts = (async (sort: string, filter: number, filter2: number, pag
             },
             include: {
                 tags: true,
+                link: {
+                    select: {
+                        twitterId: true,
+                        avatar: true
+                    }
+                },
                 locklikes: {
                     where: {
                         locked_until: {
@@ -102,7 +108,7 @@ const getImagePosts = (async (sort: string, filter: number, filter2: number, pag
                 const filteredNote = reply.note.split('data:image')[0];
 
                 reply.note = filteredNote
-            
+
                 // Return a new object with the filtered note and other properties
                 return {
                     ...reply,
@@ -164,7 +170,7 @@ const getCachedPosts = unstable_cache(
     async (sort: string, filter: number, filter2: number, currentPage: number, limit: number) => {
         const cachedPosts = await getImagePosts(sort, filter, filter2, currentPage, limit)
 
-        return stringify({...cachedPosts})
+        return stringify({ ...cachedPosts })
     },
     ['image-posts'],
     {
@@ -180,7 +186,7 @@ export default async function ImagesFeed({ searchParams }: ImagesFeedProps) {
     const activeSort = searchParams.sort || "week";
 
     const activeFilter = searchParams.filter !== undefined ? parseFloat(searchParams.filter) : 0;
-    
+
     const activeFilter2 = searchParams.filter2 !== undefined ? parseFloat(searchParams.filter2) : 0;
 
     const currentPage = searchParams.page || 1;
@@ -198,17 +204,17 @@ export default async function ImagesFeed({ searchParams }: ImagesFeedProps) {
         return (
             <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
                 {
-                     Object.values(posts).map((transaction: HODLTransactions) => (
+                    Object.values(posts).map((transaction: HODLTransactions) => (
                         <Suspense key={transaction.txid} fallback={<PostComponentPlaceholder />}>
                             <PostComponent
-                            key={transaction.txid} // Assuming transaction has an 'id' field
-                            transaction={transaction}
-                            postLockLike={postLockLike}
-                        />
+                                key={transaction.txid} // Assuming transaction has an 'id' field
+                                transaction={transaction}
+                                postLockLike={postLockLike}
+                            />
                         </Suspense>
                     ))
                 }
-                <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} filter2={activeFilter2}/>
+                <Pagination tab={activeTab} currentPage={currentPage} sort={activeSort} filter={activeFilter} filter2={activeFilter2} />
             </div>
         )
 

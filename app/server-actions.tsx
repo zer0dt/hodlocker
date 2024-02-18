@@ -336,16 +336,19 @@ export async function postLockLike(
 };
 
 
-export async function postNewBitcoiner(handle: string, twitterId: string, pubkey: string) {
+export async function postNewBitcoiner(handle: string, twitterId: string, pubkey: string, avatar: string) {
   const newBitcoiner = await prisma.bitcoiner.upsert({
     where: {
       handle: handle
     },
-    update: {}, // no update in this case, since we're just ensuring it exists
+    update: {
+      avatar: avatar
+    }, // no update in this case, since we're just ensuring it exists
     create: {
       handle: handle,
       twitterId: twitterId,
-      pubkey: pubkey
+      pubkey: pubkey,
+      avatar: avatar
     }
   })
 

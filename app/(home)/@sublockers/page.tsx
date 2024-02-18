@@ -20,7 +20,7 @@ export default async function SublockerFeed({ searchParams }: SublockersFeedProp
         const topicTags = await getAllTags("topic")
 
         return (
-            <div className="grid grid-cols-1 gap-0 w-full lg:w-96 pb-20">
+            <div className="grid grid-cols-1 gap-0 w-full lg:w-96">
                 <SublockersList searchParams={searchParams} coinTags={coinTags} topicTags={topicTags} />
             </div>
         )

@@ -50,7 +50,8 @@ export const getBitcoinerMentions = cache(
           tags: true,
           link: {
             select: {
-              twitterId: true
+              twitterId: true,
+              avatar: true
             }
           },
           locklikes: {

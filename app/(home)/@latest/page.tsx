@@ -95,7 +95,8 @@ export const getLatestPosts = (
                     tags: true,
                     link: {
                         select: {
-                            twitterId: true
+                            twitterId: true,
+                            avatar: true
                         }
                     },
                     locklikes: {

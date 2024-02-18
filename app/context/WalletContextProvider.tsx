@@ -87,7 +87,7 @@ export const WalletContextProvider = ({
   useEffect(() => {
     console.log(session)
 
-    if (session && session.user && session.user.name && session.user.id) {
+    if (session && session.user && session.user.id) {
       const getTwitterBitcoiner = async () => {
         const bitcoiner = await getBitcoinerByTwitterId(session.user.id)
         if (bitcoiner) {
@@ -95,18 +95,7 @@ export const WalletContextProvider = ({
           setPaymail(bitcoiner.handle + "@hodlocker.com")
           setAvatar(session.user.image)
           setTwitterId(session.user.id)
-        } else {
-          const bitcoiner = await postNewBitcoiner(session.user.name, session.user.id, session.user.id)
-          console.log(bitcoiner)
-          if (bitcoiner.twitterId) {
-            setHandle(bitcoiner.handle)
-            setPaymail(bitcoiner.handle + "@hodlocker.com")
-            setAvatar(session.user.image)
-            setTwitterId(session.user.id)
-          } else {
-            alert("Error: couldn't create new bitcoiner using X.com login")
-          }
-        }
+        } 
       }
 
       getTwitterBitcoiner()

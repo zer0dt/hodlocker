@@ -68,7 +68,8 @@ export const getSubTopPosts = cache(async (
         tags: true,
         link: {
           select: {
-            twitterId: true
+            twitterId: true,
+            avatar: true
           }
         },
         locklikes: {

@@ -10,6 +10,7 @@ export const getBitcoinerProfile = cache(
   ): Promise<{
     handle: string;
     twitterId: string;
+    avatar: string,
     created_at: Date;
     totalAmountandLockLiked: number;
   }> => {
@@ -23,6 +24,7 @@ export const getBitcoinerProfile = cache(
         select: {
           created_at: true,
           twitterId: true,
+          avatar: true,
           handle: true,
           locklikes: {
             where: {
@@ -62,10 +64,11 @@ export const getBitcoinerProfile = cache(
 
       const totalAmountandLockLiked =
         totalTransactionsAmount + totalLockLikedFromBitcoiner;
-
+      
       return {
         handle: bitcoiner.handle,
         twitterId: bitcoiner.twitterId,
+        avatar: bitcoiner.avatar,
         created_at: bitcoiner.created_at,
         totalAmountandLockLiked,
       };

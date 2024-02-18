@@ -42,8 +42,8 @@ export default async function Post({ transaction, postLockLike, postTxid }: Post
 
   let avatar = "https://a.relayx.com/u/undefined@relayx.io"
 
-  if (transaction.link.twitterId != null) {
-      avatar = "https://unavatar.io/twitter/" + transaction.handle_id
+  if (transaction.link.avatar != null) {
+      avatar = transaction.link.avatar
   } else {
     avatar = transaction.handle_id == "anon" ? (
       "https://api.dicebear.com/7.x/shapes/svg?seed=" +

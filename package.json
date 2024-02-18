@@ -15,6 +15,7 @@
     "genprivkey": "npx ts-node ./scripts/privateKey.ts"
   },
   "dependencies": {
+    "@auth/core": "^0.27.0",
     "@google/model-viewer": "^3.2.1",
     "@gorillapool/js-junglebus": "^0.4.1",
     "@huwyane/flywheel-leaderboard": "0.0.26",

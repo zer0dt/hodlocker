@@ -96,7 +96,8 @@ export async function fetchTransactions(
             tags: true,
             link: {
               select: {
-                twitterId: true
+                twitterId: true,
+                avatar: true
               }
             },
             locklikes: {

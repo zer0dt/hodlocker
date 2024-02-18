@@ -42,8 +42,8 @@ export default async function ProfileInfo({ handle }: ProfileInfoProps) {
 
     let avatar = "https://a.relayx.com/u/undefined@relayx.io"
 
-    if (bitcoiner.twitterId) {
-        avatar = "https://unavatar.io/twitter/" + bitcoiner.handle
+    if (bitcoiner.avatar) {
+        avatar = bitcoiner.avatar
     } else {
          avatar = ('https://a.relayx.com/u/' + handle + '@relayx.io')
     }

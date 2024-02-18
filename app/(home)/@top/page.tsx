@@ -57,7 +57,8 @@ const getTopPosts = (async (sort: string, filter: number, filter2: number, page:
                 tags: true,
                 link: {
                     select: {
-                        twitterId: true
+                        twitterId: true,
+                        avatar: true
                     }
                 },
                 locklikes: {

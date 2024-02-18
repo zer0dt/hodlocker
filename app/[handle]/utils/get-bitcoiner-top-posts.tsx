@@ -65,7 +65,8 @@ export const getBitcoinerTopPosts = (
                     tags: true,
                     link: {
                         select: {
-                            twitterId: true
+                            twitterId: true,
+                            avatar: true
                         }
                     },
                     locklikes: {
