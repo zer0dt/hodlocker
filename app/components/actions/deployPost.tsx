@@ -256,7 +256,7 @@ export default function DeployInteraction({
 
     if (isLinked) {
       if (handle && pubkey) {
-        postNewBitcoiner(handle, "", pubkey, "");
+        postNewBitcoiner(handle, "", pubkey, null);
         console.log("using this pubkey to lock: ", pubkey);
       } else {
         setLoading(false);
