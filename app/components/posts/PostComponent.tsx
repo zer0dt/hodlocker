@@ -105,7 +105,7 @@ export default async function Post({ transaction, postLockLike, postTxid }: Post
                 <div className="pl-2 text-gray-600 dark:text-gray-300 text-sm flex gap-1">
                   {'·'}
                   <div className="hover:underline">
-                    <Link href={"/" + transaction.handle_id + "/post/" + transaction.txid}>
+                    <Link href={"/" + transaction.handle_id + "/post/" + transaction.txid} prefetch={false}>
                       {timeSincePost(transaction)}
                     </Link>
                   </div>
