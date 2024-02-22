@@ -104,25 +104,7 @@ export default function FeedBar() {
                 <SortingDropdown sub={activeSub} tab={activeTab} sort={activeSort} filter={parseFloat(activeFilter) || 0} filter2={parseFloat(activeFilter2) || 0} />
             </li>
 
-            <li onClick={() => handleLinkClick({
-                path: '/',
-                query: {
-                    tab: 'subs',
-                    sort: activeSort,
-                    filter: activeFilter,
-                    filter2: activeFilter2
-                }
-            }, 'subs')}
-                className={getClassName("subs")}
-            >
-
-                {(transitionState.subs && isPending) ? loading() : (
-                    <div className="flex pt-1">
-                        <p className="text-md dark:text-white">{activeSub === "all" ? (activeSub) : ("h/" + activeSub)}</p>
-                        <IoMdArrowDropdown className="mt-1" />
-                    </div>
-                )}
-            </li>
+         
 
             <li onClick={() => handleLinkClick({
                 path: '/',

@@ -553,58 +553,15 @@ export default function DeployInteraction({
           data-dropdown-toggle="dropdownNavbar"
           className="flex items-center justify-start w-1/4 mb-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-gray-400 dark:hover:text-white dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
         >
-          <span className="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
-            {sub}
-          </span>
-          <svg
-            className="w-2.5 h-2.5 ml-1"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 10 6"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="m1 1 4 4 4-4"
-            />
-          </svg>
+          
         </button>
-
-        {subDropdownVisible && (
-          <div
-            id="dropdownNavbar"
-            ref={dropdownRef}
-            className="z-30 absolute top-4 left-2 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
-          >
-            <ul
-              className="py-2 text-sm text-gray-700 dark:text-gray-400 overflow-y-auto max-h-40"
-              aria-labelledby="dropdownLargeButton"
-            >
-              {subs.map((sub) => (
-                <li key={sub.id}>
-                  <h1
-                    onClick={() => {
-                      handleSubClick(sub.name);
-                    }}
-                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                  >
-                    {sub.name}
-                  </h1>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
 
         <MentionsInput
           value={note}
           onChange={(e) => setNote(e.target.value)}
           autoComplete="off"
           id="message"
-          className={darkMode ? "dark-comments-textarea" : "comments-textarea"}
+          className={darkMode ? "dark-comments-textarea mt-4" : "comments-textarea mt-4"}
           placeholder="What's up?"
         >
           <Mention

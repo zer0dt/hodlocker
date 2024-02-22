@@ -112,17 +112,7 @@ export default async function Post({ transaction, postLockLike, postTxid }: Post
                 </div>
               </div>
             </div>
-            <div className="absolute right-10 top-2"> {/* Adjust right and top values as needed */}
-              {
-                transaction.tags.map(tag => (
-                  <Link key={tag.id} href={"/h/" + tag.name}>
-                    <div className="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300 hover:text-orange-400">
-                      {tag.name}
-                    </div>
-                  </Link>
-                ))
-              }
-            </div>
+            
             <a
               target="_blank"
               rel="noopener noreferrer"

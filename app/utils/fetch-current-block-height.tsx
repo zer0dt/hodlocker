@@ -1,3 +1,5 @@
+'use server'
+
 import { cache } from 'react'
 
 export const fetchCurrentBlockHeight = cache(async (): Promise<number> => {
@@ -14,7 +16,7 @@ export const fetchCurrentBlockHeight = cache(async (): Promise<number> => {
         },
         mode: "cors",
         next: {
-          revalidate: 30
+          revalidate: 120
         }
       },  );
   
