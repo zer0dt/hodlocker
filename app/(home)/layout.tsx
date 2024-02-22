@@ -37,7 +37,6 @@ export default async function FeedLayout(props: {
       <div className="w-full z-0">
         <div className="flex justify-center">
 
-          {props.sublockers}
           {props.top}
           {props.latest}
           {props.trending}
