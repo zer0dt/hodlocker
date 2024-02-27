@@ -3,11 +3,14 @@ import { Alumni_Sans } from 'next/font/google'
 
 import React, { Suspense } from 'react';
 import Link from 'next/link'
+import dynamic from 'next/dynamic';
 
 import BitcoinLocked from './BitcoinLocked'
 import UserBalance from './UserBalance';
 import { SiBitcoinsv } from 'react-icons/si';
-
+const GithubCorner = dynamic(() => import('./GithubCorner'), {
+  ssr: false,
+});
 
 const inter = Alumni_Sans({ subsets: ['latin'] })
 
@@ -44,6 +47,9 @@ export default async function NavBar() {
           <div className="flex-1 flex justify-end items-center md:order-2 md:pt-2 lg:mr-36">
             <UserBalance />
           </div>
+        </div>
+        <div className="hidden lg:block">
+          <GithubCorner />
         </div>
       </nav>
 
