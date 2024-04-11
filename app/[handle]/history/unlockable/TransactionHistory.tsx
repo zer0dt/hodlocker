@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
-import { callRedeem } from "@/app/utils/scrypt";
+import { callRedeem, callRedeemL2M } from "@/app/utils/scrypt";
 
 import {
   checkIfSpent,
@@ -130,6 +130,21 @@ const TransactionHistory = ({ bitcoiner, currentBlockHeight, handle }: HistoryPr
 
   };
 
+  const unlockL2M = async (txid: string) => {
+    setIsUnlockingTx(true);
+
+    const result = await callRedeemL2M(
+      currentBlockHeight,
+      txid,
+      mnemonic
+    );
+
+    console.log("result", result)
+    result && handleExplosion()
+    setIsUnlockingTx(false);   
+
+  };
+
 
   const spinner = () => {
     return (
@@ -194,6 +209,7 @@ const TransactionHistory = ({ bitcoiner, currentBlockHeight, handle }: HistoryPr
         unlockAllDisabled={unlockAllDisabled}
         isUnlockingTx={isUnlockingTx}
         unlockTransactions={unlockTransactions}
+        unlockL2M={unlockL2M}
         mnemonic={mnemonic}
         setMnemonic={setMnemonic}
         unlockableTransactions={unlockableTransactions}

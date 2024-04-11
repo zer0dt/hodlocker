@@ -27,6 +27,7 @@ interface UnlockModalProps {
   isUnlockingTx: boolean;
   unlockableTransactions: { txid: string; spent: boolean, amount: number }[];
   unlockTransactions: () => void;
+  unlockL2M: (txid: string) => void;
   mnemonic: string;
   setMnemonic: React.Dispatch<React.SetStateAction<string>>;
   isExploding: boolean,
@@ -68,6 +69,7 @@ const UnlockModal = ({
   mnemonic,
   unlockableTransactions,
   unlockTransactions,
+  unlockL2M,
   isUnlockingTx,
   isExploding,
   handleExplosion
@@ -75,6 +77,8 @@ const UnlockModal = ({
 
   const [totalUnspentTransactions, setTotalUnspentTransactions] = useState(0);
   const [totalAmountUnspentTransactions, setTotalAmountUnspentTransactions] = useState(0);
+
+  const [txid, setTxid] = useState<string | undefined>()
 
   useEffect(() => {
     // Calculate the quantity of unspent locklikes and their total amount
@@ -103,6 +107,7 @@ const UnlockModal = ({
       return () => clearTimeout(timeoutId);
     }
   }, [isExploding]);
+
 
   return (
     unlockModalOpen && (
@@ -173,20 +178,20 @@ const UnlockModal = ({
                     </div>
 
                     <div className="pt-4">
-                    {/* Display individual unspent locklikes */}
-                    {checkedTransactions
-                      .filter((tx) => !tx.spent) // Filter unspent locklikes
-                      .map((tx, index) => (
-                        <p
-                          key={index}
-                          className={`text-sm leading-relaxed ${tx.spent ? 'text-red-500' : 'text-green-500'
-                            }`}
-                        >
-                          Transaction ID: <strong>{tx.txid.slice(0, 7) + '...'}</strong>
-                          {tx.spent ? ' unlocked' : ' 🤑'}
-                        </p>
-                      ))}
-                      </div>
+                      {/* Display individual unspent locklikes */}
+                      {checkedTransactions
+                        .filter((tx) => !tx.spent) // Filter unspent locklikes
+                        .map((tx, index) => (
+                          <p
+                            key={index}
+                            className={`text-sm leading-relaxed ${tx.spent ? 'text-red-500' : 'text-green-500'
+                              }`}
+                          >
+                            Transaction ID: <strong>{tx.txid.slice(0, 7) + '...'}</strong>
+                            {tx.spent ? ' unlocked' : ' 🤑'}
+                          </p>
+                        ))}
+                    </div>
                   </div>
                 )}
               </div>
@@ -215,8 +220,8 @@ const UnlockModal = ({
                 type="button"
                 disabled={unlockAllDisabled}
                 className={`${unlockAllDisabled
-                    ? 'opacity-50 cursor-not-allowed'
-                    : 'hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300'
+                  ? 'opacity-50 cursor-not-allowed'
+                  : 'hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300'
                   } text-white bg-blue-700 ${unlockAllDisabled
                     ? ''
                     : 'hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300'
@@ -239,6 +244,54 @@ const UnlockModal = ({
               </button>
               {isUnlockingTx ? unlockingSpinner() : null}
             </div>
+
+            <div className="px-2 py-2">
+              <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+                Enter lock to mint transaction to unlock:
+              </p>
+              <input
+                type="text"
+                placeholder="Enter txid"
+                value={txid}
+                onChange={(e) => {
+                  e.preventDefault();
+                  setTxid(e.target.value);
+                }}
+                className="border border-gray-300 rounded-lg px-2 py-1 text-xs w-full"
+              />
+
+              <button
+                data-modal-hide="defaultModal"
+                type="button"
+                disabled={unlockAllDisabled}
+                className={`${unlockAllDisabled
+                  ? 'opacity-50 cursor-not-allowed'
+                  : 'hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300'
+                  } text-white bg-blue-700 ${unlockAllDisabled
+                    ? ''
+                    : 'hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300'
+                  } font-medium rounded-lg text-xs px-3 py-1 text-center ${unlockAllDisabled
+                    ? 'dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+                    : ''
+                  }`}
+                onClick={() => unlockL2M(txid)}
+              >
+                <Confetti active={isExploding} config={config} />
+                {isUnlockingTx ? (
+                  <>
+                    <div className="flex">
+                      Unlocking Tx
+                    </div>
+                  </>
+                ) : (
+                  <span>Unlock</span>
+                )}
+              </button>
+            </div>
+
+
+
+
           </div>
         </div>
       </div>

@@ -716,6 +716,32 @@ export async function getUtxoData(txid: string, retries = 20): Promise<ScriptDat
   throw new Error('Maximum retries exceeded'); // Throw error if maximum retries exceeded
 }
 
+export async function getUtxoData1(txid: string, retries = 20): Promise<ScriptData> {
+  const url = "https://api.bitails.io/tx/" + txid + "/output/1";
+
+  while (retries > 0) {
+    try {
+      const res = await fetch(url, {
+        method: "GET",
+        next: { revalidate: 0 }
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to fetch data');
+      }
+
+      const utxo: ScriptData = await res.json();
+      console.log(utxo);
+      return utxo;
+
+    } catch (error) {
+      if (retries === 1) throw error; // If it's the last retry, throw the error
+      retries--; // Decrement retries and continue looping
+    }
+  }
+  throw new Error('Maximum retries exceeded'); // Throw error if maximum retries exceeded
+}
+
 
 export async function getOpReturnData(txid: string) {
   const url = `https://api.whatsonchain.com/v1/bsv/main/tx/${txid}/opreturn`;
